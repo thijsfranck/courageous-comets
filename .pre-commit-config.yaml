@@ -1,18 +1,44 @@
-# Pre-commit configuration.
-# See https://github.com/python-discord/code-jam-template/tree/main#pre-commit-run-linting-before-committing
+default_install_hook_types: [commit-msg, pre-commit]
 
 repos:
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.27.0
+    hooks:
+      - id: commitizen
+        name: Check commit message format
+        stages: [commit-msg]
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: check-json
+        name: Check for JSON syntax errors
       - id: check-toml
+        name: Check for TOML syntax errors
       - id: check-yaml
+        name: Check for YAML syntax errors
       - id: end-of-file-fixer
+        name: Ensure files end with a newline
+      - id: pretty-format-json
+        name: Format JSON files
+        args: [--autofix]
       - id: trailing-whitespace
+        name: Trim trailing whitespace
         args: [--markdown-linebreak-ext=md]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.0
+    rev: v0.5.2
     hooks:
       - id: ruff
+        name: Check for Python linting errors
+        args: [ --fix ]
       - id: ruff-format
+        name: Run Python formatter
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        name: Check for Markdown linting errors

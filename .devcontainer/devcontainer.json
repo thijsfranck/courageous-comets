@@ -1,0 +1,60 @@
+{
+  "build": {
+    "cacheFrom": "ghcr.io/thijsfranck/courageous-comets-devcontainer",
+    "dockerfile": "Dockerfile"
+  },
+  "containerEnv": {
+    "POETRY_VIRTUALENVS_CREATE": "false"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "DavidAnson.vscode-markdownlint",
+        "KnisterPeter.vscode-commitizen",
+        "tamasfe.even-better-toml",
+        "-ms-python.autopep8"
+      ],
+      "settings": {
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        },
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "files.exclude": {
+          "**/.pytest_cache": true,
+          "**/.ruff_cache": true,
+          "**/__pycache__": true
+        },
+        "files.insertFinalNewline": true,
+        "python.analysis.typeCheckingMode": "basic",
+        "python.testing.pytestArgs": [
+          "."
+        ],
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/act:1": {},
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/python:1": {
+      "installTools": false,
+      "version": "3.12"
+    }
+  },
+  "forwardPorts": [
+    8000
+  ],
+  "name": "Courageous Comets \u2604\ufe0f",
+  "portsAttributes": {
+    "8000": {
+      "label": "MkDocs",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/postcreate.sh",
+  "updateContentCommand": "bash .devcontainer/updatecontent.sh"
+}

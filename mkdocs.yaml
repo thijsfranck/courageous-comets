@@ -1,0 +1,71 @@
+copyright: © 2024 Courageous Comets ☄️
+repo_name: thijsfranck/courageous-comets
+repo_url: https://github.com/thijsfranck/courageous-comets
+site_name: Courageous Comets ☄️
+site_url: https://thijsfranck.github.io/courageous-comets/
+
+theme:
+  name: material
+  search: true
+
+  features:
+    - content.code.copy
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.sections
+
+  icon:
+    logo: fontawesome/brands/discord
+    repo: fontawesome/brands/github
+
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+nav:
+  - Contributor Guide:
+    - contributor-guide/index.md
+    - Development Environment: contributor-guide/development-environment.md
+    - Version Control: contributor-guide/version-control.md
+    - Documentation: contributor-guide/documentation.md
+    - Testing: contributor-guide/testing.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - toc:
+      permalink: true
+
+plugins:
+  - mike
+  - search
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/thijsfranck/courageous-comets
+  version:
+    alias: true
+    provider: mike
+
+extra_css:
+  - stylesheets/tabs.css
+  - stylesheets/table.css
