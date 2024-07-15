@@ -27,6 +27,7 @@ jobs:
 
       - name: Set up Pyright
         run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+        shell: bash
 
       - name: Run type checking
         uses: jakebailey/pyright-action@v2
@@ -36,3 +37,4 @@ jobs:
 
       - name: Run tests
         run: poetry run pytest
+        shell: bash
