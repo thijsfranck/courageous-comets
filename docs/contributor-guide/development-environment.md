@@ -5,16 +5,6 @@ Follow the steps below to set up your development environment.
 !!! NOTE "Prerequisites"
     You need to have [Git](https://git-scm.com) installed on your system.
 
-## Cloning the Repository
-
-To clone the repository, run the following command:
-
-```bash
-git clone https://github.com/thijsfranck/courageous-comets.git
-```
-
-Next, open the project in your preferred IDE or navigate to the project directory using the terminal.
-
 ## Environment Setup
 
 You can set up the development environment using either the [automated](#automated-setup) or [manual](#manual-setup)
@@ -23,20 +13,39 @@ setup process.
 ### Automated Setup
 
 The project includes a [development container](https://containers.dev) to automatically set up your development
-environment. See the video installation guide below:
+environment.
+
+!!! NOTE "Prerequisites"
+    [Docker](https://www.docker.com) must be installed on your system to use the development container.
+
+??? TIP "GitHub Codespaces"
+    If your system does not support Docker, you can use a [GitHub Codespace](https://docs.github.com/en/codespaces/getting-started/quickstart)
+    to install a development container in the cloud.
+
+#### Quick Start
+
+See the video installation guide below for a step-by-step tutorial on installing the development container with
+Visual Studio Code:
 
 <video controls>
     <source src="https://github.com/user-attachments/assets/703aa245-9e33-44d9-9c79-7432afbeb445" type="video/mp4">
 </video>
 
+First, install the [Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack).
+Next, open Visual Studio Code and click on icon in the bottom left corner to open the command palette for remote
+environments.
+
+Select the `Clone Repository in Container Volume` command. This will prompt you to select the
+repository to clone. Choose the `thijsfranck/courageous-comets` repository or paste the repository URL.
+
+Once you confirm the selection, the development container will be set up automatically.
+
+#### Detailed Setup Guide
+
 For more details, refer to the setup guide for your IDE:
 
-- [Visual Studio Code (recommended)](https://code.visualstudio.com/docs/devcontainers/tutorial)
+- [Visual Studio Code](https://code.visualstudio.com/docs/devcontainers/tutorial)
 - [PyCharm](https://www.jetbrains.com/help/pycharm/connect-to-devcontainer.html)
-
-??? TIP "Cloud Development Environment"
-    Alternatively, you can use a [GitHub Codespace](https://docs.github.com/en/codespaces/getting-started/quickstart)
-    to set up your development environment in the cloud.
 
 ### Manual Setup
 
@@ -45,6 +54,16 @@ If you prefer to set up the development environment manually, follow the steps b
 !!! NOTE "Prerequisites"
     Please ensure [Python 3.12](https://www.python.org) and [Poetry](https://python-poetry.org) are installed
     on your system.
+
+#### Clone the Repository
+
+To clone the repository, run the following command:
+
+```bash
+git clone https://github.com/thijsfranck/courageous-comets.git
+```
+
+Next, open the project in your preferred IDE or navigate to the project directory using the terminal.
 
 #### Install Dependencies
 
@@ -64,7 +83,7 @@ Next, install the pre-commit hooks to ensure that your code is formatted and lin
 poetry run pre-commit install
 ```
 
-### Secrets Management
+## Secrets Management
 
 To use our team's shared Discord bot token, you will need to retrieve it from the `.env.lock` file in the project
 root directory. This section will guide you through the process of decrypting the file to access the token.
@@ -82,7 +101,7 @@ root directory. This section will guide you through the process of decrypting th
 
     If you choose to use your own token, you can skip the steps below.
 
-#### Install Tools
+### Install Tools
 
 First, you will need to install [GnuPG](https://gnupg.org) and [SOPS](https://github.com/getsops/sops) on your
 system. Follow the instructions for your operating system below.
@@ -135,7 +154,7 @@ system. Follow the instructions for your operating system below.
 
     If you are using the development container, the tools are already installed! 🎉
 
-#### Install Keys
+### Install Keys
 
 Next, you will need to import the required keys. Copy the files with the keys into your workspace and import them
 using the following commands:
@@ -153,7 +172,7 @@ The keys will be imported into your keyring.
 ??? QUESTION "Where can I find the keys?"
     You can download the keys from our private Discord server.
 
-#### Decrypt `.env.lock`
+### Decrypt `.env.lock`
 
 Once you have installed the required keys, you can decrypt the `.env.lock` file using the following command:
 
