@@ -108,6 +108,10 @@ system. Follow the instructions for your operating system below.
     sudo apt-get install -y sops gnupg
     ```
 
+=== "Development Container"
+
+    If you are using the development container, the tools are already installed! 🎉
+
 #### Install Keys
 
 Next, you will need to import the required keys. Copy the files with the keys into your workspace and import them
