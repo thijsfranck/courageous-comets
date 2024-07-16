@@ -1,10 +1,12 @@
 copyright: © 2024 Courageous Comets ☄️
 repo_name: thijsfranck/courageous-comets
 repo_url: https://github.com/thijsfranck/courageous-comets
-site_name: Courageous Comets ☄️
+site_name: Courageous Comets
 site_url: https://thijsfranck.github.io/courageous-comets/
 
 theme:
+  favicon: assets/favicon.ico
+  logo: assets/logo.png
   name: material
   search: true
 
@@ -16,7 +18,6 @@ theme:
     - navigation.sections
 
   icon:
-    logo: fontawesome/brands/discord
     repo: fontawesome/brands/github
 
   palette:
