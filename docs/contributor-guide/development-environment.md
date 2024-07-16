@@ -23,9 +23,11 @@ setup process.
 ### Automated Setup
 
 The project includes a [development container](https://containers.dev) to automatically set up your development
-environment.
+environment. See the video installation guide below:
 
-To get started, refer to the setup guide for your IDE:
+https://github.com/user-attachments/assets/703aa245-9e33-44d9-9c79-7432afbeb445
+
+For more details, refer to the setup guide for your IDE:
 
 - [Visual Studio Code (recommended)](https://code.visualstudio.com/docs/devcontainers/tutorial)
 - [PyCharm](https://www.jetbrains.com/help/pycharm/connect-to-devcontainer.html)
