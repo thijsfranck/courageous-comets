@@ -42,34 +42,103 @@ If you prefer to set up the development environment manually, follow the steps b
     Please ensure [Python 3.12](https://www.python.org) and [Poetry](https://python-poetry.org) are installed
     on your system.
 
+#### Install Dependencies
+
 Start by installing the project dependencies using Poetry:
 
 ```bash
 poetry install
 ```
 
-Finally, install the pre-commit hooks:
+This will create a virtual environment and install the required dependencies.
+
+#### Pre-commit Hooks
+
+Next, install the pre-commit hooks to ensure that your code is formatted and linted before each commit:
 
 ```bash
 poetry run pre-commit install
 ```
 
-## Configuration
+### Secrets Management
 
-To configure your development environment, create a `.env` file in the project root directory with the following
-content:
+To use our team's shared Discord bot token, you will need to retrieve it from the `.env.lock` file in the project
+root directory. This section will guide you through the process of decrypting the file to access the token.
 
-```env
-DISCORD_TOKEN=<YOUR_TOKEN>
+??? QUESTION "Can I use my own Discord bot token?"
+    Yes, you can use your own Discord bot token.
+
+    First, create a new bot account on the [Discord Developer Portal](https://discord.com/developers/applications).
+    Generate a token for your bot account and create a `.env` file in the project root directory. Add the following
+    line to the file:
+
+    ```plaintext
+    DISCORD_TOKEN=<YOUR DISCORD TOKEN>
+    ```
+
+    If you choose to use your own token, you can skip the steps below.
+
+#### Install Tools
+
+First, you will need to install [GnuPG](https://gnupg.org) and [SOPS](https://github.com/getsops/sops) on your
+system. Follow the instructions for your operating system below.
+
+=== "Windows"
+
+    Open a PowerShell terminal and run the following commands:
+
+    ```bash
+    winget install -e --id Mozilla.SOPS
+    winget install -e --id GnuPG.GnuPG
+    ```
+
+=== "macOS"
+
+    Open a terminal and run the following command:
+
+    ```bash
+    brew install sops gnupg
+    ```
+
+=== "Linux"
+
+    Open a terminal and run the following command:
+
+    ```bash
+    sudo apt-get install -y sops gnupg
+    ```
+
+#### Install Keys
+
+Next, you will need to import the required keys. Copy the files with the keys into your workspace and import them
+using the following commands:
+
+```bash
+gpg --import courageous-comets.pub.asc
+gpg --import courageous-comets.sec.asc
 ```
 
-Replace `<YOUR_TOKEN>` with your Discord bot token.
+The keys will be imported into your keyring.
 
 !!! DANGER "Security Warning"
-    Do not commit your `.env` file to version control or share your token with anyone!
+    Do not share the keys with anyone!
 
-??? QUESTION "Where do I find my Discord bot token?"
-    You can obtain a Discord bot token from the [Discord Developer Portal](https://discord.com/developers/applications).
+??? QUESTION "Where can I find the keys?"
+    You can download the keys from our private Discord server.
+
+#### Decrypt `.env.lock`
+
+Once you have installed the required keys, you can decrypt the `.env.lock` file using the following command:
+
+```bash
+sops -d --input-type dotenv --output-type dotenv .env.lock > .env
+```
+
+This will create a decrypted `.env` file at the project root directory. You can now view the contents of the file
+and access the Discord bot token.
+
+!!! DANGER "Security Warning"
+    Do not commit your decrypted `.env` file to version control or share the token with anyone!
 
 ## Running the Documentation Locally
 
