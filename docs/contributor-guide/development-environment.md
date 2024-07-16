@@ -165,19 +165,18 @@ the project:
 age-keygen -o > secrets/keys.txt
 ```
 
-This will create a new key pair and save it to the `secrets/keys.txt` file. The public key will also be printed
-to the terminal. Share this key with the team so it can be added to the `.env.lock` file.
+This will create a new key pair and save it to the `secrets/keys.txt` file. Share your public key with the team
+so it can be registered.
 
 !!! DANGER "Security Warning"
     Only your public key can be safely shared. Do not share the private key with anyone!
 
-??? TIP "Development Container Automation"
-    On initial setup, the key pair is generated automatically in the development container. You can find the
-    public key in the devcontainer output.
-
 ??? QUESTION "Where can I find my public key?"
     You can find your public key in the `secrets/keys.txt` file or in the terminal output after generating the
     key pair.
+
+??? TIP "Development Container Automation"
+    On initial setup, the key pair is generated automatically in the development container.
 
 ### Registering a new Public Key
 
