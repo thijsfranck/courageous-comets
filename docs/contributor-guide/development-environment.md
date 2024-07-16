@@ -25,7 +25,9 @@ setup process.
 The project includes a [development container](https://containers.dev) to automatically set up your development
 environment. See the video installation guide below:
 
-https://github.com/user-attachments/assets/703aa245-9e33-44d9-9c79-7432afbeb445
+<video controls>
+    <source src="https://github.com/user-attachments/assets/703aa245-9e33-44d9-9c79-7432afbeb445" type="video/mp4">
+</video>
 
 For more details, refer to the setup guide for your IDE:
 
