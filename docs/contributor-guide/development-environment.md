@@ -102,21 +102,27 @@ system. Follow the instructions for your operating system below.
 
 === "Linux"
 
-    Download the [SOPS binary](https://github.com/getsops/sops/releases) for your platform.  For instance, if you are on an amd64 architecture:
+    Download the [SOPS binary](https://github.com/getsops/sops/releases) for your platform. For instance, if
+    you are on an amd64 architecture:
+
     ```bash
     curl -LO https://github.com/getsops/sops/releases/download/v3.9.0/sops-v3.9.0.linux.amd64
     ```
 
-    Move the binary into your PATH
+    Move the binary into your `PATH`:
+
     ```bash
     mv sops-v3.9.0.linux.amd64 /usr/local/bin/sops
     ```
 
-    Make the binary executable
+    Make the binary executable:
+
     ```bash
     chmod +x /usr/local/bin/sops
     ```
-    Install GnuPG
+
+    Finally, install GnuPG:
+
     ```bash
     sudo apt-get install -y gnupg
     ```
