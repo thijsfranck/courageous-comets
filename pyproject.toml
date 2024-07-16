@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "courageous-comets"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["Courageous Comets"]
 description = ""
 readme = "docs/README.md"
