@@ -115,7 +115,7 @@ on your system. Follow the instructions for your operating system below.
     ```
 
     To install `age`, download the [latest binary for Windows](https://github.com/FiloSottile/age/releases) and
-    move it into your `PATH`.
+    add your `age` binary to the system `PATH`.
 
 === "macOS"
 
@@ -198,8 +198,8 @@ Next, [encrypt](#encrypting-secrets) the `.env` file with the updated list of ke
 
 ### Decrypting Secrets
 
-Once someone has added your public key to the `.env.lock` file, you can decrypt the file to access the Discord
-bot token. First, pull the latest changes from the repository:
+Once your public key is added to the `.env.lock` file, you can decrypt the file to access the Discord bot token.
+First, pull the latest changes from the repository:
 
 ```bash
 git pull
