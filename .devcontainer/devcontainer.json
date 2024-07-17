@@ -4,7 +4,8 @@
     "dockerfile": "Dockerfile"
   },
   "containerEnv": {
-    "POETRY_VIRTUALENVS_CREATE": "false"
+    "POETRY_VIRTUALENVS_CREATE": "false",
+    "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
   },
   "customizations": {
     "vscode": {
@@ -38,6 +39,9 @@
   },
   "features": {
     "ghcr.io/devcontainers-contrib/features/act:1": {},
+    "ghcr.io/devcontainers-contrib/features/apt-packages": {
+      "packages": "age"
+    },
     "ghcr.io/devcontainers-contrib/features/poetry:2": {},
     "ghcr.io/devcontainers-contrib/features/sops:1": {},
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
