@@ -30,16 +30,16 @@ jobs:
           python-version: 3.12
           poetry-version: 1.8.3
 
-#      - name: Build the Application
-#        run: poetry build -f wheel
-#        shell: bash
-#
-#      - name: Build and Publish the Docker Image
-#        uses: docker/build-push-action@v6
-#        with:
-#          context: .
-#          push: true
-#          tags: ghcr.io/thijsfranck/courageous-comets:${{ github.ref_name }},ghcr.io/thijsfranck/courageous-comets:latest
+      - name: Build the Application
+        run: poetry build -f wheel
+        shell: bash
+
+      - name: Build and Publish the Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/thijsfranck/courageous-comets:${{ github.ref_name }},ghcr.io/thijsfranck/courageous-comets:latest
 
       - name: Set up Git user
         uses: fregante/setup-git-user@v2.0.1
