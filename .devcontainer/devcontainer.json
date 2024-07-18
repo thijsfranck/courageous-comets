@@ -1,10 +1,8 @@
 {
-  "build": {
-    "cacheFrom": "ghcr.io/thijsfranck/courageous-comets-devcontainer",
-    "dockerfile": "Dockerfile"
-  },
   "containerEnv": {
     "POETRY_VIRTUALENVS_CREATE": "false",
+    "REDIS_HOST": "localhost",
+    "REDIS_PORT": "6379",
     "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
   },
   "customizations": {
@@ -37,6 +35,7 @@
       }
     }
   },
+  "dockerComposeFile": "docker-compose.yaml",
   "features": {
     "ghcr.io/devcontainers-contrib/features/act:1": {},
     "ghcr.io/devcontainers-contrib/features/apt-packages": {
@@ -51,15 +50,27 @@
     }
   },
   "forwardPorts": [
-    8000
+    6379,
+    8000,
+    8001
   ],
   "name": "Courageous Comets \u2604\ufe0f",
   "portsAttributes": {
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "silent"
+    },
     "8000": {
       "label": "MkDocs",
       "onAutoForward": "notify"
+    },
+    "8001": {
+      "label": "RedisInsight",
+      "onAutoForward": "silent"
     }
   },
   "postCreateCommand": "bash .devcontainer/postcreate.sh",
-  "updateContentCommand": "bash .devcontainer/updatecontent.sh"
+  "service": "dev",
+  "updateContentCommand": "bash .devcontainer/updatecontent.sh",
+  "workspaceFolder": "/workspace"
 }
