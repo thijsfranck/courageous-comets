@@ -1,0 +1,24 @@
+services:
+
+  # This is the development container
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      cache_from:
+        - ghcr.io/thijsfranck/courageous-comets-devcontainer
+    volumes:
+      - ..:/workspace
+    command: 'sleep infinity'
+
+  redis-stack:
+    image: redis/redis-stack:7.2.0-v11
+    environment:
+      REDIS_PASSWORD: redis
+    volumes:
+      - redis-stack-data:/data
+    network_mode: service:dev
+    restart: unless-stopped
+
+volumes:
+  redis-stack-data:
