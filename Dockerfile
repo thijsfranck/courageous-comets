@@ -15,8 +15,8 @@ RUN adduser --system courageous-comets
 # Set the working directory
 WORKDIR /app
 
-# Copy the wheel file to the working directory
-COPY dist/*.whl ./
+# Copy the app config and the wheel file to the working directory and set the permissions
+COPY --chown=courageous-comets --chmod=0400 application.yaml dist/*.whl ./
 
 # Install the wheel file and clean up to reduce image size
 RUN pip install --no-cache-dir *.whl && \
