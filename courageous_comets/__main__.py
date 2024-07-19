@@ -1,7 +1,7 @@
 import asyncio
 import sys
 
-from redis.asyncio import ConnectionError, Redis
+from redis.asyncio import AuthenticationError, Redis, RedisError
 
 from courageous_comets import logger
 from courageous_comets.error import CourageousCometsError
@@ -20,7 +20,10 @@ async def init_redis() -> Redis:
 
     try:
         await instance.ping()
-    except ConnectionError as e:
+    except AuthenticationError as e:
+        message = "Redis authentication failed. Check the password."
+        raise CourageousCometsError(message) from e
+    except RedisError as e:
         message = f"Could not connect to Redis at {Settings.REDIS_HOST}:{Settings.REDIS_PORT}"
         raise CourageousCometsError(message) from e
 
@@ -35,14 +38,17 @@ async def init_redis() -> Redis:
 
 async def main() -> None:
     """Start the appication."""
+    logger.info("Starting the Courageous Comets application ☄️")
+
     redis = await init_redis()
 
     try:
-        logger.info("Starting the Discord client...")
+        logger.info("Starting the Discord client 🚀")
     finally:
+        logger.info("Shutting down gracefully...")
         logger.debug("Closing Redis connection...")
         await redis.aclose()
-        logger.info("Application shutdown complete.")
+        logger.info("Application shutdown complete. Goodbye! 👋")
 
 
 try:

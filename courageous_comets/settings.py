@@ -1,10 +1,17 @@
 import os
 
+from courageous_comets.error import CourageousCometsError
+
 
 class Settings:
     """Shared application configuration."""
 
-    DEBUG = bool(os.environ.get("DEBUG", default=True))
-    REDIS_HOST = os.environ["REDIS_HOST"]
-    REDIS_PORT = int(os.environ["REDIS_PORT"])
-    REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+    REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
+
+    try:
+        REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+    except ValueError as e:
+        message = f"REDIS_PORT must be an integer, got {os.getenv('REDIS_PORT')}"
+        raise CourageousCometsError(message) from e
