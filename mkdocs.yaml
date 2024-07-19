@@ -37,7 +37,11 @@ theme:
         name: Switch to system preference
 
 nav:
-  - Contributor Guide:
+  - Administrators:
+    - admin-guide/index.md
+    - Deployment: admin-guide/deployment.md
+    - Configuration: admin-guide/configuration.md
+  - Contributors:
     - contributor-guide/index.md
     - Development Environment: contributor-guide/development-environment.md
     - Version Control: contributor-guide/version-control.md
@@ -50,6 +54,9 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.tabbed:
       alternate_style: true
   - toc:

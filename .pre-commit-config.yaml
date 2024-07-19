@@ -19,6 +19,7 @@ repos:
         name: Check for TOML syntax errors
       - id: check-yaml
         name: Check for YAML syntax errors
+        args: [--unsafe]
       - id: end-of-file-fixer
         name: Ensure files end with a newline
       - id: pretty-format-json

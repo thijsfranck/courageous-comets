@@ -229,7 +229,43 @@ To encrypt the `.env` file after making changes, run the following command:
 sops encrypt .env > .env.lock
 ```
 
-## Running the Documentation Locally
+## Running the Application
+
+With your development environment set up and configured, you can run the application using the following command:
+
+```bash
+poetry run python -m courageous_comets
+```
+
+The application should now be online and ready to respond to input from your Discord server.
+
+## Building the Application
+
+!!! INFO "Production Builds"
+    Production builds are fully automated. See the [GitHub Actions](./version-control.md#github-actions) section
+    of the version control page for more information.
+
+To run a local build for testing, first build the Python package with Poetry:
+
+```bash
+poetry build -f wheel
+```
+
+This will create a `.whl` file in the `dist` directory. Next, build the Docker image as follows:
+
+```bash
+docker build -t courageous-comets .
+```
+
+Finally, run the Docker container:
+
+```bash
+docker run -i --env-file .env courageous-comets
+```
+
+This will run the application just as it would in production, using your local `.env` file.
+
+## Running the Documentation
 
 To view the documentation locally, you can use the following command:
 
