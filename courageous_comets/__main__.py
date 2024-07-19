@@ -13,7 +13,7 @@ async def init_redis() -> Redis:
     logger.debug("Connecting to Redis...")
 
     instance = Redis(
-        host="",
+        host=Settings.REDIS_HOST,
         port=Settings.REDIS_PORT,
         password=Settings.REDIS_PASSWORD,
     )
