@@ -9,7 +9,7 @@ from courageous_comets.error import CourageousCometsError
 
 load_dotenv()
 
-BOT_CONFIG_PATH = os.getenv("BOT_CONFIG_PATH", "courageous-comets.yaml")
+BOT_CONFIG_PATH = os.getenv("BOT_CONFIG_PATH", "application.yaml")
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 LOG_LEVEL = logging.getLevelNamesMapping().get(os.getenv("LOG_LEVEL", "INFO"), logging.INFO)
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
