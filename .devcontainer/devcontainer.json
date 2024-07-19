@@ -2,6 +2,7 @@
   "containerEnv": {
     "POETRY_VIRTUALENVS_CREATE": "false",
     "REDIS_HOST": "localhost",
+    "REDIS_PASSWORD": "redis",
     "REDIS_PORT": "6379",
     "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
   },
