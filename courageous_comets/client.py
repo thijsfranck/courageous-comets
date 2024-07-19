@@ -1,31 +1,46 @@
-import os
+import logging
 import typing
 from pathlib import Path
 
 import discord
 import yaml
-from bot import Bot
+from discord import Intents
 from discord.ext import commands
-from dotenv import load_dotenv
 
-load_dotenv()
+from courageous_comets import settings
 
-# Get the path of the current working directory
-wd = Path(__file__).parent
+logger = logging.getLogger(__name__)
 
-
-config_path = wd / "config.yaml"
-with config_path.open() as config_file:
-    CONFIG = yaml.safe_load(config_file)
-
-discord.utils.setup_logging()
-
-intents = discord.Intents.default()
+intents = Intents.default()
 intents.members = True
 intents.message_content = True
 
-bot = Bot(command_prefix=commands.when_mentioned, intents=intents)
-bot.config = CONFIG
+with Path(settings.BOT_CONFIG_PATH).open() as config_file:
+    CONFIG = yaml.safe_load(config_file)
+
+bot = commands.Bot(command_prefix=commands.when_mentioned, intents=intents)
+
+
+@bot.event
+async def on_ready() -> None:
+    """Informs when the bot is ready."""
+    logger.info("Logged in as %s", bot.user)
+
+
+@bot.event
+async def setup_hook() -> None:
+    """Load all cogs in the config file."""
+    for cog in CONFIG["cogs"]:
+        try:
+            await bot.load_extension(cog)
+            logger.info("Loaded cog %s", cog)
+        except (
+            commands.ExtensionNotFound,
+            commands.ExtensionAlreadyLoaded,
+            commands.NoEntryPointError,
+            commands.ExtensionFailed,
+        ) as e:
+            logger.exception("Failed to load cog %s", cog, exc_info=e)
 
 
 @bot.command()
@@ -80,12 +95,3 @@ async def sync(
             else:
                 ret += 1
         await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
-
-
-TOKEN = os.getenv("DISCORD_TOKEN")
-
-if not TOKEN:
-    msg = "No token provided. Please check the `DISCORD_TOKEN` environment variable."
-    raise ValueError(msg)
-
-bot.run(token=TOKEN, log_handler=None)

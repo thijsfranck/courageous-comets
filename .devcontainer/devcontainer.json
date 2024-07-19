@@ -1,5 +1,6 @@
 {
   "containerEnv": {
+    "BOT_CONFIG_PATH": "${containerWorkspaceFolder}/courageous-comets.yaml",
     "POETRY_VIRTUALENVS_CREATE": "false",
     "REDIS_HOST": "localhost",
     "REDIS_PASSWORD": "redis",
