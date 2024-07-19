@@ -9,7 +9,10 @@ exclude = ["**/test__*.py"]
 
 [tool.poetry.dependencies]
 python = "~3.12"
-redis = {extras = ["hiredis"], version = "^5.0.7"}
+discord-py = "^2.4.0"
+jishaku = "^2.5.2"
+python-dotenv = "^1.0.1"
+redis = { extras = ["hiredis"], version = "^5.0.7" }
 
 [tool.poetry.dev-dependencies]
 commitizen = "3.27.0"
