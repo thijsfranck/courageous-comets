@@ -6,8 +6,10 @@ import discord
 import nltk
 import redis.asyncio as redis
 import yaml
+from redisvl.index import AsyncSearchIndex
 
 from courageous_comets import bot, exceptions, settings
+from courageous_comets.redis import schema
 
 
 async def download_nltk_resource(resource: str, download_dir: str) -> None:
@@ -88,6 +90,15 @@ async def init_redis() -> redis.Redis:
     return instance
 
 
+async def create_indexes(redis: redis.Redis) -> None:
+    """Create search indexes on Redis."""
+    logging.debug("Creating indexes on redis...")
+    message_index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
+    message_index.set_client(redis)
+    await message_index.create(overwrite=True)
+    logging.info("Created indexes on Redis.")
+
+
 async def main() -> None:
     """
     Start the appication.
@@ -104,6 +115,8 @@ async def main() -> None:
 
     await init_nltk()
     redis = await init_redis()
+    # Create the search indexes on Redis
+    await create_indexes(redis)
 
     try:
         logging.info("Starting the Discord client 🚀")
