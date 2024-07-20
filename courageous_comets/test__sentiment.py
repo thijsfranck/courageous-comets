@@ -4,6 +4,8 @@ import pytest
 from pytest_mock import MockerFixture, MockType
 from redis.asyncio import Redis
 
+from courageous_comets.models import SentimentResult
+
 from .sentiment import (
     MAX_MESSAGE_LENGTH,
     calculate_sentiment,
@@ -22,7 +24,7 @@ def redis(mocker: MockerFixture) -> MockerFixture:
     return mock
 
 
-def test__calculate_sentiment_analyzes_sentiment_of_given_text() -> None:
+def test__calculate_sentiment_analyzes_sentiment_of_given_text(mocker: MockerFixture) -> None:
     """
     Test whether the sentiment calculation analyzes the sentiment of the given text.
 
@@ -30,10 +32,14 @@ def test__calculate_sentiment_analyzes_sentiment_of_given_text() -> None:
     -------
     - The function produces sentiment scores for the given text.
     """
+    expected = SentimentResult.model_construct(
+        neg=mocker.ANY,
+        neu=mocker.ANY,
+        pos=mocker.ANY,
+        compound=mocker.ANY,
+    )
     result = calculate_sentiment("I love this product!", "test")
-    attrs = ["neg", "neu", "pos", "compound"]
-    for attr in attrs:
-        assert getattr(result, attr) is not None
+    assert result == expected
 
 
 @pytest.mark.parametrize(
@@ -154,15 +160,17 @@ async def test__get_sentiment_retrieves_sentiment_from_redis(
     key = "courageous_comets:1:1:1:1:sentiment"
     redis.hmget.return_value = ["1.0", "1.0", "1.0", "1.0"]
 
+    expected = SentimentResult(
+        neg=1.0,
+        neu=1.0,
+        pos=1.0,
+        compound=1.0,
+    )
+
     result = await get_sentiment(key, redis)
 
     redis.hmget.assert_awaited_with(key, "neg", "neu", "pos", "compound")
-    assert result.model_dump(mode="json") == {
-        "neg": 1.0,
-        "neu": 1.0,
-        "pos": 1.0,
-        "compound": 1.0,
-    }
+    assert result == expected
 
 
 @pytest.mark.asyncio()
@@ -180,12 +188,14 @@ async def test__get_sentiment_handles_missing_sentiment(
     key = "courageous_comets:1:1:1:1:sentiment"
     redis.hmget.return_value = [None, None, None, None]
 
+    expected = SentimentResult(
+        neg=0.0,
+        neu=0.0,
+        pos=0.0,
+        compound=0.0,
+    )
+
     result = await get_sentiment(key, redis)
 
     redis.hmget.assert_awaited_with(key, "neg", "neu", "pos", "compound")
-    assert result.model_dump(mode="json") == {
-        "neg": 0.0,
-        "neu": 0.0,
-        "pos": 0.0,
-        "compound": 0.0,
-    }
+    assert expected == result
