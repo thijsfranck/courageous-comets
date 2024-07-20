@@ -25,6 +25,8 @@ def calculate_sentiment(content: str, key: str) -> SentimentResult:
     ----------
     content : str
         The message content to analyze.
+    key : str
+        The Redis key for the message. Used for logging.
 
     Returns
     -------
@@ -55,14 +57,12 @@ async def store_sentiment(message: Message, redis: Redis) -> None:
     ----------
     message : discord.Message
         The message to process.
-
-    Returns
-    -------
-    SentimentResult
-        The sentiment of the message.
+    redis : redis.asyncio.Redis
+        The Redis connection instance.
     """
     # Ignore empty messages
     if not message.content:
+        logger.warning("Ignoring empty message %s", message.id)
         return
 
     # Extract the IDs from the message
@@ -73,6 +73,7 @@ async def store_sentiment(message: Message, redis: Redis) -> None:
 
     # Ignore messages without all required IDs
     if not all((guild_id, channel_id, user_id, message_id)):
+        logger.warning("Ignoring message %s with missing IDs", message.id)
         return
 
     # Construct the Redis key
