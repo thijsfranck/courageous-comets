@@ -131,8 +131,8 @@ async def test__sync_syncs_to_current_guild(mock_context: MockType) -> None:
     """
     await sync(mock_context, [], "~")
 
-    mock_context.bot.tree.sync.assert_called_with(guild=mock_context.guild)
-    mock_context.send.assert_called_with(
+    mock_context.bot.tree.sync.assert_awaited_with(guild=mock_context.guild)
+    mock_context.send.assert_awaited_with(
         f"Synced {len(mock_context.bot.tree.sync.return_value)} command(s) to the current guild.",
     )
 
@@ -149,8 +149,8 @@ async def test__sync_syncs_to_global_scope(mock_context: MockType) -> None:
     """
     await sync(mock_context, [], "*")
 
-    await mock_context.bot.tree.sync.to_have_been_called_with()
-    mock_context.send.assert_called_with(
+    mock_context.bot.tree.sync.assert_awaited_with()
+    mock_context.send.assert_awaited_with(
         f"Synced {len(mock_context.bot.tree.sync.return_value)} command(s) globally.",
     )
 
@@ -169,8 +169,8 @@ async def test__sync_removes_non_global_commands(mock_context: MockType) -> None
     await sync(mock_context, [], "^")
 
     mock_context.bot.tree.clear_commands.assert_called_with(guild=mock_context.guild)
-    mock_context.bot.tree.sync.assert_called_with(guild=mock_context.guild)
-    mock_context.send.assert_called_with("Synced 0 command(s) to the current guild.")
+    mock_context.bot.tree.sync.assert_awaited_with(guild=mock_context.guild)
+    mock_context.send.assert_awaited_with("Synced 0 command(s) to the current guild.")
 
 
 @pytest.mark.asyncio()
@@ -187,12 +187,13 @@ async def test__sync_syncs_to_given_guilds(
     - The ctx.send function is called with the expected message.
     """
     guilds = [mocker.Mock(), mocker.Mock()]
+
     await sync(mock_context, guilds)
 
     for guild in guilds:
-        mock_context.bot.tree.sync.assert_any_call(guild=guild)
+        mock_context.bot.tree.sync.assert_any_await(guild=guild)
 
-    mock_context.send.assert_called_with(f"Synced the tree to {len(guilds)}/{len(guilds)}.")
+    mock_context.send.assert_awaited_with(f"Synced the tree to {len(guilds)}/{len(guilds)}.")
 
 
 @pytest.mark.asyncio()
@@ -219,4 +220,4 @@ async def test__sync_logs_exception_on_http_exception(
     for guild in guilds:
         logger_exception.assert_any_call("Failed to sync to guild %s", guild, exc_info=expected)
 
-    mock_context.send.assert_called_with(f"Synced the tree to 0/{len(guilds)}.")
+    mock_context.send.assert_awaited_with(f"Synced the tree to 0/{len(guilds)}.")
