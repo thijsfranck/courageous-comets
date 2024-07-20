@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pytest
@@ -19,4 +20,8 @@ def _load_nltk_data(application_config: dict) -> None:
     resources = application_config.get("nltk", [])
 
     for resource in resources:
-        nltk.download(resource, quiet=True)
+        nltk.download(
+            resource,
+            quiet=True,
+            download_dir=os.getenv("NLTK_DATA_DIR", "nltk_data"),
+        )
