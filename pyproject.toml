@@ -33,6 +33,11 @@ typeCheckingMode = "basic"
 pythonVersion = "3.12"
 reportUnnecessaryTypeIgnoreComment = "error"
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:'audioop' is deprecated and slated for removal in Python 3.13",
+]
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
