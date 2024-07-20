@@ -1,24 +1,15 @@
 import logging
-from typing import TypedDict, cast
 
 from discord import Message
 from nltk.sentiment import SentimentIntensityAnalyzer
 from redis.asyncio import Redis
 
+from courageous_comets.models import SentimentResult
 from courageous_comets.redis.keys import key_schema
 
 MAX_MESSAGE_LENGTH = 256
 
 logger = logging.getLogger(__name__)
-
-
-class SentimentResult(TypedDict):
-    """Result of sentiment analysis."""
-
-    neg: float
-    neu: float
-    pos: float
-    compound: float
 
 
 def calculate_sentiment(content: str, key: str) -> SentimentResult:
@@ -48,7 +39,7 @@ def calculate_sentiment(content: str, key: str) -> SentimentResult:
     sia = SentimentIntensityAnalyzer()
     result = sia.polarity_scores(truncated)
 
-    return cast(SentimentResult, result)
+    return SentimentResult.model_validate(result)
 
 
 async def store_sentiment(message: Message, redis: Redis) -> None:
@@ -96,7 +87,10 @@ async def store_sentiment(message: Message, redis: Redis) -> None:
     sentiment = calculate_sentiment(message.content, key)
 
     # Store the sentiment in Redis
-    await redis.hset(key, mapping=sentiment)  # type: ignore
+    await redis.hset(
+        key,
+        mapping=sentiment.model_dump(mode="json"),
+    )  # pyright: ignore[reportGeneralTypeIssues]
 
     logger.info("Stored sentiment for message %s", key)
 
@@ -119,9 +113,9 @@ async def get_sentiment(key: str, redis: Redis) -> SentimentResult:
     """
     neg, neu, pos, compound = await redis.hmget(key, "neg", "neu", "pos", "compound")  # type: ignore
 
-    return {
-        "neg": float(neg or 0),
-        "neu": float(neu or 0),
-        "pos": float(pos or 0),
-        "compound": float(compound or 0),
-    }
+    return SentimentResult(
+        neg=float(neg or 0),
+        neu=float(neu or 0),
+        pos=float(pos or 0),
+        compound=float(compound or 0),
+    )

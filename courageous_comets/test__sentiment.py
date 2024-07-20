@@ -22,10 +22,7 @@ def redis(mocker: MockerFixture) -> MockerFixture:
     return mock
 
 
-def test__calculate_sentiment_analyzes_sentiment_of_given_text(
-    *,
-    mocker: MockerFixture,
-) -> None:
+def test__calculate_sentiment_analyzes_sentiment_of_given_text() -> None:
     """
     Test whether the sentiment calculation analyzes the sentiment of the given text.
 
@@ -34,13 +31,9 @@ def test__calculate_sentiment_analyzes_sentiment_of_given_text(
     - The function produces sentiment scores for the given text.
     """
     result = calculate_sentiment("I love this product!", "test")
-
-    assert result == {
-        "neg": mocker.ANY,
-        "neu": mocker.ANY,
-        "pos": mocker.ANY,
-        "compound": mocker.ANY,
-    }
+    attrs = ["neg", "neu", "pos", "compound"]
+    for attr in attrs:
+        assert getattr(result, attr) is not None
 
 
 @pytest.mark.parametrize(
@@ -164,7 +157,12 @@ async def test__get_sentiment_retrieves_sentiment_from_redis(
     result = await get_sentiment(key, redis)
 
     redis.hmget.assert_awaited_with(key, "neg", "neu", "pos", "compound")
-    assert result == {"neg": 1.0, "neu": 1.0, "pos": 1.0, "compound": 1.0}
+    assert result.model_dump(mode="json") == {
+        "neg": 1.0,
+        "neu": 1.0,
+        "pos": 1.0,
+        "compound": 1.0,
+    }
 
 
 @pytest.mark.asyncio()
@@ -185,4 +183,9 @@ async def test__get_sentiment_handles_missing_sentiment(
     result = await get_sentiment(key, redis)
 
     redis.hmget.assert_awaited_with(key, "neg", "neu", "pos", "compound")
-    assert result == {"neg": 0.0, "neu": 0.0, "pos": 0.0, "compound": 0.0}
+    assert result.model_dump(mode="json") == {
+        "neg": 0.0,
+        "neu": 0.0,
+        "pos": 0.0,
+        "compound": 0.0,
+    }
