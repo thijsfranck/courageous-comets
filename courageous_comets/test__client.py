@@ -149,7 +149,7 @@ async def test__sync_syncs_to_global_scope(mock_context: MockType) -> None:
     """
     await sync(mock_context, [], "*")
 
-    mock_context.bot.tree.sync.to_have_been_called()
+    await mock_context.bot.tree.sync.to_have_been_called_with()
     mock_context.send.assert_called_with(
         f"Synced {len(mock_context.bot.tree.sync.return_value)} command(s) globally.",
     )
