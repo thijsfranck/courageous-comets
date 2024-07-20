@@ -42,5 +42,20 @@ class KeySchema:
         """
         return f"{guild_id}:messages:tokens"
 
+    @prefix_key
+    def sentiment_tokens(
+        self,
+        guild_id: int,
+        channel_id: int,
+        user_id: int,
+        message_id: int,
+    ) -> str:
+        """
+        Key to sentiment tokens for a message.
+
+        Redis type: hash
+        """
+        return f"{guild_id}:{channel_id}:{user_id}:{message_id}:sentiment"
+
 
 key_schema = KeySchema()
