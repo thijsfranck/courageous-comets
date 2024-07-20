@@ -12,7 +12,7 @@ def application_config() -> dict:
         return yaml.safe_load(file)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def _load_nltk_data(application_config: dict) -> None:
     """Load the NLTK data for testing."""
     import nltk
