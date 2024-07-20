@@ -12,6 +12,9 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
+    env:
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
