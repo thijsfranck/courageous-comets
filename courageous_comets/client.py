@@ -1,6 +1,5 @@
 import logging
 import typing
-from pathlib import Path
 
 import discord
 import yaml
@@ -15,7 +14,7 @@ intents = Intents.default()
 intents.members = True
 intents.message_content = True
 
-with Path(settings.BOT_CONFIG_PATH).open() as config_file:
+with settings.BOT_CONFIG_PATH.open() as config_file:
     CONFIG = yaml.safe_load(config_file)
 
 bot = commands.Bot(command_prefix=commands.when_mentioned, intents=intents)
@@ -34,12 +33,7 @@ async def setup_hook() -> None:
         try:
             await bot.load_extension(cog)
             logger.info("Loaded cog %s", cog)
-        except (
-            commands.ExtensionNotFound,
-            commands.ExtensionAlreadyLoaded,
-            commands.NoEntryPointError,
-            commands.ExtensionFailed,
-        ) as e:
+        except commands.ExtensionError as e:
             logger.exception("Failed to load cog %s", cog, exc_info=e)
 
 
