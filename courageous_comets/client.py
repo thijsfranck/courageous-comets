@@ -1,5 +1,6 @@
 import logging
 import typing
+from collections.abc import Collection
 
 import discord
 import yaml
@@ -41,8 +42,8 @@ async def setup_hook() -> None:
 @commands.guild_only()
 @commands.is_owner()
 async def sync(
-    ctx: commands.Context,
-    guilds: commands.Greedy[discord.Object],
+    ctx: commands.Context[commands.Bot],
+    guilds: Collection[discord.Object],
     spec: typing.Literal["~", "*", "^"] | None = None,
 ) -> None:
     """
@@ -63,29 +64,31 @@ async def sync(
     """
     async with ctx.typing():
         if not guilds:
-            if spec == "~":
+            if spec == "~" and ctx.guild is not None:
                 synced = await ctx.bot.tree.sync(guild=ctx.guild)
             elif spec == "*":
                 synced = await ctx.bot.tree.sync()
-            elif spec == "^":
+            elif spec == "^" and ctx.guild is not None:
                 ctx.bot.tree.clear_commands(guild=ctx.guild)
                 await ctx.bot.tree.sync(guild=ctx.guild)
                 synced = []
-            else:
+            elif ctx.guild is not None:
                 ctx.bot.tree.copy_global_to(guild=ctx.guild)
                 synced = await ctx.bot.tree.sync(guild=ctx.guild)
 
-            scope = "globally" if spec == "*" else "to the current guild."
-            await ctx.send(f"Synced {len(synced)} commands {scope}")
+            scope = "globally." if spec == "*" else "to the current guild."
+            await ctx.send(f"Synced {len(synced)} command(s) {scope}")
 
             return
 
         ret = 0
+
         for guild in guilds:
             try:
                 await ctx.bot.tree.sync(guild=guild)
-            except discord.HTTPException:
-                pass
+            except discord.HTTPException as e:
+                logger.exception("Failed to sync to guild %s", guild, exc_info=e)
             else:
                 ret += 1
+
         await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
