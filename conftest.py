@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import nltk
 import pytest
 import yaml
 
@@ -15,8 +16,6 @@ def application_config() -> dict:
 @pytest.fixture(scope="session", autouse=True)
 def _load_nltk_data(application_config: dict) -> None:
     """Load the NLTK data for testing."""
-    import nltk
-
     resources = application_config.get("nltk", [])
 
     for resource in resources:
