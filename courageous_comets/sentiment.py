@@ -64,14 +64,10 @@ async def store_sentiment(message: Message, redis: Redis) -> None:
     ----------
     message : discord.Message
         The message to process.
-
-    Returns
-    -------
-    SentimentResult
-        The sentiment of the message.
     """
     # Ignore empty messages
     if not message.content:
+        logger.warning("Ignoring empty message %s", message.id)
         return
 
     # Extract the IDs from the message
@@ -82,6 +78,7 @@ async def store_sentiment(message: Message, redis: Redis) -> None:
 
     # Ignore messages without all required IDs
     if not all((guild_id, channel_id, user_id, message_id)):
+        logger.warning("Ignoring message %s with missing IDs", message.id)
         return
 
     # Construct the Redis key
