@@ -10,7 +10,6 @@ from courageous_comets.redis.keys import key_schema
 MAX_MESSAGE_LENGTH = 256
 
 logger = logging.getLogger(__name__)
-sia = SentimentIntensityAnalyzer()
 
 
 class SentimentResult(TypedDict):
@@ -46,6 +45,7 @@ def calculate_sentiment(content: str, key: str) -> SentimentResult:
     if truncated != content:
         logger.warning("Truncated message %s to %s characters", key, MAX_MESSAGE_LENGTH)
 
+    sia = SentimentIntensityAnalyzer()
     result = sia.polarity_scores(truncated)
 
     return cast(SentimentResult, result)
