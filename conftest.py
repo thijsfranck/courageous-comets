@@ -22,6 +22,5 @@ def _load_nltk_data(application_config: dict) -> None:
     for resource in resources:
         nltk.download(
             resource,
-            quiet=True,
             download_dir=os.getenv("NLTK_DATA_DIR", "nltk_data"),
         )
