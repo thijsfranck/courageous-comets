@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      BOT_CONFIG_PATH: ${{ github.workspace }}/application.yaml
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       NLTK_DATA: ${{ github.workspace }}/nltk_data
 
