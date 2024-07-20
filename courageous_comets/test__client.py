@@ -21,14 +21,10 @@ class MockAsyncContextManager:
 @pytest.fixture()
 def mock_context(mocker: MockerFixture) -> MockType:
     """Create a mock context for testing."""
-    ctx = mocker.Mock(spec=commands.Context)
-    ctx.bot = mocker.Mock()
-    ctx.bot.tree = mocker.Mock()
-    ctx.bot.tree.clear_commands = mocker.Mock()
-    ctx.bot.tree.copy_global_to = mocker.Mock()
+    ctx = mocker.MagicMock(spec=commands.Context)
+    ctx.bot = mocker.MagicMock(spec=commands.Bot)
+    ctx.bot.tree = mocker.MagicMock(spec=discord.app_commands.CommandTree)
     ctx.bot.tree.sync = mocker.AsyncMock(return_value=[mocker.Mock()])
-    ctx.guild = mocker.Mock()
-    ctx.send = mocker.AsyncMock()
     ctx.typing = mocker.MagicMock(MockAsyncContextManager())
     return ctx
 
@@ -85,17 +81,19 @@ async def test__setup_hook_logs_loaded_cogs(mocker: MockerFixture) -> None:
 
     Asserts
     -------
+    - The bot.load_extension function is awaited for each cog in the config file.
     - The logger.info function is called with the correct message for each cog.
     """
     cogs = ["cog1", "cog2", "cog3"]
-
     mocker.patch("courageous_comets.client.CONFIG", {"cogs": cogs})
-    mocker.patch("discord.ext.commands.Bot.load_extension", return_value=None)
+
+    load_extension = mocker.patch("discord.ext.commands.Bot.load_extension", return_value=None)
     logger_info = mocker.spy(logger, "info")
 
     await setup_hook()
 
     for cog in cogs:
+        load_extension.assert_any_await(cog)
         logger_info.assert_any_call("Loaded cog %s", cog)
 
 
@@ -106,16 +104,19 @@ async def test__setup_hook_logs_exception_on_extension_error(mocker: MockerFixtu
 
     Asserts
     -------
+    - The bot.load_extension function is awaited for each cog in the config file.
     - The logger.exception function is called when an ExtensionError is raised.
     """
-    mocker.patch("courageous_comets.client.CONFIG", {"cogs": ["cog1"]})
-    expected = commands.ExtensionError(name="cog1")
-    mocker.patch("discord.ext.commands.Bot.load_extension", side_effect=expected)
+    cogs = ["cog1"]
+    mocker.patch("courageous_comets.client.CONFIG", {"cogs": cogs})
 
+    expected = commands.ExtensionError(name="cog1")
+    load_extension = mocker.patch("discord.ext.commands.Bot.load_extension", side_effect=expected)
     logger_exception = mocker.spy(logger, "exception")
 
     await setup_hook()
 
+    load_extension.assert_awaited_with("cog1")
     logger_exception.assert_called_with("Failed to load cog %s", "cog1", exc_info=expected)
 
 
@@ -126,8 +127,8 @@ async def test__sync_syncs_to_current_guild(mock_context: MockType) -> None:
 
     Asserts
     -------
-    - The bot.sync function is called with the expected parameters.
-    - The ctx.send function is called with the expected message.
+    - The bot.sync function is awaited with the expected parameters.
+    - The ctx.send function is awaited with the expected message.
     """
     await sync(mock_context, [], "~")
 
@@ -144,8 +145,8 @@ async def test__sync_syncs_to_global_scope(mock_context: MockType) -> None:
 
     Asserts
     -------
-    - The bot.sync function is called with the expected parameters.
-    - The ctx.send function is called with the expected message
+    - The bot.sync function is awaited with the expected parameters.
+    - The ctx.send function is awaited with the expected message
     """
     await sync(mock_context, [], "*")
 
@@ -163,8 +164,8 @@ async def test__sync_removes_non_global_commands(mock_context: MockType) -> None
     Asserts
     -------
     - The bot.tree.clear_commands function is called with the expected parameters.
-    - The bot.sync function is called with the expected parameters
-    - The ctx.send function is called with the expected message
+    - The bot.sync function is awaited with the expected parameters
+    - The ctx.send function is awaited with the expected message
     """
     await sync(mock_context, [], "^")
 
@@ -183,8 +184,8 @@ async def test__sync_syncs_to_given_guilds(
 
     Asserts
     -------
-    - The bot.sync function is called with the expected parameters.
-    - The ctx.send function is called with the expected message.
+    - The bot.sync function is awaited with the expected parameters.
+    - The ctx.send function is awaited with the expected message.
     """
     guilds = [mocker.Mock(), mocker.Mock()]
 
@@ -207,7 +208,7 @@ async def test__sync_logs_exception_on_http_exception(
     Asserts
     -------
     - The logger.exception function is called when an HTTPException is raised.
-    - The ctx.send function is called with the expected message.
+    - The ctx.send function is awaited with the expected message.
     """
     guilds = [mocker.Mock(), mocker.Mock()]
     expected = discord.HTTPException(response=mocker.Mock(), message="Failed to sync")
