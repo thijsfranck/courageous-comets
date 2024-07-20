@@ -1,3 +1,6 @@
 cogs:
   - courageous_comets.cogs.ping
   - jishaku
+nltk:
+  - stopwords
+  - vader_lexicon

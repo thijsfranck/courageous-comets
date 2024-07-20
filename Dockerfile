@@ -15,6 +15,10 @@ RUN adduser --system courageous-comets
 # Set the working directory
 WORKDIR /app
 
+# Assign the working directory to the non-root user and set the permissions
+RUN chown -R courageous-comets /app && \
+    chmod -R 0600 /app
+
 # Copy the app config and the wheel file to the working directory and set the permissions
 COPY --chown=courageous-comets --chmod=0400 application.yaml dist/*.whl ./
 
