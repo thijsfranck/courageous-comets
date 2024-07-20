@@ -100,7 +100,10 @@ def read_redis_port() -> int:
 load_dotenv()
 
 # Let discord.py set up the logging configuration
-LOG_LEVEL = logging.getLevelNamesMapping().get(os.getenv("LOG_LEVEL", "INFO"), logging.INFO)
+LOG_LEVEL = logging.getLevelNamesMapping().get(
+    os.getenv("LOG_LEVEL", "INFO"),
+    logging.INFO,
+)
 setup_logging(level=LOG_LEVEL)
 
 
@@ -111,8 +114,12 @@ try:
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = read_redis_port()
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
+    REDIS_KEYS_PREFIX = os.getenv("REDIS_KEYS_PREFIX", "courageous_comets")
 except ConfigurationValueError as e:
-    logging.critical("Cannot start the application due to configuration errors", exc_info=e)
+    logging.critical(
+        "Cannot start the application due to configuration errors",
+        exc_info=e,
+    )
     sys.exit(1)
 
 logging.info("Configuration loaded successfully")
