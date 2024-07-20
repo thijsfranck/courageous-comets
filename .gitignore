@@ -178,3 +178,6 @@ pyrightconfig.json
 
 # Vim
 *.vim
+
+# NLTK
+nltk_data

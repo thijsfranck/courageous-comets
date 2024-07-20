@@ -107,6 +107,7 @@ setup_logging(level=LOG_LEVEL)
 try:
     DISCORD_TOKEN = read_discord_token()
     BOT_CONFIG_PATH = read_bot_config_path()
+    NLTK_DATA_DIR = os.getenv("NLTK_DATA_DIR", "nltk_data")
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = read_redis_port()
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")

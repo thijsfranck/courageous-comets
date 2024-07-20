@@ -7,6 +7,7 @@ The following environment variables are available to configure the application:
 | [`DISCORD_TOKEN`](#discord_token)     | The Discord bot token.                    | Yes      | -                  |
 | [`BOT_CONFIG_PATH`](#bot_config_path) | The path to the bot's configuration file. | No       | `application.yaml` |
 | [`LOG_LEVEL`](#log_level)             | The minimum log level.                    | No       | `INFO`             |
+| [`NLTK_DATA_DIR`](#nltk_data_dir)     | The directory containing NLTK data files. | No       | `/nltk_data`       |
 | [`REDIS_HOST`](#redis_host)           | The Redis host.                           | No       | `localhost`        |
 | [`REDIS_PORT`](#redis_port)           | The Redis port.                           | No       | `6379`             |
 | [`REDIS_PASSWORD`](#redis_password)   | The Redis password.                       | No       | -                  |
@@ -54,6 +55,11 @@ The minimum log level to display. The following levels are available:
 - `CRITICAL`
 
 The default log level is `INFO`.
+
+### `NLTK_DATA_DIR`
+
+The directory containing NLTK data files. By default, this is set to `nltk_data` in the directory from which the
+application is launched. In the Docker image, this directory is located at `/app/nltk_data`.
 
 ### `REDIS_HOST`
 

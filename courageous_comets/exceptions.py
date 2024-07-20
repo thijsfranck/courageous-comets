@@ -34,3 +34,7 @@ class ConfigurationValueError[T](CourageousCometsError):
 
 class DatabaseConnectionError(CourageousCometsError):
     """Raised when a connection to the database cannot be established."""
+
+
+class NltkInitializationError(CourageousCometsError):
+    """Raised when the application fails to download the NLTK dependencies on startup."""

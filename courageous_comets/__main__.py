@@ -3,9 +3,47 @@ import logging
 import sys
 
 import discord
+import nltk
 import redis.asyncio as redis
+import yaml
 
 from courageous_comets import bot, exceptions, settings
+
+
+async def download_nltk_resource(resource: str, download_dir: str) -> None:
+    """Download an NLTK resource to the specified directory."""
+    logging.debug("Downloading NLTK resource '%s'...", resource)
+    try:
+        await asyncio.to_thread(
+            nltk.download,
+            resource,
+            download_dir=download_dir,
+            quiet=True,
+            raise_on_error=True,
+        )
+    except ValueError as e:
+        message = f"Invalid NLTK resource '{resource}'"
+        raise exceptions.NltkInitializationError(message) from e
+
+
+async def init_nltk() -> None:
+    """
+    Ensure all required NLTK resources are downloaded.
+
+    Downloads the resources specified in the bot configuration file.
+    """
+    with settings.BOT_CONFIG_PATH.open("r") as file:
+        config = yaml.safe_load(file)
+
+    resources = config.get("nltk", [])
+
+    download_tasks = [
+        download_nltk_resource(resource, settings.NLTK_DATA_DIR) for resource in resources
+    ]
+
+    await asyncio.gather(*download_tasks)
+
+    logging.info("NLTK resources downloaded")
 
 
 async def init_redis() -> redis.Redis:
@@ -64,6 +102,7 @@ async def main() -> None:
     """
     logging.info("Starting the Courageous Comets application ☄️")
 
+    await init_nltk()
     redis = await init_redis()
 
     try:
