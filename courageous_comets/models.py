@@ -26,6 +26,7 @@ class Message(BaseModel):
     timestamp: UnixTimestamp
     user_id: str
     content: str
+    embedding: bytes
 
 
 class SentimentResult(BaseModel):

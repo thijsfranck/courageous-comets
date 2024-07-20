@@ -96,6 +96,7 @@ async def create_indexes(redis: redis.Redis) -> None:
     message_index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
     message_index.set_client(redis)
     await message_index.create(overwrite=True)
+    logging.info("Created indexes on Redis.")
 
 
 async def main() -> None:
