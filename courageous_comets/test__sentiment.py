@@ -17,7 +17,7 @@ from .sentiment import (
 def redis(mocker: MockerFixture) -> MockerFixture:
     """Create a mock Redis instance for testing."""
     mock = mocker.AsyncMock(spec=Redis)
-    mock.hmset = mocker.AsyncMock()
+    mock.hset = mocker.AsyncMock()
     mock.hmget = mocker.AsyncMock()
     return mock
 
@@ -92,9 +92,14 @@ async def test__store_sentiment_calculates_and_stores_sentiment(
 
     await store_sentiment(message, redis)
 
-    redis.hmset.assert_awaited_with(
+    redis.hset.assert_awaited_with(
         "courageous_comets:1:1:1:1:sentiment",
-        {"neg": mocker.ANY, "neu": mocker.ANY, "pos": mocker.ANY, "compound": mocker.ANY},
+        mapping={
+            "neg": mocker.ANY,
+            "neu": mocker.ANY,
+            "pos": mocker.ANY,
+            "compound": mocker.ANY,
+        },
     )
 
 
@@ -113,7 +118,7 @@ async def test__store_sentiment_ignores_empty_messages(
     """
     message = mocker.Mock(content="")
     await store_sentiment(message, redis)
-    redis.hmset.assert_not_awaited()
+    redis.hset.assert_not_awaited()
 
 
 @pytest.mark.parametrize(
@@ -138,7 +143,7 @@ async def test__store_sentiment_ignores_messages_without_ids(
     - The database is not updated when the message is missing IDs.
     """
     await store_sentiment(message, redis)
-    redis.hmset.assert_not_awaited()
+    redis.hset.assert_not_awaited()
 
 
 @pytest.mark.asyncio()

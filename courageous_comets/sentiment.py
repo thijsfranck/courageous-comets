@@ -96,7 +96,7 @@ async def store_sentiment(message: Message, redis: Redis) -> None:
     sentiment = calculate_sentiment(message.content, key)
 
     # Store the sentiment in Redis
-    await redis.hmset(key, sentiment)  # type: ignore
+    await redis.hset(key, mapping=sentiment)  # type: ignore
 
     logger.info("Stored sentiment for message %s", key)
 
