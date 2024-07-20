@@ -14,7 +14,7 @@ services:
   redis-stack:
     image: redis/redis-stack:7.2.0-v11
     environment:
-      REDIS_PASSWORD: redis
+      REDIS_ARGS: "--requirepass redis"
     volumes:
       - redis-stack-data:/data
     network_mode: service:dev
