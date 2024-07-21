@@ -41,6 +41,7 @@ nav:
     - admin-guide/index.md
     - Deployment: admin-guide/deployment.md
     - Configuration: admin-guide/configuration.md
+    - Changelog: CHANGELOG.md
   - Contributors:
     - contributor-guide/index.md
     - Development Environment: contributor-guide/development-environment.md
