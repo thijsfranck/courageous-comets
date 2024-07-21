@@ -6,8 +6,7 @@ from redis.asyncio import Redis
 
 from courageous_comets import settings
 from courageous_comets.models import SentimentResult
-
-from .sentiment import (
+from courageous_comets.sentiment import (
     MAX_MESSAGE_LENGTH,
     calculate_sentiment,
     get_sentiment,
