@@ -4,8 +4,6 @@ import contractions
 from nltk.stem.snowball import SnowballStemmer, stopwords
 from nltk.tokenize import word_tokenize
 
-STOP_WORDS = set(stopwords.words("english"))
-
 
 def tokenize_sentence(sentence: str) -> list[str]:
     """
@@ -43,7 +41,9 @@ def tokenize_sentence(sentence: str) -> list[str]:
     stemmed_words = [stemmer.stem(word) for word in words]
 
     # Remove stopwords and words with a length of 1
-    return [word for word in stemmed_words if len(word) > 1 and word not in STOP_WORDS]
+    stop_words = set(stopwords.words("english"))
+
+    return [word for word in stemmed_words if len(word) > 1 and word not in stop_words]
 
 
 def word_frequency(words: list[str]) -> dict[str, int]:
