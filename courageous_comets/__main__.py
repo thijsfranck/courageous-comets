@@ -12,20 +12,21 @@ from courageous_comets import bot, exceptions, settings
 from courageous_comets.redis import schema
 
 
-async def download_nltk_resource(resource: str, download_dir: str) -> None:
+async def download_nltk_resource(resource: str, semaphore: asyncio.Semaphore) -> None:
     """Download an NLTK resource to the specified directory."""
-    logging.debug("Downloading NLTK resource '%s'...", resource)
-    try:
-        await asyncio.to_thread(
-            nltk.download,
-            resource,
-            download_dir=download_dir,
-            quiet=True,
-            raise_on_error=True,
-        )
-    except ValueError as e:
-        message = f"Invalid NLTK resource '{resource}'"
-        raise exceptions.NltkInitializationError(message) from e
+    async with semaphore:
+        logging.debug("Downloading NLTK resource '%s'...", resource)
+        try:
+            await asyncio.to_thread(
+                nltk.download,
+                resource,
+                download_dir=settings.NLTK_DATA_DIR,
+                quiet=True,
+                raise_on_error=True,
+            )
+        except ValueError as e:
+            message = f"Invalid NLTK resource '{resource}'"
+            raise exceptions.NltkInitializationError(message) from e
 
 
 async def init_nltk() -> None:
@@ -39,13 +40,24 @@ async def init_nltk() -> None:
 
     resources = config.get("nltk", [])
 
-    download_tasks = [
-        download_nltk_resource(resource, settings.NLTK_DATA_DIR) for resource in resources
-    ]
+    semaphore = asyncio.Semaphore(settings.NLTK_DOWNLOAD_CONCURRENCY)
+    download_tasks = [download_nltk_resource(resource, semaphore) for resource in resources]
 
     await asyncio.gather(*download_tasks)
 
     logging.info("NLTK resources downloaded")
+
+
+async def create_indexes(redis: redis.Redis) -> None:
+    """Create search indexes on Redis."""
+    logging.debug("Creating indexes on redis...")
+
+    message_index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
+    message_index.set_client(redis)
+
+    await message_index.create(overwrite=True)
+
+    logging.info("Created indexes on Redis")
 
 
 async def init_redis() -> redis.Redis:
@@ -72,6 +84,7 @@ async def init_redis() -> redis.Redis:
         password=settings.REDIS_PASSWORD,
     )
 
+    # Check if the connection is successful
     try:
         await instance.ping()
     except redis.AuthenticationError as e:
@@ -87,16 +100,12 @@ async def init_redis() -> redis.Redis:
         settings.REDIS_PORT,
     )
 
+    # Create search indexes on Redis
+    await create_indexes(instance)
+
+    logging.info("Redis initialization complete")
+
     return instance
-
-
-async def create_indexes(redis: redis.Redis) -> None:
-    """Create search indexes on Redis."""
-    logging.debug("Creating indexes on redis...")
-    message_index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
-    message_index.set_client(redis)
-    await message_index.create(overwrite=True)
-    logging.info("Created indexes on Redis.")
 
 
 async def main() -> None:
@@ -113,10 +122,9 @@ async def main() -> None:
     """
     logging.info("Starting the Courageous Comets application ☄️")
 
-    await init_nltk()
+    # Initialize dependencies
     redis = await init_redis()
-    # Create the search indexes on Redis
-    await create_indexes(redis)
+    await init_nltk()
 
     try:
         logging.info("Starting the Discord client 🚀")

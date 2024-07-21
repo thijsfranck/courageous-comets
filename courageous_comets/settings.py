@@ -63,6 +63,39 @@ def read_discord_token() -> str:
     return result
 
 
+def read_int(key: str, default: int) -> int:
+    """
+    Read an integer value from the environment.
+
+    Parameters
+    ----------
+    key : str
+        The environment variable key.
+    default : int
+        The default value to use if the environment variable is not set.
+
+    Returns
+    -------
+    int
+        The integer value.
+
+    Raises
+    ------
+    courageous_comets.exceptions.ConfigurationValueError
+        If the value is not a valid integer.
+    """
+    try:
+        result = int(os.getenv(key, str(default)))
+    except ValueError as e:
+        raise ConfigurationValueError(
+            key=key,
+            value=os.getenv(key),
+            reason="Value must be an integer",
+        ) from e
+
+    return result
+
+
 def read_redis_port() -> int:
     """
     Read the Redis port from the environment.
@@ -77,14 +110,7 @@ def read_redis_port() -> int:
     courageous_comets.exceptions.ConfigurationValueError
         If the port is not a valid port number.
     """
-    try:
-        result = int(os.getenv("REDIS_PORT", "6379"))
-    except ValueError as e:
-        raise ConfigurationValueError(
-            key="REDIS_PORT",
-            value=os.getenv("REDIS_PORT"),
-            reason="Value must be an integer (e.g., 6379)",
-        ) from e
+    result = read_int("REDIS_PORT", 6379)
 
     if not (0 <= result <= 65535):  # noqa: PLR2004
         raise ConfigurationValueError(
@@ -111,6 +137,7 @@ try:
     DISCORD_TOKEN = read_discord_token()
     BOT_CONFIG_PATH = read_bot_config_path()
     NLTK_DATA_DIR = os.getenv("NLTK_DATA", "nltk_data")
+    NLTK_DOWNLOAD_CONCURRENCY = read_int("NLTK_DOWNLOAD_CONCURRENCY", 3)
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = read_redis_port()
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")

@@ -2,15 +2,16 @@
 
 The following environment variables are available to configure the application:
 
-| Variable                              | Description                               | Required | Default            |
-| ------------------------------------- | ------------------------------------------| -------- | ------------------ |
-| [`DISCORD_TOKEN`](#discord_token)     | The Discord bot token.                    | Yes      | -                  |
-| [`BOT_CONFIG_PATH`](#bot_config_path) | The path to the bot's configuration file. | No       | `application.yaml` |
-| [`LOG_LEVEL`](#log_level)             | The minimum log level.                    | No       | `INFO`             |
-| [`NLTK_DATA`](#nltk_data)             | The directory containing NLTK data files. | No       | `/nltk_data`       |
-| [`REDIS_HOST`](#redis_host)           | The Redis host.                           | No       | `localhost`        |
-| [`REDIS_PORT`](#redis_port)           | The Redis port.                           | No       | `6379`             |
-| [`REDIS_PASSWORD`](#redis_password)   | The Redis password.                       | No       | -                  |
+| Variable                                                  | Description                                                           | Required | Default            |
+| --------------------------------------------------------- | --------------------------------------------------------------------- | -------- | ------------------ |
+| [`DISCORD_TOKEN`](#discord_token)                         | The Discord bot token.                                                | Yes      | -                  |
+| [`BOT_CONFIG_PATH`](#bot_config_path)                     | The path to the bot's configuration file.                             | No       | `application.yaml` |
+| [`LOG_LEVEL`](#log_level)                                 | The minimum log level.                                                | No       | `INFO`             |
+| [`NLTK_DATA`](#nltk_data)                                 | The directory containing NLTK data files.                             | No       | `nltk_data`       |
+| [`NLTK_DOWNLOAD_CONCURRENCY`](#nltk_download_concurrency) | The maximum number of concurrent downloads when installing NLTK data. | No       | `3`                |
+| [`REDIS_HOST`](#redis_host)                               | The Redis host.                                                       | No       | `localhost`        |
+| [`REDIS_PORT`](#redis_port)                               | The Redis port.                                                       | No       | `6379`             |
+| [`REDIS_PASSWORD`](#redis_password)                       | The Redis password.                                                   | No       | -                  |
 
 ## Required Settings
 
@@ -60,6 +61,11 @@ The default log level is `INFO`.
 
 The directory containing NLTK data files. By default, this is set to `nltk_data` in the directory from which the
 application is launched. In the Docker image, this directory is located at `/app/nltk_data`.
+
+### `NLTK_DOWNLOAD_CONCURRENCY`
+
+The application automatically downloads NLTK data files on startup. This setting controls the number of concurrent
+downloads. By default, this is set to `3`.
 
 ### `REDIS_HOST`
 
