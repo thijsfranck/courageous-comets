@@ -16,8 +16,9 @@ pyyaml = "^6.0.1"
 redis = { extras = ["hiredis"], version = "^5.0.7" }
 nltk = "^3.8.1"
 pydantic = "^2.8.2"
-redisvl = {extras = ["hiredis"], version = "^0.2.3"}
+redisvl = { extras = ["hiredis"], version = "^0.2.3" }
 contractions = "^0.1.73"
+sentence-transformers = "^3.0.1"
 
 [tool.poetry.dev-dependencies]
 commitizen = "3.27.0"
@@ -38,6 +39,7 @@ pythonVersion = "3.12"
 reportUnnecessaryTypeIgnoreComment = "error"
 
 [tool.pytest.ini_options]
+asyncio_mode = "auto"
 filterwarnings = [
     "ignore:'audioop' is deprecated and slated for removal in Python 3.13",
 ]

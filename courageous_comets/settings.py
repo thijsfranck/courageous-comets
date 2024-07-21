@@ -146,6 +146,7 @@ try:
         "HF_DATA",
         "hf_data",
     )
+    HUGGINGFACE_DOWNLOAD_CONCURRENCY = read_int("HF_DOWNLOAD_CONCURRENCY", 3)
 except ConfigurationValueError as e:
     logging.critical(
         "Cannot start the application due to configuration errors",

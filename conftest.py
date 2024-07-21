@@ -5,6 +5,8 @@ import nltk
 import pytest
 import yaml
 
+from courageous_comets.transformers import init_transformers
+
 
 @pytest.fixture(scope="session")
 def application_config() -> dict:
@@ -24,3 +26,10 @@ def _load_nltk_data(application_config: dict) -> None:
             quiet=True,
             download_dir=os.getenv("NLTK_DATA", "nltk_data"),
         )
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def _load_transformers(application_config: dict) -> None:
+    """Load the transformers for testing."""
+    transformers = application_config.get("transformers", [])
+    await init_transformers(transformers)

@@ -181,3 +181,6 @@ pyrightconfig.json
 
 # NLTK
 nltk_data
+
+# Huggingface
+hf_data
