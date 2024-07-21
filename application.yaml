@@ -5,3 +5,5 @@ nltk:
   - punkt
   - stopwords
   - vader_lexicon
+huggingface:
+  - sentence-transformers/all-MiniLM-L6-v2

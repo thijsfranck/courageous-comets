@@ -142,6 +142,10 @@ try:
     REDIS_PORT = read_redis_port()
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
     REDIS_KEYS_PREFIX = os.getenv("REDIS_KEYS_PREFIX", "courageous_comets")
+    HUGGINGFACE_DATA_DIR = os.getenv(
+        "HF_DATA",
+        "hf_data",
+    )
 except ConfigurationValueError as e:
     logging.critical(
         "Cannot start the application due to configuration errors",

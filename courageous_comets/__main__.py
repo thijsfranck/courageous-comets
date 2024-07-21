@@ -48,6 +48,11 @@ async def init_nltk() -> None:
     logging.info("NLTK resources downloaded")
 
 
+def download_transformer_model(model: str) -> None:
+    """Download a Huggingface model to the specified directory."""
+    logging.debug("Downloading hugging face model %r...", model)
+
+
 async def create_indexes(redis: redis.Redis) -> None:
     """Create search indexes on Redis."""
     logging.debug("Creating indexes on redis...")
