@@ -9,16 +9,18 @@ exclude = ["**/test__*.py"]
 
 [tool.poetry.dependencies]
 python = "~3.12"
-discord-py = "^2.4.0"
-jishaku = "^2.5.2"
-python-dotenv = "^1.0.1"
-pyyaml = "^6.0.1"
-redis = { extras = ["hiredis"], version = "^5.0.7" }
-nltk = "^3.8.1"
-pydantic = "^2.8.2"
-redisvl = { extras = ["hiredis"], version = "^0.2.3" }
-contractions = "^0.1.73"
-sentence-transformers = "^3.0.1"
+coloredlogs = "15.0.1"
+contractions = "0.1.73"
+discord-py = "2.4.0"
+jishaku = "2.5.2"
+nltk = "3.8.1"
+pydantic = "2.8.2"
+pynacl = "1.5.0"
+python-dotenv = "1.0.1"
+pyyaml = "6.0.1"
+redis = { extras = ["hiredis"], version = "5.0.7" }
+redisvl = { extras = ["hiredis"], version = "0.2.3" }
+sentence-transformers = "3.0.1"
 
 [tool.poetry.dev-dependencies]
 commitizen = "3.27.0"
