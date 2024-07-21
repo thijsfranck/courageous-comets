@@ -46,7 +46,6 @@ def test__bot_has_required_intents(bot: CourageousCometsBot) -> None:
     assert bot.intents == intents
 
 
-@pytest.mark.asyncio()
 async def test__on_ready_logs_message(bot: CourageousCometsBot, mocker: MockerFixture) -> None:
     """
     Test whether the on_ready function logs the expected message.
@@ -60,7 +59,6 @@ async def test__on_ready_logs_message(bot: CourageousCometsBot, mocker: MockerFi
     logger_info.assert_called_with("Logged in as %s", mocker.ANY)
 
 
-@pytest.mark.asyncio()
 async def test__load_cogs_loads_all_cogs(bot: CourageousCometsBot, mocker: MockerFixture) -> None:
     """
     Test whether the load_cogs function loads all cogs from the config file.
@@ -79,7 +77,6 @@ async def test__load_cogs_loads_all_cogs(bot: CourageousCometsBot, mocker: Mocke
         load_extension.assert_any_call(cog)
 
 
-@pytest.mark.asyncio()
 async def test__load_cogs_logs_loaded_cogs(
     bot: CourageousCometsBot,
     mocker: MockerFixture,
@@ -104,7 +101,6 @@ async def test__load_cogs_logs_loaded_cogs(
         logger_debug.assert_any_call("Loaded cog %s", cog)
 
 
-@pytest.mark.asyncio()
 async def test__load_cogs_logs_exception_on_extension_error(
     bot: CourageousCometsBot,
     mocker: MockerFixture,
@@ -129,7 +125,6 @@ async def test__load_cogs_logs_exception_on_extension_error(
     logger_exception.assert_called_with("Failed to load cog %s", "cog1", exc_info=expected)
 
 
-@pytest.mark.asyncio()
 async def test__sync_syncs_to_current_guild(mock_context: MockType) -> None:
     """
     Test whether the sync command syncs to the current guild.
@@ -147,7 +142,6 @@ async def test__sync_syncs_to_current_guild(mock_context: MockType) -> None:
     )
 
 
-@pytest.mark.asyncio()
 async def test__sync_syncs_to_global_scope(mock_context: MockType) -> None:
     """
     Test whether the sync command syncs to the global scope.
@@ -165,7 +159,6 @@ async def test__sync_syncs_to_global_scope(mock_context: MockType) -> None:
     )
 
 
-@pytest.mark.asyncio()
 async def test__sync_removes_non_global_commands(mock_context: MockType) -> None:
     """
     Test whether the sync command removes non-global commands.
@@ -183,7 +176,6 @@ async def test__sync_removes_non_global_commands(mock_context: MockType) -> None
     mock_context.send.assert_awaited_with("Synced 0 command(s) to the current guild.")
 
 
-@pytest.mark.asyncio()
 async def test__sync_syncs_to_given_guilds(
     mocker: MockerFixture,
     mock_context: MockType,
@@ -206,7 +198,6 @@ async def test__sync_syncs_to_given_guilds(
     mock_context.send.assert_awaited_with(f"Synced the tree to {len(guilds)}/{len(guilds)}.")
 
 
-@pytest.mark.asyncio()
 async def test__sync_logs_exception_on_http_exception(
     mocker: MockerFixture,
     mock_context: MockType,
