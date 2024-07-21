@@ -11,11 +11,6 @@ async def main() -> None:
     Start the appication.
 
     If a critical error occurs, attempt to shut down gracefully.
-
-    Raises
-    ------
-    courageous_comets.exceptions.AuthenticationError
-        If the Discord token is not valid.
     """
     logging.info("Starting the Courageous Comets application ☄️")
     try:
