@@ -2,6 +2,7 @@ from collections.abc import AsyncGenerator
 from pathlib import Path
 
 import pytest
+import pytest_asyncio
 import yaml
 from redis.asyncio import Redis
 
@@ -39,26 +40,20 @@ def _patch_redis_keys_prefix() -> None:
     settings.REDIS_KEYS_PREFIX = settings.REDIS_KEYS_PREFIX + "_test"
 
 
-@pytest.fixture(scope="session")
-async def redis_connection() -> AsyncGenerator[Redis, None]:
-    """Acquire a connection to the Redis database."""
+@pytest_asyncio.fixture(autouse=True)
+async def redis() -> AsyncGenerator[Redis, None]:
+    """Acquire a connection to the Redis database with teardown."""
     redis = await init_redis()
+
     yield redis
-    await redis.aclose()
 
-
-@pytest.fixture()
-async def redis(redis_connection: Redis) -> AsyncGenerator[Redis, None]:
-    """Acquire a connection to the Redis database with teardown after each test."""
-    yield redis_connection
-
-    # Delete any existing keys created during the test
-    keys_to_delete = [
-        key async for key in redis_connection.scan_iter(f"{settings.REDIS_KEYS_PREFIX}:*")
-    ]
+    # Delete any keys that were created during the test
+    keys_to_delete = [key async for key in redis.scan_iter(f"{settings.REDIS_KEYS_PREFIX}:*")]
 
     if keys_to_delete:
-        await redis_connection.delete(*keys_to_delete)
+        await redis.delete(*keys_to_delete)
+
+    await redis.aclose()
 
 
 @pytest.fixture(scope="session")
