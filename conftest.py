@@ -2,7 +2,6 @@ from collections.abc import AsyncGenerator
 from pathlib import Path
 
 import pytest
-import pytest_asyncio
 import yaml
 from redis.asyncio import Redis
 
@@ -40,7 +39,7 @@ def _patch_redis_keys_prefix() -> None:
     settings.REDIS_KEYS_PREFIX = settings.REDIS_KEYS_PREFIX + "_test"
 
 
-@pytest_asyncio.fixture(autouse=True)
+@pytest.fixture()
 async def redis() -> AsyncGenerator[Redis, None]:
     """Acquire a connection to the Redis database with teardown."""
     redis = await init_redis()
