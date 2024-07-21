@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from pathlib import Path
 
 import nltk
 
@@ -31,6 +32,14 @@ async def init_nltk(resources: list[str]) -> None:
 
     Downloads the resources specified in the bot configuration file.
     """
+    if not any(resources):
+        logger.debug("No NLTK resources to download")
+        return
+
+    # Create the NLTK data directory if it does not exist to avoid a race condition when running
+    # multiple download tasks concurrently
+    Path(settings.NLTK_DATA_DIR).mkdir(parents=True, exist_ok=True)
+
     semaphore = asyncio.Semaphore(settings.NLTK_DOWNLOAD_CONCURRENCY)
     download_tasks = [download_nltk_resource(resource, semaphore) for resource in resources]
 
