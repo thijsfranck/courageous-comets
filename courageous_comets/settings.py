@@ -3,6 +3,7 @@
 import logging
 import os
 import sys
+import warnings
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -123,6 +124,9 @@ def read_redis_port() -> int:
 
 # Load environment variables from a .env file. If the file does not exist, this does nothing.
 load_dotenv()
+
+# Suppress warnings from libraries
+warnings.filterwarnings("ignore")
 
 # Let discord.py set up the logging configuration
 LOG_LEVEL = logging.getLevelNamesMapping().get(
