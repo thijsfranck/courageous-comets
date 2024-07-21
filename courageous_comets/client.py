@@ -11,6 +11,7 @@ from discord.ext import commands
 from courageous_comets import settings
 from courageous_comets.nltk import init_nltk
 from courageous_comets.redis import init_redis
+from courageous_comets.transformers import init_transformers
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,12 @@ class CourageousCometsBot(commands.Bot):
         """
         On startup, initialize the bot.
 
-        Sets up the Redis connection, downloads NLTK resources, and loads all cogs.
+        Performs the following setup actions:
+
+        - Connect to Redis.
+        - Load the NLTK resources.
+        - Load the transformers.
+        - Load the cogs.
         """
         logger.info("Initializing the Discord client...")
 
@@ -74,6 +80,9 @@ class CourageousCometsBot(commands.Bot):
 
         nltk_resources = CONFIG.get("nltk", [])
         await init_nltk(nltk_resources)
+
+        transformers = CONFIG.get("transformers", [])
+        await init_transformers(transformers)
 
         cogs = CONFIG.get("cogs", [])
         await self.load_cogs(cogs)

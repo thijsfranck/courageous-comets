@@ -6,6 +6,7 @@
     "REDIS_HOST": "localhost",
     "REDIS_PASSWORD": "redis",
     "REDIS_PORT": "6379",
+    "SENTENCE_TRANSFORMERS_HOME": "${containerWorkspaceFolder}/hf_data",
     "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
   },
   "customizations": {
@@ -18,6 +19,9 @@
         "-ms-python.autopep8"
       ],
       "settings": {
+        "[markdown]": {
+          "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+        },
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff"
         },

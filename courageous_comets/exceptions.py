@@ -38,3 +38,7 @@ class DatabaseConnectionError(CourageousCometsError):
 
 class NltkInitializationError(CourageousCometsError):
     """Raised when the application fails to download the NLTK dependencies on startup."""
+
+
+class HuggingFaceModelDownloadError(CourageousCometsError):
+    """Raised when the application fails to download a huggingface model on startup."""

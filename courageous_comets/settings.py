@@ -139,6 +139,11 @@ try:
     REDIS_PORT = read_redis_port()
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
     REDIS_KEYS_PREFIX = os.getenv("REDIS_KEYS_PREFIX", "courageous_comets")
+    SENTENCE_TRANSFORMERS_HOME = os.getenv(
+        "SENTENCE_TRANSFORMERS_HOME",
+        "hf_data",
+    )
+    SENTENCE_TRANSFORMERS_CONCURRENCY = read_int("SENTENCE_TRANSFORMERS_CONCURRENCY", 3)
 except ConfigurationValueError as e:
     logging.critical(
         "Cannot start the application due to configuration errors",

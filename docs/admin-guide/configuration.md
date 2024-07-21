@@ -2,16 +2,18 @@
 
 The following environment variables are available to configure the application:
 
-| Variable                                                  | Description                                                           | Required | Default            |
-| --------------------------------------------------------- | --------------------------------------------------------------------- | -------- | ------------------ |
-| [`DISCORD_TOKEN`](#discord_token)                         | The Discord bot token.                                                | Yes      | -                  |
-| [`BOT_CONFIG_PATH`](#bot_config_path)                     | The path to the bot's configuration file.                             | No       | `application.yaml` |
-| [`LOG_LEVEL`](#log_level)                                 | The minimum log level.                                                | No       | `INFO`             |
-| [`NLTK_DATA`](#nltk_data)                                 | The directory containing NLTK data files.                             | No       | `nltk_data`       |
-| [`NLTK_DOWNLOAD_CONCURRENCY`](#nltk_download_concurrency) | The maximum number of concurrent downloads when installing NLTK data. | No       | `3`                |
-| [`REDIS_HOST`](#redis_host)                               | The Redis host.                                                       | No       | `localhost`        |
-| [`REDIS_PORT`](#redis_port)                               | The Redis port.                                                       | No       | `6379`             |
-| [`REDIS_PASSWORD`](#redis_password)                       | The Redis password.                                                   | No       | -                  |
+| Variable                                                                  | Description                                                              | Required | Default            |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------ |
+| [`DISCORD_TOKEN`](#discord_token)                                         | The Discord bot token.                                                   | Yes      | -                  |
+| [`BOT_CONFIG_PATH`](#bot_config_path)                                     | The path to the bot's configuration file.                                | No       | `application.yaml` |
+| [`LOG_LEVEL`](#log_level)                                                 | The minimum log level.                                                   | No       | `INFO`             |
+| [`NLTK_DATA`](#nltk_data)                                                 | The directory containing NLTK data files.                                | No       | `nltk_data`        |
+| [`NLTK_DOWNLOAD_CONCURRENCY`](#nltk_download_concurrency)                 | The maximum number of concurrent downloads when installing NLTK data.    | No       | `3`                |
+| [`REDIS_HOST`](#redis_host)                                               | The Redis host.                                                          | No       | `localhost`        |
+| [`REDIS_PORT`](#redis_port)                                               | The Redis port.                                                          | No       | `6379`             |
+| [`REDIS_PASSWORD`](#redis_password)                                       | The Redis password.                                                      | No       | -                  |
+| [`SENTENCE TRANSFORMERS_HOME`](#sentence_transformers_home)               | The directory containing Sentence Transformers data files.               | No       | `hf_data`          |
+| [`SENTENCE_TRANSFORMERS_CONCURRENCY`](#sentence_transformers_concurrency) | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
 
 ## Required Settings
 
@@ -82,3 +84,13 @@ is set by default.
 
 !!! DANGER "Security Warning"
     Do not share your Redis password with anyone!
+
+### `SENTENCE_TRANSFORMERS_HOME`
+
+The directory containing Sentence Transformers data files. By default, this is set to `hf_data` in the directory
+from which the application is launched. In the Docker image, this directory is located at `/app/hf_data`.
+
+### `SENTENCE_TRANSFORMERS_CONCURRENCY`
+
+The maximum number of concurrent downloads when installing Sentence Transformers models. By default, this is set
+to `3`.

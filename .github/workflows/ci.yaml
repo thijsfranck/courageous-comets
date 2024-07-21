@@ -16,10 +16,27 @@ jobs:
       BOT_CONFIG_PATH: ${{ github.workspace }}/application.yaml
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       NLTK_DATA: ${{ github.workspace }}/nltk_data
+      SENTENCE_TRANSFORMERS_HOME: ${{ github.workspace }}/hf_data
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up caching for NLTK_DATA
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NLTK_DATA }}
+          key: ${{ runner.os }}-nltk-data-${{ hashFiles(env.BOT_CONFIG_PATH) }}
+          restore-keys: |
+            ${{ runner.os }}-nltk-data-
+
+      - name: Set up caching for SENTENCE_TRANSFORMERS_HOME
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.SENTENCE_TRANSFORMERS_HOME }}
+          key: ${{ runner.os }}-hf-data-${{ hashFiles(env.BOT_CONFIG_PATH) }}
+          restore-keys: |
+            ${{ runner.os }}-hf-data-
 
       - name: Setup Python, Poetry and dependencies
         uses: packetcoders/action-setup-cache-python-poetry@main

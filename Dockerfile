@@ -9,6 +9,12 @@ LABEL org.opencontainers.image.licenses=MIT
 LABEL org.opencontainers.image.source=https://github.com/thijsfranck/courageous-comets
 LABEL org.opencontainers.image.title="Courageous Comets"
 
+# Set default environment variables
+ENV BOT_CONFIG_PATH=/app/application.yaml
+ENV LOG_LEVEL=INFO
+ENV NLTK_DATA=/app/nltk_data
+ENV SENTENCE_TRANSFORMERS_HOME=/app/hf_data
+
 # Add a non-root user
 RUN adduser --system courageous-comets
 
