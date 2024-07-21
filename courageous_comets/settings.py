@@ -3,8 +3,10 @@
 import logging
 import os
 import sys
+import warnings
 from pathlib import Path
 
+import coloredlogs
 from dotenv import load_dotenv
 
 from courageous_comets.exceptions import ConfigurationValueError
@@ -121,15 +123,32 @@ def read_redis_port() -> int:
     return result
 
 
+def setup_logging() -> None:
+    """Set up logging for the application."""
+    coloredlogs.install(
+        level=LOG_LEVEL,
+        fmt="{asctime} {levelname:<8} [{name}] {message}",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        style="{",
+        reconfigure=True,
+    )
+
+
 # Load environment variables from a .env file. If the file does not exist, this does nothing.
 load_dotenv()
 
-# Let discord.py set up the logging configuration
+# Suppress warnings from libraries
+warnings.filterwarnings("ignore")
+
+# Set up logging for the application
 LOG_LEVEL = logging.getLevelNamesMapping().get(
     os.getenv("LOG_LEVEL", "INFO"),
     logging.INFO,
 )
 
+setup_logging()
+
+# Load configuration values from the environment
 try:
     DISCORD_TOKEN = read_discord_token()
     BOT_CONFIG_PATH = read_bot_config_path()

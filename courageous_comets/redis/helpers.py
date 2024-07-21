@@ -55,7 +55,7 @@ async def init_redis() -> redis.Redis:
         message = f"Could not connect to Redis at {settings.REDIS_HOST}:{settings.REDIS_PORT}"
         raise exceptions.DatabaseConnectionError(message) from e
 
-    logger.debug(
+    logger.info(
         "Connected to Redis at %s:%s",
         settings.REDIS_HOST,
         settings.REDIS_PORT,
@@ -63,6 +63,6 @@ async def init_redis() -> redis.Redis:
 
     await create_indexes(instance)
 
-    logger.debug("Redis initialization complete")
+    logger.info("Redis initialization complete")
 
     return instance
