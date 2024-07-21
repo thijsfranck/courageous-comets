@@ -114,7 +114,7 @@ class CourageousCometsBot(commands.Bot):
         ----------
         redis: Redis
             The Redis connection instance.
-        message : discord.VectorizedMessage
+        message : discord.Message
             The message to save.
 
         Returns
