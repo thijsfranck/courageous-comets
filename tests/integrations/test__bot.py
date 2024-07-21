@@ -1,23 +1,12 @@
-from collections.abc import AsyncGenerator
-
 import discord
-import pytest
 from pytest_mock import MockerFixture
+from redis.asyncio import Redis
 
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.redis.keys import key_schema
 
 
-@pytest.fixture()
-async def bot() -> AsyncGenerator[CourageousCometsBot, None]:
-    """Fixture that sets up and tears down the CourageousCometsBot instance."""
-    instance = CourageousCometsBot()
-    await instance.setup_hook()
-    yield instance
-    await instance.close()
-
-
-async def test__save_message(bot: CourageousCometsBot, mocker: MockerFixture) -> None:
+async def test__save_message(bot: CourageousCometsBot, redis: Redis, mocker: MockerFixture) -> None:
     """
     Test whether messages received by the bot are saved to Redis.
 
@@ -37,5 +26,4 @@ async def test__save_message(bot: CourageousCometsBot, mocker: MockerFixture) ->
 
     key = key_schema.guild_messages(1)
 
-    assert bot.redis is not None
-    assert bot.redis.exists(key)
+    assert redis.exists(key)
