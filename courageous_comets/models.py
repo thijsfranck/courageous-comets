@@ -18,7 +18,26 @@ class BaseModel(pydantic.BaseModel):
 
 
 class Message(BaseModel):
-    """Redis model of a Discord message."""
+    """
+    Redis model of a Discord message.
+
+    Attributes
+    ----------
+    message_id : str
+        The ID of the message.
+    channel_id : str
+        The ID of the channel the message was sent in.
+    guild_id : str
+        The ID of the guild the message was sent in.
+    timestamp : UnixTimestamp
+        The timestamp when the message was sent.
+    user_id : str
+        The ID of the user who sent the message.
+    content : str
+        The content of the message.
+    embedding : bytes
+        The embedding of the message.
+    """
 
     message_id: str
     channel_id: str
@@ -30,7 +49,20 @@ class Message(BaseModel):
 
 
 class SentimentResult(BaseModel):
-    """Result of sentiment analysis."""
+    """
+    Result of sentiment analysis.
+
+    Attributes
+    ----------
+    neg : float
+        The negative sentiment score.
+    neu : float
+        The neutral sentiment score.
+    pos : float
+        The positive sentiment score.
+    compound : float
+        The compound sentiment score.
+    """
 
     neg: float
     neu: float

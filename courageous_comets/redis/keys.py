@@ -1,30 +1,45 @@
 from collections.abc import Callable
 from functools import wraps
-from typing import Any
+from typing import ParamSpec
 
 from courageous_comets import settings
 
+P = ParamSpec("P")
+Prefixable = Callable[P, str]
 
-def prefix_key(func: Callable[..., str]) -> Callable[..., str]:
-    """Prefix return values of methods with settings.REDIS_KEYS_PREFIX."""
+
+def prefix_key(func: Prefixable[P]) -> Prefixable[P]:
+    """
+    Prefix the key returned by the decorated function with the Redis key prefix.
+
+    This function is intended to be used as a decorator.
+
+    Parameters
+    ----------
+    func : courageous_comets.redis.keys.Prefixable[P]
+        The function to decorate.
+
+    Returns
+    -------
+    courageous_comets.redis.keys.Prefixable[P]
+        The decorated function.
+    """
 
     @wraps(func)
-    def prefixed_method(self: object, *args: Any, **kwargs: Any) -> str:  # noqa: ANN401
-        key = func(self, *args, **kwargs)
+    def prefixed_method(*args: P.args, **kwargs: P.kwargs) -> str:
+        key = func(*args, **kwargs)
         return f"{settings.REDIS_KEYS_PREFIX}:{key}"
 
     return prefixed_method
 
 
 class KeySchema:
-    """A class to generate key names for Redis data structures.
+    """
+    A class to generate key names for Redis data structures.
 
     This class contains a reference to all possible key names used
     by the application.
     """
-
-    def __init__(self, prefix: str = settings.REDIS_KEYS_PREFIX) -> None:
-        self.prefix = prefix
 
     @prefix_key
     def guild_messages(self, guild_id: int) -> str:

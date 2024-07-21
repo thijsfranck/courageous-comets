@@ -57,9 +57,11 @@ async def sync(
 
     Parameters
     ----------
-    guilds: commands.Greedy[discord.Object]
+    ctx : commands.Context[commands.Bot]
+        The context of the command.
+    guilds : Collection[discord.Object]
         The guilds to sync to.
-    spec: typing.Literal["~", "*", "^"] | None
+    spec : typing.Literal["~", "*", "^"] | None
         The scope to sync to. Defaults to `~`.
     """
     async with ctx.typing():

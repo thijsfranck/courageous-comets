@@ -30,7 +30,7 @@ def calculate_sentiment(content: str, key: str) -> SentimentResult:
 
     Returns
     -------
-    SentimentResult
+    courageous_comets.models.SentimentResult
         The sentiment of the message.
     """
     truncated = content[:MAX_MESSAGE_LENGTH]
@@ -109,7 +109,7 @@ async def get_sentiment(key: str, redis: Redis) -> SentimentResult:
 
     Returns
     -------
-    SentimentResult
+    courageous_comets.models.SentimentResult
         The sentiment of the message.
     """
     neg, neu, pos, compound = await redis.hmget(key, "neg", "neu", "pos", "compound")  # type: ignore

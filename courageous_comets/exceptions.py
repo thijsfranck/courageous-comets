@@ -14,13 +14,13 @@ class ConfigurationValueError[T](CourageousCometsError):
     """
     Raised when a configuration value is invalid.
 
-    Parameters
+    Attributes
     ----------
-    key: str
+    key : str
         The configuration key.
-    value: T, optional
+    value : T, optional
         The invalid value provided.
-    reason: str
+    reason : str
         The reason why the value is considered invalid.
     """
 
