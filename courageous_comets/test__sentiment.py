@@ -67,7 +67,6 @@ def test__calculate_sentiment_truncates_long_messages(
     assert logger_warning.called == expected
 
 
-@pytest.mark.asyncio()
 async def test__store_sentiment_calculates_and_stores_sentiment(
     *,
     mocker: MockerFixture,
@@ -102,7 +101,6 @@ async def test__store_sentiment_calculates_and_stores_sentiment(
     )
 
 
-@pytest.mark.asyncio()
 async def test__store_sentiment_ignores_empty_messages(
     *,
     mocker: MockerFixture,
@@ -128,7 +126,6 @@ async def test__store_sentiment_ignores_empty_messages(
         Mock(content="test", guild=Mock(id=1), channel=Mock(id=1), author=None, id=1),
     ],
 )
-@pytest.mark.asyncio()
 async def test__store_sentiment_ignores_messages_without_ids(
     *,
     redis: MockType,
@@ -145,7 +142,6 @@ async def test__store_sentiment_ignores_messages_without_ids(
     redis.hset.assert_not_awaited()
 
 
-@pytest.mark.asyncio()
 async def test__get_sentiment_retrieves_sentiment_from_redis(
     *,
     redis: MockType,
@@ -173,7 +169,6 @@ async def test__get_sentiment_retrieves_sentiment_from_redis(
     assert result == expected
 
 
-@pytest.mark.asyncio()
 async def test__get_sentiment_handles_missing_sentiment(
     *,
     redis: MockType,

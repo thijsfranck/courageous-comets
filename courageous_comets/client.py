@@ -1,6 +1,7 @@
 import logging
 import typing
 from collections.abc import Collection
+from typing import override
 
 import discord
 import yaml
@@ -8,6 +9,8 @@ from discord import Intents
 from discord.ext import commands
 
 from courageous_comets import settings
+from courageous_comets.nltk import init_nltk
+from courageous_comets.redis import init_redis
 
 logger = logging.getLogger(__name__)
 
@@ -18,24 +21,76 @@ intents.message_content = True
 with settings.BOT_CONFIG_PATH.open() as config_file:
     CONFIG = yaml.safe_load(config_file)
 
-bot = commands.Bot(command_prefix=commands.when_mentioned, intents=intents)
+
+class CourageousCometsBot(commands.Bot):
+    """
+    The Courageous Comets Discord bot.
+
+    Attributes
+    ----------
+    redis : redis.asyncio.Redis | None
+        The Redis connection instance for the bot, or `None` if not connected.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            command_prefix=commands.when_mentioned,
+            intents=intents,
+        )
+        self.redis = None
+
+    @override
+    async def close(self) -> None:
+        """
+        Gracefully shut down the application.
+
+        First closes the Discord client, then the Redis connection if it exists.
+
+        Overrides the `close` method in `discord.ext.commands.Bot`.
+        """
+        logger.info("Gracefully shutting down the application...")
+
+        await super().close()
+
+        if self.redis is not None:
+            await self.redis.aclose()
+            logger.info("Closed the Redis connection")
+
+        logger.info("Application shutdown complete. Goodbye! 👋")
+
+    async def on_ready(self) -> None:
+        """Log a message when the bot is ready."""
+        logger.info("Logged in as %s", self.user)
+
+    async def setup_hook(self) -> None:
+        """
+        On startup, initialize the bot.
+
+        Sets up the Redis connection, downloads NLTK resources, and loads all cogs.
+        """
+        logger.info("Initializing the Discord client...")
+
+        self.redis = await init_redis()
+
+        nltk_resources = CONFIG.get("nltk", [])
+        await init_nltk(nltk_resources)
+
+        cogs = CONFIG.get("cogs", [])
+        await self.load_cogs(cogs)
+
+        logger.info("Initialization complete 🚀")
+
+    async def load_cogs(self, cogs: list[str]) -> None:
+        """Load all given cogs."""
+        for cog in cogs:
+            try:
+                await bot.load_extension(cog)
+                logger.debug("Loaded cog %s", cog)
+            except commands.ExtensionError as e:
+                logger.exception("Failed to load cog %s", cog, exc_info=e)
 
 
-@bot.event
-async def on_ready() -> None:
-    """Informs when the bot is ready."""
-    logger.info("Logged in as %s", bot.user)
-
-
-@bot.event
-async def setup_hook() -> None:
-    """Load all cogs in the config file."""
-    for cog in CONFIG["cogs"]:
-        try:
-            await bot.load_extension(cog)
-            logger.info("Loaded cog %s", cog)
-        except commands.ExtensionError as e:
-            logger.exception("Failed to load cog %s", cog, exc_info=e)
+bot = CourageousCometsBot()
 
 
 @bot.command()

@@ -5,7 +5,6 @@ import os
 import sys
 from pathlib import Path
 
-from discord.utils import setup_logging
 from dotenv import load_dotenv
 
 from courageous_comets.exceptions import ConfigurationValueError
@@ -130,8 +129,6 @@ LOG_LEVEL = logging.getLevelNamesMapping().get(
     os.getenv("LOG_LEVEL", "INFO"),
     logging.INFO,
 )
-setup_logging(level=LOG_LEVEL)
-
 
 try:
     DISCORD_TOKEN = read_discord_token()

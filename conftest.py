@@ -1,10 +1,9 @@
-import os
 from pathlib import Path
 
-import nltk
 import pytest
 import yaml
 
+from courageous_comets.nltk import init_nltk
 from courageous_comets.transformers import init_transformers
 
 
@@ -16,16 +15,10 @@ def application_config() -> dict:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _load_nltk_data(application_config: dict) -> None:
+async def _load_nltk_data(application_config: dict) -> None:
     """Load the NLTK data for testing."""
     resources = application_config.get("nltk", [])
-
-    for resource in resources:
-        nltk.download(
-            resource,
-            quiet=True,
-            download_dir=os.getenv("NLTK_DATA", "nltk_data"),
-        )
+    await init_nltk(resources)
 
 
 @pytest.fixture(scope="session", autouse=True)
