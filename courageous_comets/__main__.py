@@ -12,6 +12,9 @@ async def main() -> None:
 
     If a critical error occurs, attempt to shut down gracefully.
     """
+    # Override logging configuration by dependencies
+    settings.setup_logging()
+
     logging.info("Starting the Courageous Comets application ☄️")
     try:
         await bot.start(settings.DISCORD_TOKEN)
