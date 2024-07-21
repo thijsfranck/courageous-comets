@@ -5,7 +5,7 @@ import pytest
 from discord.ext import commands
 from pytest_mock import MockerFixture, MockType
 
-from .client import bot, intents, logger, on_ready, setup_hook, sync
+from .client import CourageousCometsBot, intents, logger, sync
 
 
 class MockAsyncContextManager:
@@ -29,7 +29,13 @@ def mock_context(mocker: MockerFixture) -> MockType:
     return ctx
 
 
-def test__bot_has_required_intents() -> None:
+@pytest.fixture()
+def bot() -> CourageousCometsBot:
+    """Create a CourageousCometsBot instance for testing."""
+    return CourageousCometsBot()
+
+
+def test__bot_has_required_intents(bot: CourageousCometsBot) -> None:
     """
     Test whether the bot has the required intents.
 
@@ -41,7 +47,7 @@ def test__bot_has_required_intents() -> None:
 
 
 @pytest.mark.asyncio()
-async def test__on_ready_logs_message(mocker: MockerFixture) -> None:
+async def test__on_ready_logs_message(bot: CourageousCometsBot, mocker: MockerFixture) -> None:
     """
     Test whether the on_ready function logs the expected message.
 
@@ -50,14 +56,14 @@ async def test__on_ready_logs_message(mocker: MockerFixture) -> None:
     - The logger.info function is called with the expected message.
     """
     logger_info = mocker.spy(logger, "info")
-    await on_ready()
+    await bot.on_ready()
     logger_info.assert_called_with("Logged in as %s", mocker.ANY)
 
 
 @pytest.mark.asyncio()
-async def test__setup_hook_loads_all_cogs(mocker: MockerFixture) -> None:
+async def test__load_cogs_loads_all_cogs(bot: CourageousCometsBot, mocker: MockerFixture) -> None:
     """
-    Test whether the setup_hook function loads all cogs from the config file.
+    Test whether the load_cogs function loads all cogs from the config file.
 
     Asserts
     -------
@@ -65,42 +71,46 @@ async def test__setup_hook_loads_all_cogs(mocker: MockerFixture) -> None:
     """
     cogs = ["cog1", "cog2", "cog3"]
 
-    mocker.patch("courageous_comets.client.CONFIG", {"cogs": cogs})
     load_extension = mocker.patch("discord.ext.commands.Bot.load_extension")
 
-    await setup_hook()
+    await bot.load_cogs(cogs)
 
     for cog in cogs:
         load_extension.assert_any_call(cog)
 
 
 @pytest.mark.asyncio()
-async def test__setup_hook_logs_loaded_cogs(mocker: MockerFixture) -> None:
+async def test__load_cogs_logs_loaded_cogs(
+    bot: CourageousCometsBot,
+    mocker: MockerFixture,
+) -> None:
     """
-    Test whether the setup_hook function logs the correct message for each cog.
+    Test whether the load_cogs function logs the correct message for each cog.
 
     Asserts
     -------
     - The bot.load_extension function is awaited for each cog in the config file.
-    - The logger.info function is called with the correct message for each cog.
+    - The logger.debug function is called with the correct message for each cog.
     """
     cogs = ["cog1", "cog2", "cog3"]
-    mocker.patch("courageous_comets.client.CONFIG", {"cogs": cogs})
 
     load_extension = mocker.patch("discord.ext.commands.Bot.load_extension", return_value=None)
-    logger_info = mocker.spy(logger, "info")
+    logger_debug = mocker.spy(logger, "debug")
 
-    await setup_hook()
+    await bot.load_cogs(cogs)
 
     for cog in cogs:
         load_extension.assert_any_await(cog)
-        logger_info.assert_any_call("Loaded cog %s", cog)
+        logger_debug.assert_any_call("Loaded cog %s", cog)
 
 
 @pytest.mark.asyncio()
-async def test__setup_hook_logs_exception_on_extension_error(mocker: MockerFixture) -> None:
+async def test__load_cogs_logs_exception_on_extension_error(
+    bot: CourageousCometsBot,
+    mocker: MockerFixture,
+) -> None:
     """
-    Test whether the setup_hook function logs an exception when an ExtensionError is raised.
+    Test whether the load_cogs function logs an exception when an ExtensionError is raised.
 
     Asserts
     -------
@@ -108,13 +118,12 @@ async def test__setup_hook_logs_exception_on_extension_error(mocker: MockerFixtu
     - The logger.exception function is called when an ExtensionError is raised.
     """
     cogs = ["cog1"]
-    mocker.patch("courageous_comets.client.CONFIG", {"cogs": cogs})
 
     expected = commands.ExtensionError(name="cog1")
     load_extension = mocker.patch("discord.ext.commands.Bot.load_extension", side_effect=expected)
     logger_exception = mocker.spy(logger, "exception")
 
-    await setup_hook()
+    await bot.load_cogs(cogs)
 
     load_extension.assert_awaited_with("cog1")
     logger_exception.assert_called_with("Failed to load cog %s", "cog1", exc_info=expected)
