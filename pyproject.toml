@@ -42,6 +42,8 @@ reportUnnecessaryTypeIgnoreComment = "error"
 asyncio_mode = "auto"
 filterwarnings = [
     "ignore:'audioop' is deprecated and slated for removal in Python 3.13",
+    "ignore:invalid escape sequence *",
+    "ignore:`resume_download` is deprecated and will be removed *",
 ]
 
 [tool.ruff]
