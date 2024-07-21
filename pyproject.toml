@@ -17,6 +17,7 @@ redis = { extras = ["hiredis"], version = "^5.0.7" }
 nltk = "^3.8.1"
 pydantic = "^2.8.2"
 redisvl = {extras = ["hiredis"], version = "^0.2.3"}
+contractions = "^0.1.73"
 
 [tool.poetry.dev-dependencies]
 commitizen = "3.27.0"
