@@ -35,8 +35,6 @@ class Message(BaseModel):
         The ID of the user who sent the message.
     content : str
         The content of the message.
-    embedding : bytes
-        The embedding of the message.
     """
 
     message_id: str
@@ -45,6 +43,18 @@ class Message(BaseModel):
     timestamp: UnixTimestamp
     user_id: str
     content: str
+
+
+class VectorizedMessage(Message):
+    """Message with vector embedding of content.
+
+    Attributes
+    ----------
+    embedding : bytes
+        The embedding of the content.
+    embedding: bytes
+    """
+
     embedding: bytes
 
 

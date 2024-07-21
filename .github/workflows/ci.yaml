@@ -12,6 +12,18 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
+    services:
+      redis:
+        image: redis/redis-stack:7.2.0-v11
+        ports:
+          - 6379:6379
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
       BOT_CONFIG_PATH: ${{ github.workspace }}/application.yaml
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
