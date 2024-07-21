@@ -127,7 +127,7 @@ class CourageousCometsBot(commands.Bot):
             raise CourageousCometsError(error_message)
 
         embedding = await self.vectorizer.embed(message.content)
-        return await redis_messages.save_mesage(
+        return await redis_messages.save_message(
             self.redis,
             VectorizedMessage(
                 user_id=str(message.author.id),

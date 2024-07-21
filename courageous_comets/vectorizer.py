@@ -23,7 +23,7 @@ class Vectorizer:
     async def embed(self, message: str) -> bytes:
         """Create a vector embedding of message."""
         return await asyncio.to_thread(
-            self.transformer.embed,  # pyright: ignore[reportGeneralTypeIssues]
+            self.transformer.embed,  # pyright: ignore
             message,
             as_buffer=True,
         )

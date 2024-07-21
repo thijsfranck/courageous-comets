@@ -70,7 +70,7 @@ async def save_message(
             [message.model_dump()],
             keys=[
                 key_schema.guild_messages(
-                    message.guild_id,  # pyright: ignore[reportGeneralTypeIssues]
+                    message.guild_id,  # pyright: ignore
                 ),
             ],
         )
