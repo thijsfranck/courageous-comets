@@ -1,4 +1,5 @@
 import re
+import string
 from collections.abc import Callable
 from functools import partial
 
@@ -25,6 +26,23 @@ def drop_links(text: str) -> str:
         The text with links removed.
     """
     return re.sub(r"http\S+", "", text)
+
+
+def drop_punctuation(text: str) -> str:
+    """
+    Remove punctuation from the given text.
+
+    Parameters
+    ----------
+    text : str
+        The text to process.
+
+    Returns
+    -------
+    str
+        The text without punctuation.
+    """
+    return text.translate(str.maketrans("", "", string.punctuation))
 
 
 def drop_very_long_words(text: str, max_length: int) -> str:
@@ -70,6 +88,7 @@ PROCESSORS: list[Processor] = [
     drop_links,
     unidecode,
     contractions.fix,  # type: ignore
+    drop_punctuation,
     partial(drop_very_long_words, max_length=settings.PREPROCESSING_MAX_WORD_LENGTH),
     partial(truncate, max_length=settings.PREPROCESSING_MAX_WORD_LENGTH),
 ]
