@@ -56,12 +56,12 @@ jobs:
           python-version: 3.12
           poetry-version: 1.8.3
 
-      - name: Run pre-commit hooks
-        uses: pre-commit/action@v3.0.1
-
       - name: Set up Pyright
         run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
         shell: bash
+
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1
 
       - name: Run type checking
         uses: jakebailey/pyright-action@v2
