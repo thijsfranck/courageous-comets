@@ -1,6 +1,7 @@
 import asyncio
 
-from redisvl.utils.vectorize.text.huggingface import HFTextVectorizer
+import numpy as np
+from sentence_transformers import SentenceTransformer
 
 
 class Vectorizer:
@@ -11,19 +12,21 @@ class Vectorizer:
 
     Attributes
     ----------
-    transformer: huggingface.HFTextVectorizer
-        The Hugging Face sentence transformer
+    transformer: sentence_transformers.SentenceTransformer
+        The sentence transformer
     """
 
     def __init__(self) -> None:
-        self.transformer = HFTextVectorizer(
-            model="sentence-transformers/all-MiniLM-L6-v2",
+        self.transformer = SentenceTransformer(
+            "sentence-transformers/all-MiniLM-L6-v2",
         )
 
     async def embed(self, message: str) -> bytes:
         """Create a vector embedding of message."""
-        return await asyncio.to_thread(
-            self.transformer.embed,  # pyright: ignore
+        embedding = await asyncio.to_thread(
+            self.transformer.encode,
             message,
-            as_buffer=True,
         )
+        return embedding.astype(  # pyright: ignore[reportGeneralTypeIssues]
+            np.float32,
+        ).tobytes()
