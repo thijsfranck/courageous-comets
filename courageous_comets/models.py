@@ -33,8 +33,6 @@ class Message(BaseModel):
         The timestamp when the message was sent.
     user_id : str
         The ID of the user who sent the message.
-    content : str
-        The content of the message.
     """
 
     message_id: str
@@ -42,20 +40,18 @@ class Message(BaseModel):
     guild_id: str
     timestamp: UnixTimestamp
     user_id: str
-    content: str
 
 
 class VectorizedMessage(Message):
-    """Message with vector embedding of content.
+    """Message with embedding vector of content.
 
     Attributes
     ----------
-    embedding : bytes
-        The embedding of the content.
-    embedding: bytes
+    embedding : list[float]
+        The embedding vector of the message content.
     """
 
-    embedding: bytes
+    embedding: list[float]
 
 
 class SentimentResult(BaseModel):
@@ -78,3 +74,15 @@ class SentimentResult(BaseModel):
     neu: float
     pos: float
     compound: float
+
+
+class MessageAnalysis(VectorizedMessage):
+    """Vectorized message with sentiment analysis.
+
+    Attributes
+    ----------
+    sentiment : SentimentResult
+        The results of sentiment analysis.
+    """
+
+    sentiment: SentimentResult
