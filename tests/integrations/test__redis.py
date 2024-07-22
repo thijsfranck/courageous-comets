@@ -41,7 +41,7 @@ async def vectorized_message(
     models.VectorizedMessage
         A message with embedding vector
     """
-    embedding = await vectorizer.embed(message.content)
+    embedding = await vectorizer.aencode(message.content)
     return models.VectorizedMessage(**message.model_dump(), embedding=embedding)
 
 

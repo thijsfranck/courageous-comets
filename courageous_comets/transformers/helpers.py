@@ -2,7 +2,7 @@ import asyncio
 import logging
 from pathlib import Path
 
-from sentence_transformers import SentenceTransformer
+from transformers import AutoModel, AutoTokenizer
 
 from courageous_comets import settings
 
@@ -24,9 +24,14 @@ async def download_transformer(resource: str, semaphore: asyncio.Semaphore) -> N
 
     async with semaphore:
         await asyncio.to_thread(
-            SentenceTransformer,
-            model_name_or_path=resource,
-            cache_folder=settings.SENTENCE_TRANSFORMERS_HOME,
+            AutoTokenizer.from_pretrained,
+            pretrained_model_name_or_path=resource,
+            cache_dir=settings.HF_HOME,
+        )
+        await asyncio.to_thread(
+            AutoModel.from_pretrained,
+            pretrained_model_name_or_path=resource,
+            cache_dir=settings.HF_HOME,
         )
 
     logger.debug("Transformer %r downloaded", resource)
@@ -47,9 +52,9 @@ async def init_transformers(resources: list[str]) -> None:
 
     # Create the Huggingface data directory if it does not exist to avoid a race condition when
     # running multiple download tasks concurrently
-    Path(settings.SENTENCE_TRANSFORMERS_HOME).mkdir(parents=True, exist_ok=True)
+    Path(settings.HF_HOME).mkdir(parents=True, exist_ok=True)
 
-    semaphore = asyncio.Semaphore(settings.SENTENCE_TRANSFORMERS_CONCURRENCY)
+    semaphore = asyncio.Semaphore(settings.HF_DOWNLOAD_CONCURRENCY)
     download_tasks = [download_transformer(resource, semaphore) for resource in resources]
 
     await asyncio.gather(*download_tasks)
