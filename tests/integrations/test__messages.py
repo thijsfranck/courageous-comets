@@ -36,7 +36,7 @@ async def test__messages_on_message__message_saved_to_redis(
 
     await cog.on_message(message)
 
-    key = key_schema.guild_messages(1)
+    key = key_schema.guild_messages(guild_id=1, message_id=1)
     key_exists = await redis.exists(key)
 
     assert key_exists

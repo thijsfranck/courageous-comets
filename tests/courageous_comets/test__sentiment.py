@@ -4,8 +4,8 @@ import pytest
 from pytest_mock import MockerFixture, MockType
 from redis.asyncio import Redis
 
-from courageous_comets import settings
 from courageous_comets.models import SentimentResult
+from courageous_comets.redis.keys import key_schema
 from courageous_comets.sentiment import (
     MAX_MESSAGE_LENGTH,
     calculate_sentiment,
@@ -93,7 +93,7 @@ async def test__store_sentiment_calculates_and_stores_sentiment(
     await store_sentiment(message, redis)
 
     redis.hset.assert_awaited_with(
-        f"{settings.REDIS_KEYS_PREFIX}:1:1:1:1:sentiment",
+        key_schema.sentiment_tokens(1, 1, 1, 1),
         mapping={
             "neg": mocker.ANY,
             "neu": mocker.ANY,
@@ -155,7 +155,7 @@ async def test__get_sentiment_retrieves_sentiment_from_redis(
     -------
     - The sentiment is retrieved from the database.
     """
-    key = f"{settings.REDIS_KEYS_PREFIX}:1:1:1:1:sentiment"
+    key = key_schema.sentiment_tokens(1, 1, 1, 1)
     redis.hmget.return_value = ["1.0", "1.0", "1.0", "1.0"]
 
     expected = SentimentResult(
@@ -182,7 +182,7 @@ async def test__get_sentiment_handles_missing_sentiment(
     -------
     - The function returns default sentiment values when the sentiment is missing.
     """
-    key = f"{settings.REDIS_KEYS_PREFIX}:1:1:1:1:sentiment"
+    key = key_schema.sentiment_tokens(1, 1, 1, 1)
     redis.hmget.return_value = [None, None, None, None]
 
     expected = SentimentResult(
