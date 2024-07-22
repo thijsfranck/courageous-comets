@@ -1,12 +1,12 @@
 {
   "containerEnv": {
     "BOT_CONFIG_PATH": "${containerWorkspaceFolder}/application.yaml",
+    "HF_HOME": "${containerWorkspaceFolder}/hf_data",
     "NLTK_DATA": "${containerWorkspaceFolder}/nltk_data",
     "POETRY_VIRTUALENVS_CREATE": "false",
     "REDIS_HOST": "localhost",
     "REDIS_PASSWORD": "redis",
     "REDIS_PORT": "6379",
-    "SENTENCE_TRANSFORMERS_HOME": "${containerWorkspaceFolder}/hf_data",
     "SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/secrets/keys.txt"
   },
   "customizations": {
