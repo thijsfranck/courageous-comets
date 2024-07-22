@@ -5,7 +5,7 @@ import pytest
 from discord.ext import commands
 from pytest_mock import MockerFixture, MockType
 
-from .client import CourageousCometsBot, intents, logger, sync
+from courageous_comets.client import CourageousCometsBot, intents, logger, sync
 
 
 class MockAsyncContextManager:
