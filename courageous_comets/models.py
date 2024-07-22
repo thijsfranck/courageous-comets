@@ -1,6 +1,7 @@
 import datetime
-from typing import Annotated
+from typing import Annotated, Self
 
+import discord
 import pydantic
 from pydantic import PlainSerializer
 
@@ -43,6 +44,25 @@ class Message(BaseModel):
     timestamp: UnixTimestamp
     user_id: str
     content: str
+
+    @classmethod
+    def from_discord_message(cls, message: discord.Message) -> Self:
+        """
+        Construct a Message model from a discord.Message object.
+
+        Parameters
+        ----------
+        message: discord.Message
+            The discord message to read data from
+        """
+        return cls(
+            message_id=str(message.id),
+            channel_id=str(message.channel.id),
+            guild_id=str(message.guild.id),  # type: ignore
+            timestamp=message.created_at,
+            user_id=str(message.author.id),
+            content=message.content,
+        )
 
 
 class VectorizedMessage(Message):
