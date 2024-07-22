@@ -134,7 +134,7 @@ async def test__sync_syncs_to_current_guild(mock_context: MockType) -> None:
     - The bot.sync function is awaited with the expected parameters.
     - The ctx.send function is awaited with the expected message.
     """
-    await sync(mock_context, [], "~")
+    await sync(mock_context, [], "~")  # type: ignore
 
     mock_context.bot.tree.sync.assert_awaited_with(guild=mock_context.guild)
     mock_context.send.assert_awaited_with(
@@ -151,7 +151,7 @@ async def test__sync_syncs_to_global_scope(mock_context: MockType) -> None:
     - The bot.sync function is awaited with the expected parameters.
     - The ctx.send function is awaited with the expected message
     """
-    await sync(mock_context, [], "*")
+    await sync(mock_context, [], "*")  # type: ignore
 
     mock_context.bot.tree.sync.assert_awaited_with()
     mock_context.send.assert_awaited_with(
@@ -169,7 +169,7 @@ async def test__sync_removes_non_global_commands(mock_context: MockType) -> None
     - The bot.sync function is awaited with the expected parameters
     - The ctx.send function is awaited with the expected message
     """
-    await sync(mock_context, [], "^")
+    await sync(mock_context, [], "^")  # type: ignore
 
     mock_context.bot.tree.clear_commands.assert_called_with(guild=mock_context.guild)
     mock_context.bot.tree.sync.assert_awaited_with(guild=mock_context.guild)
@@ -190,7 +190,7 @@ async def test__sync_syncs_to_given_guilds(
     """
     guilds = [mocker.Mock(), mocker.Mock()]
 
-    await sync(mock_context, guilds)
+    await sync(mock_context, guilds)  # type: ignore
 
     for guild in guilds:
         mock_context.bot.tree.sync.assert_any_await(guild=guild)
@@ -216,7 +216,7 @@ async def test__sync_logs_exception_on_http_exception(
 
     logger_exception = mocker.spy(logger, "exception")
 
-    await sync(mock_context, guilds)
+    await sync(mock_context, guilds)  # type: ignore
 
     for guild in guilds:
         logger_exception.assert_any_call("Failed to sync to guild %s", guild, exc_info=expected)
