@@ -89,7 +89,7 @@ class Vectorizer:
         # Perform pooling
         sentence_embeddings = mean_pooling(
             model_output,
-            encoded_input["attention_mask"],
+            encoded_input["attention_mask"],  # type: ignore
         )
 
         # Normalize embeddings
