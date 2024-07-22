@@ -83,6 +83,7 @@ class Messages(commands.Cog):
                 timestamp=message.created_at,
                 embedding=embedding,
                 sentiment=calculate_sentiment(message.content),
+            ),
         )
 
         return logger.info(
