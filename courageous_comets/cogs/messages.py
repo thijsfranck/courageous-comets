@@ -82,7 +82,7 @@ class Messages(commands.Cog):
                 guild_id=str(message.guild.id),  # pyright: ignore
                 timestamp=message.created_at,
                 embedding=embedding,
-                sentiment=calculate_sentiment(message.content),
+                sentiment=calculate_sentiment(text),
             ),
         )
 
