@@ -5,9 +5,8 @@ from discord.ext import commands
 
 from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
-from courageous_comets.models import MessageAnalysis
+from courageous_comets.models import VectorizedMessage
 from courageous_comets.redis import messages
-from courageous_comets.sentiment import calculate_sentiment
 from courageous_comets.vectorizer import Vectorizer
 
 logger = logging.getLogger(__name__)
@@ -48,21 +47,12 @@ class Messages(commands.Cog):
                 "Ignoring message %s because the bot is not connected to Redis",
                 message.id,
             )
-        # Ignore empty messages
-        if not message.content:
-            logger.warning("Ignoring empty message %s", message.id)
-            return None
 
-        # Extract the IDs from the message
-        guild_id = message.guild.id if message.guild else 0
-        channel_id = message.channel.id if message.channel else 0
-        user_id = message.author.id if message.author else 0
-        message_id = message.id if message.id else 0
-
-        # Ignore messages without all required IDs
-        if not all((guild_id, channel_id, user_id, message_id)):
-            logger.warning("Ignoring message %s with missing IDs", message.id)
-            return None
+        if not message.guild:
+            return logger.debug(
+                "Ignoring message %s because it's not in a guild",
+                message.id,
+            )
 
         text = preprocessing.process(message.clean_content)
 
@@ -73,18 +63,17 @@ class Messages(commands.Cog):
             )
 
         embedding = await self.vectorizer.aencode(text)
-        key = await messages.save_message(
-            self.bot.redis,
-            MessageAnalysis(
-                user_id=str(message.author.id),
-                message_id=str(message.id),
-                channel_id=str(message.channel.id),
-                guild_id=str(message.guild.id),  # pyright: ignore
-                timestamp=message.created_at,
-                embedding=embedding,
-                sentiment=calculate_sentiment(text),
-            ),
+
+        vectorized_message = VectorizedMessage(
+            user_id=str(message.author.id),
+            message_id=str(message.id),
+            channel_id=str(message.channel.id),
+            guild_id=str(message.guild.id),
+            timestamp=message.created_at,
+            embedding=embedding,
         )
+
+        key = await messages.save_message(self.bot.redis, vectorized_message)
 
         return logger.info(
             "Saved message %s to Redis with key %s",

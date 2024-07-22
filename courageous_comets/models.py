@@ -43,15 +43,16 @@ class Message(BaseModel):
 
 
 class VectorizedMessage(Message):
-    """Message with embedding vector of content.
+    """Message with vector embedding of content.
 
     Attributes
     ----------
-    embedding : list[float]
-        The embedding vector of the message content.
+    embedding : bytes
+        The embedding of the content.
+    embedding: bytes
     """
 
-    embedding: list[float]
+    embedding: bytes
 
 
 class SentimentResult(BaseModel):
@@ -74,15 +75,3 @@ class SentimentResult(BaseModel):
     neu: float
     pos: float
     compound: float
-
-
-class MessageAnalysis(VectorizedMessage):
-    """Vectorized message with sentiment analysis.
-
-    Attributes
-    ----------
-    sentiment : SentimentResult
-        The results of sentiment analysis.
-    """
-
-    sentiment: SentimentResult
