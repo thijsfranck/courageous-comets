@@ -20,6 +20,7 @@ pyyaml = "6.0.1"
 redis = { extras = ["hiredis"], version = "5.0.7" }
 redisvl = { extras = ["hiredis"], version = "0.2.3" }
 sentence-transformers = "3.0.1"
+numpy = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 commitizen = "3.27.0"
