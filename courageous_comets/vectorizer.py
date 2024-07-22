@@ -46,7 +46,7 @@ class Vectorizer:
         - Tokenize sentences
         - Compute token embeddings
         - Perform pooling taking into account the attention mask
-        - Normalize embeddings using toruch.nn.functional
+        - Normalize embeddings using torch.nn.functional
 
         Adapted from: https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2#usage-huggingface-transformers
 
