@@ -84,4 +84,4 @@ async def save_message(message: discord.Message, redis: Redis, vectorizer: Vecto
 
     key = await messages.save_message(redis, vectorized_message)
 
-    return logger.debug("Saved message %s to Redis with key %s", message.id, key)
+    return logger.info("Saved message %s to Redis with key %s", message.id, key)
