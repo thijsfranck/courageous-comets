@@ -28,7 +28,7 @@ jobs:
       BOT_CONFIG_PATH: ${{ github.workspace }}/application.yaml
       DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       NLTK_DATA: ${{ github.workspace }}/nltk_data
-      SENTENCE_TRANSFORMERS_HOME: ${{ github.workspace }}/hf_data
+      HF_HOME: ${{ github.workspace }}/hf_data
 
     steps:
       - name: Checkout code
@@ -42,10 +42,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nltk-data-
 
-      - name: Set up caching for SENTENCE_TRANSFORMERS_HOME
+      - name: Set up caching for HF_HOME
         uses: actions/cache@v4
         with:
-          path: ${{ env.SENTENCE_TRANSFORMERS_HOME }}
+          path: ${{ env.HF_HOME }}
           key: ${{ runner.os }}-hf-data-${{ hashFiles(env.BOT_CONFIG_PATH) }}
           restore-keys: |
             ${{ runner.os }}-hf-data-
