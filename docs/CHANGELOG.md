@@ -1,3 +1,26 @@
+## v0.3.0 (2024-07-22)
+
+### Feat
+
+- store sentiment analysis with message data (#39)
+- set up message content preprocessing (#40)
+- replace sentence_transformers with transformers library (#36)
+- add messages cog (#32)
+- return messages based on similarity score (#30)
+
+### Fix
+
+- fix sync command signature and internal logic (#38)
+- save messages with message_id on redis (#33)
+- ensure consistent log output (#29)
+- suppress warnings from libraries
+
+### Refactor
+
+- remove hfvectorizer (#35)
+- include save_message in Messages cog (#34)
+- remove throws clause from docstring
+
 ## v0.2.0 (2024-07-21)
 
 ### Feat
