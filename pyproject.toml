@@ -78,6 +78,9 @@ ignore = [
     "D107",
     # We do not need cryptographically secure random functions.
     "S311",
+    # Just let us use TODOs minimally!!
+    "TD003",
+    "FIX002",
 ]
 select = ["ALL"]
 

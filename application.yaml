@@ -1,4 +1,5 @@
 cogs:
+  - courageous_comets.cogs.interactions
   - courageous_comets.cogs.messages
   - courageous_comets.cogs.ping
   - jishaku
