@@ -27,6 +27,6 @@ class Vectorizer:
             self.transformer.encode,
             message,
         )
-        return embedding.astype(  # pyright: ignore[reportGeneralTypeIssues]
+        return embedding.astype(  # pyright: ignore
             np.float32,
         ).tobytes()
