@@ -6,14 +6,14 @@ The following environment variables are available to configure the application:
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------ |
 | [`DISCORD_TOKEN`](#discord_token)                                         | The Discord bot token.                                                   | Yes      | -                  |
 | [`BOT_CONFIG_PATH`](#bot_config_path)                                     | The path to the bot's configuration file.                                | No       | `application.yaml` |
+| [`HF_DOWNLOAD_CONCURRENCY`](#hf_download_concurrency)                     | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
+| [`HF_HOME`](#hf_home)                                                     | The directory containing Huggingface Transformers data files.            | No       | `hf_data`          |
 | [`LOG_LEVEL`](#log_level)                                                 | The minimum log level.                                                   | No       | `INFO`             |
 | [`NLTK_DATA`](#nltk_data)                                                 | The directory containing NLTK data files.                                | No       | `nltk_data`        |
 | [`NLTK_DOWNLOAD_CONCURRENCY`](#nltk_download_concurrency)                 | The maximum number of concurrent downloads when installing NLTK data.    | No       | `3`                |
 | [`REDIS_HOST`](#redis_host)                                               | The Redis host.                                                          | No       | `localhost`        |
 | [`REDIS_PORT`](#redis_port)                                               | The Redis port.                                                          | No       | `6379`             |
 | [`REDIS_PASSWORD`](#redis_password)                                       | The Redis password.                                                      | No       | -                  |
-| [`SENTENCE TRANSFORMERS_HOME`](#sentence_transformers_home)               | The directory containing Sentence Transformers data files.               | No       | `hf_data`          |
-| [`SENTENCE_TRANSFORMERS_CONCURRENCY`](#sentence_transformers_concurrency) | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
 
 ## Required Settings
 
@@ -46,6 +46,16 @@ cogs:
 
 By default, the application searches for a file named `application.yaml` in the directory from which it is launched.
 In the Docker image, this file is located at `/app/application.yaml`.
+
+### `HF_DOWNLOAD_CONCURRENCY`
+
+The maximum number of concurrent downloads when installing Huggingface Transformers models. By default, this
+is set to `3`.
+
+### `HF_HOME`
+
+The directory containing Huggingface Transformers data files. By default, this is set to `hf_data` in the directory
+from which the application is launched. In the Docker image, this directory is located at `/app/hf_data`.
 
 ### `LOG_LEVEL`
 
@@ -84,13 +94,3 @@ is set by default.
 
 !!! DANGER "Security Warning"
     Do not share your Redis password with anyone!
-
-### `SENTENCE_TRANSFORMERS_HOME`
-
-The directory containing Sentence Transformers data files. By default, this is set to `hf_data` in the directory
-from which the application is launched. In the Docker image, this directory is located at `/app/hf_data`.
-
-### `SENTENCE_TRANSFORMERS_CONCURRENCY`
-
-The maximum number of concurrent downloads when installing Sentence Transformers models. By default, this is set
-to `3`.

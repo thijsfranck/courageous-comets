@@ -19,8 +19,8 @@ python-dotenv = "1.0.1"
 pyyaml = "6.0.1"
 redis = { extras = ["hiredis"], version = "5.0.7" }
 redisvl = { extras = ["hiredis"], version = "0.2.3" }
-sentence-transformers = "3.0.1"
-numpy = "^2.0.1"
+torch = { version = "^2.3.1+cpu", source = "pytorch-cpu" }
+transformers = "^4.42.4"
 
 [tool.poetry.dev-dependencies]
 commitizen = "3.27.0"
@@ -29,11 +29,17 @@ mkdocs = "1.6.0"
 mkdocs-material = "9.5.29"
 pre-commit = "3.7.1"
 pymdown-extensions = "10.8.1"
+pyright = "^1.1.372"
 pytest = "8.2.2"
 pytest-asyncio = "0.23.7"
 pytest-mock = "3.14.0"
 pytest-sugar = "1.0.0"
 ruff = "0.5.2"
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
 
 [tool.pyright]
 typeCheckingMode = "basic"
