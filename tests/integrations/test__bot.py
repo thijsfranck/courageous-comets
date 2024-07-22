@@ -25,5 +25,6 @@ async def test__save_message(bot: CourageousCometsBot, redis: Redis, mocker: Moc
     await bot.save_message(message)
 
     key = key_schema.guild_messages(1)
+    key_exists = await redis.exists(key)
 
-    assert redis.exists(key)
+    assert key_exists
