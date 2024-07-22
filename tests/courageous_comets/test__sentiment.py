@@ -4,7 +4,6 @@ import pytest
 from pytest_mock import MockerFixture, MockType
 from redis.asyncio import Redis
 
-from courageous_comets import settings
 from courageous_comets.models import SentimentResult
 from courageous_comets.redis.keys import key_schema
 from courageous_comets.sentiment import (
@@ -183,7 +182,7 @@ async def test__get_sentiment_handles_missing_sentiment(
     -------
     - The function returns default sentiment values when the sentiment is missing.
     """
-    key = f"{settings.REDIS_KEYS_PREFIX}:1:1:1:1:sentiment"
+    key = key_schema.sentiment_tokens(1, 1, 1, 1)
     redis.hmget.return_value = [None, None, None, None]
 
     expected = SentimentResult(
