@@ -33,7 +33,7 @@ class CourageousCometsBot(commands.Bot):
         The Redis connection instance for the bot, or `None` if not connected.
     """
 
-    redis: Redis
+    redis: Redis | None = None
 
     def __init__(self) -> None:
         super().__init__(
