@@ -42,12 +42,12 @@ class KeySchema:
     """
 
     @prefix_key
-    def guild_messages(self, guild_id: int) -> str:
+    def guild_messages(self, *, guild_id: int | str, message_id: int | str) -> str:
         """Key to messages for a Discord guild.
 
         Redis type: hash
         """
-        return f"{guild_id}:messages"
+        return f"messages:{guild_id}:{message_id}"
 
     @prefix_key
     def guild_message_tokens(self, guild_id: int) -> str:
@@ -55,7 +55,7 @@ class KeySchema:
 
         Redis type: hash
         """
-        return f"{guild_id}:messages:tokens"
+        return f"messages:tokens:{guild_id}"
 
     @prefix_key
     def sentiment_tokens(
@@ -70,7 +70,7 @@ class KeySchema:
 
         Redis type: hash
         """
-        return f"{guild_id}:{channel_id}:{user_id}:{message_id}:sentiment"
+        return f"sentiment:{guild_id}:{channel_id}:{user_id}:{message_id}"
 
 
 key_schema = KeySchema()

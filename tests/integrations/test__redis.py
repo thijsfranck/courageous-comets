@@ -57,7 +57,10 @@ async def test__save_message(
     - The returned key is the same as the one constructed by the key_schema
     """
     key = await save_message(redis, vectorized_message)
-    assert key == key_schema.guild_messages(int(vectorized_message.guild_id))
+    assert key == key_schema.guild_messages(
+        guild_id=vectorized_message.guild_id,
+        message_id=vectorized_message.message_id,
+    )
 
 
 async def test__get_similar_message(
