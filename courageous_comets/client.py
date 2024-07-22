@@ -7,6 +7,7 @@ import discord
 import yaml
 from discord import Intents
 from discord.ext import commands
+from redis.asyncio import Redis
 
 from courageous_comets import settings
 from courageous_comets.nltk import init_nltk
@@ -32,12 +33,13 @@ class CourageousCometsBot(commands.Bot):
         The Redis connection instance for the bot, or `None` if not connected.
     """
 
+    redis: Redis
+
     def __init__(self) -> None:
         super().__init__(
             command_prefix=commands.when_mentioned,
             intents=intents,
         )
-        self.redis = None
 
     @override
     async def close(self) -> None:
