@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.title="Courageous Comets"
 ENV BOT_CONFIG_PATH=/app/application.yaml
 ENV LOG_LEVEL=INFO
 ENV NLTK_DATA=/app/nltk_data
-ENV SENTENCE_TRANSFORMERS_HOME=/app/hf_data
+ENV HF_HOME=/app/hf_data
 
 # Add a non-root user
 RUN adduser --system courageous-comets

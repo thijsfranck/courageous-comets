@@ -12,8 +12,8 @@ The following environment variables are available to configure the application:
 | [`REDIS_HOST`](#redis_host)                                               | The Redis host.                                                          | No       | `localhost`        |
 | [`REDIS_PORT`](#redis_port)                                               | The Redis port.                                                          | No       | `6379`             |
 | [`REDIS_PASSWORD`](#redis_password)                                       | The Redis password.                                                      | No       | -                  |
-| [`SENTENCE TRANSFORMERS_HOME`](#sentence_transformers_home)               | The directory containing Sentence Transformers data files.               | No       | `hf_data`          |
-| [`SENTENCE_TRANSFORMERS_CONCURRENCY`](#sentence_transformers_concurrency) | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
+| [`HF_HOME`](#hf_home)                                                     | The directory containing Huggingface Transformers data files.            | No       | `hf_data`          |
+| [`HF_DOWNLOAD_CONCURRENCY`](#hf_download_concurrency)                     | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
 
 ## Required Settings
 
@@ -85,12 +85,12 @@ is set by default.
 !!! DANGER "Security Warning"
     Do not share your Redis password with anyone!
 
-### `SENTENCE_TRANSFORMERS_HOME`
+### `HF_HOME`
 
-The directory containing Sentence Transformers data files. By default, this is set to `hf_data` in the directory
+The directory containing Huggingface Transformers data files. By default, this is set to `hf_data` in the directory
 from which the application is launched. In the Docker image, this directory is located at `/app/hf_data`.
 
-### `SENTENCE_TRANSFORMERS_CONCURRENCY`
+### `HF_DOWNLOAD_CONCURRENCY`
 
-The maximum number of concurrent downloads when installing Sentence Transformers models. By default, this is set
-to `3`.
+The maximum number of concurrent downloads when installing Huggingface Transformers models. By default, this
+is set to `3`.

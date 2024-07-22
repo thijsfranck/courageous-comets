@@ -53,7 +53,7 @@ class Messages(commands.Cog):
                 message.id,
             )
 
-        embedding = await self.vectorizer.embed(message.content)
+        embedding = await self.vectorizer.aencode(message.content)
 
         vectorized_message = VectorizedMessage(
             user_id=str(message.author.id),
