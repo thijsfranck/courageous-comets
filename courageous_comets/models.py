@@ -5,6 +5,8 @@ import discord
 import pydantic
 from pydantic import PlainSerializer
 
+from courageous_comets.vectorizer import Vectorizer
+
 UnixTimestamp = Annotated[
     datetime.datetime,
     PlainSerializer(lambda t: t.timestamp(), return_type=float),
@@ -76,6 +78,30 @@ class VectorizedMessage(Message):
     """
 
     embedding: bytes
+
+    @classmethod
+    async def from_discord_message(cls, message: discord.Message) -> Self:
+        """
+        Construct a Message model from a discord.Message object.
+
+        Parameters
+        ----------
+        message: discord.Message
+            The discord message to read data from
+        """
+        vectorizer = Vectorizer()
+
+        embedding = await vectorizer.aencode(message.content)
+
+        return cls(
+            message_id=str(message.id),
+            channel_id=str(message.channel.id),
+            guild_id=str(message.guild.id),  # type: ignore
+            timestamp=message.created_at,
+            user_id=str(message.author.id),
+            content=message.content,
+            embedding=embedding,
+        )
 
 
 class SentimentResult(BaseModel):

@@ -6,7 +6,6 @@ from discord.ext import commands
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.models import VectorizedMessage
 from courageous_comets.redis import messages
-from courageous_comets.vectorizer import Vectorizer
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +15,6 @@ class Messages(commands.Cog):
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
-        self.vectorizer = Vectorizer()
 
     @commands.Cog.listener(name="on_message")
     async def on_message(self, message: discord.Message) -> None:
@@ -53,17 +51,7 @@ class Messages(commands.Cog):
                 message.id,
             )
 
-        embedding = await self.vectorizer.aencode(message.content)
-
-        vectorized_message = VectorizedMessage(
-            user_id=str(message.author.id),
-            message_id=str(message.id),
-            channel_id=str(message.channel.id),
-            guild_id=str(message.guild.id),
-            content=message.content,
-            timestamp=message.created_at,
-            embedding=embedding,
-        )
+        vectorized_message = await VectorizedMessage.from_discord_message(message)
 
         key = await messages.save_message(self.bot.redis, vectorized_message)
 
