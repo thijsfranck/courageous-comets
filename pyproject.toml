@@ -40,6 +40,15 @@ name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 priority = "explicit"
 
+
+
+
+
+
+
+[tool.poetry.group.dev.dependencies]
+pyright = "^1.1.372"
+
 [tool.pyright]
 typeCheckingMode = "basic"
 pythonVersion = "3.12"
