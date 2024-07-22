@@ -3,6 +3,7 @@ import logging
 import discord
 from discord.ext import commands
 
+from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.models import VectorizedMessage
 from courageous_comets.redis import messages
@@ -53,14 +54,22 @@ class Messages(commands.Cog):
                 message.id,
             )
 
-        embedding = await self.vectorizer.aencode(message.content)
+        text = preprocessing.process(message.clean_content)
+
+        if not text:
+            return logger.debug(
+                "Ignoring message %s because it's empty after processing",
+                message.id,
+            )
+
+        embedding = await self.vectorizer.aencode(text)
 
         vectorized_message = VectorizedMessage(
             user_id=str(message.author.id),
             message_id=str(message.id),
             channel_id=str(message.channel.id),
             guild_id=str(message.guild.id),
-            content=message.content,
+            content=text,
             timestamp=message.created_at,
             embedding=embedding,
         )
