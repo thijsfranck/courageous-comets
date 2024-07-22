@@ -47,7 +47,7 @@ async def update_message_tokens(
 
 async def save_message(
     redis: Redis,
-    message: models.VectorizedMessage,
+    message: models.MessageAnalysis,
 ) -> str:
     """Save a message on Redis.
 
@@ -55,7 +55,7 @@ async def save_message(
     ----------
     redis : Redis
         The Redis connection instance.
-    message : models.VectorizedMessage
+    message : models.MessageAnalysis
         The message to save
 
     Returns
@@ -80,8 +80,7 @@ async def save_message(
 
 async def get_similar_messages(
     redis: Redis,
-    message: models.Message,
-    embedding: bytes,
+    message: models.VectorizedMessage,
     limit: int = 10,
     scope: StatisticScopeEnum = StatisticScopeEnum.GUILD,
 ) -> list[models.Message]:
@@ -121,13 +120,12 @@ async def get_similar_messages(
             raise ValueError(error_message)
 
     query = VectorQuery(
-        vector=embedding,
+        vector=message.embedding,
         vector_field_name="embedding",
         return_fields=[
             "message_id",
             "channel_id",
             "user_id",
-            "content",
             "guild_id",
             "timestamp",
         ],
