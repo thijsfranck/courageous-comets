@@ -154,6 +154,8 @@ try:
     BOT_CONFIG_PATH = read_bot_config_path()
     NLTK_DATA_DIR = os.getenv("NLTK_DATA", "nltk_data")
     NLTK_DOWNLOAD_CONCURRENCY = read_int("NLTK_DOWNLOAD_CONCURRENCY", 3)
+    PREPROCESSING_MAX_WORD_LENGTH = read_int("MAX_WORD_LENGTH", 35)
+    PREPROCESSING_MESSAGE_TRUNCATE_LENGTH = read_int("TRUNCATE_LENGTH", 256)
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = read_redis_port()
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")

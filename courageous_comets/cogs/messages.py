@@ -3,6 +3,7 @@ import logging
 import discord
 from discord.ext import commands
 
+from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.models import MessageAnalysis
 from courageous_comets.redis import messages
@@ -63,8 +64,15 @@ class Messages(commands.Cog):
             logger.warning("Ignoring message %s with missing IDs", message.id)
             return None
 
-        embedding = await self.vectorizer.aencode(message.content)
+        text = preprocessing.process(message.clean_content)
 
+        if not text:
+            return logger.debug(
+                "Ignoring message %s because it's empty after processing",
+                message.id,
+            )
+
+        embedding = await self.vectorizer.aencode(text)
         key = await messages.save_message(
             self.bot.redis,
             MessageAnalysis(
@@ -75,7 +83,6 @@ class Messages(commands.Cog):
                 timestamp=message.created_at,
                 embedding=embedding,
                 sentiment=calculate_sentiment(message.content),
-            ),
         )
 
         return logger.info(

@@ -1,6 +1,5 @@
 import logging
 import typing
-from collections.abc import Collection
 from typing import override
 
 import discord
@@ -105,7 +104,7 @@ bot = CourageousCometsBot()
 @commands.is_owner()
 async def sync(
     ctx: commands.Context[commands.Bot],
-    guilds: Collection[discord.Object],
+    guilds: commands.Greedy[discord.Object],
     spec: typing.Literal["~", "*", "^"] | None = None,
 ) -> None:
     """
@@ -121,23 +120,23 @@ async def sync(
     ----------
     ctx : commands.Context[commands.Bot]
         The context of the command.
-    guilds : Collection[discord.Object]
+    guilds : commands.Greedy[discord.Object]
         The guilds to sync to.
     spec : typing.Literal["~", "*", "^"] | None
         The scope to sync to. Defaults to `~`.
     """
     async with ctx.typing():
         if not guilds:
-            if spec == "~" and ctx.guild is not None:
+            if spec == "~":
                 synced = await ctx.bot.tree.sync(guild=ctx.guild)
             elif spec == "*":
                 synced = await ctx.bot.tree.sync()
-            elif spec == "^" and ctx.guild is not None:
+            elif spec == "^":
                 ctx.bot.tree.clear_commands(guild=ctx.guild)
                 await ctx.bot.tree.sync(guild=ctx.guild)
                 synced = []
-            elif ctx.guild is not None:
-                ctx.bot.tree.copy_global_to(guild=ctx.guild)
+            else:
+                ctx.bot.tree.copy_global_to(guild=ctx.guild)  # type: ignore (@commands.guild_only() ensures ctx has guild attribute)
                 synced = await ctx.bot.tree.sync(guild=ctx.guild)
 
             scope = "globally." if spec == "*" else "to the current guild."
