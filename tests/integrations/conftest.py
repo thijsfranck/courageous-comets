@@ -25,9 +25,9 @@ async def redis(bot: CourageousCometsBot) -> AsyncGenerator[Redis, None]:
     yield instance
 
     # Delete any keys that were created during the test
-    keys_to_delete = [key async for key in redis.scan_iter(f"{settings.REDIS_KEYS_PREFIX}:*")]
+    keys_to_delete = [key async for key in instance.scan_iter(f"{settings.REDIS_KEYS_PREFIX}:*")]
 
     if keys_to_delete:
-        await redis.delete(*keys_to_delete)
+        await instance.delete(*keys_to_delete)
 
-    await redis.aclose()
+    await instance.aclose()
