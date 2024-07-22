@@ -5,7 +5,6 @@ authors = ["Courageous Comets"]
 description = ""
 readme = "docs/README.md"
 license = "MIT"
-exclude = ["**/test__*.py"]
 
 [tool.poetry.dependencies]
 python = "~3.12"
