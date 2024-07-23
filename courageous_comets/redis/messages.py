@@ -147,6 +147,7 @@ async def get_previous_messages(
         return_fields=["message_id", "user_id", "channel_id", "guild_id", "timestamp"],
         filter_expression=filter_expression,
         num_results=limit,
+        sort_by="timestamp",
     )
     results = await index.query(query)
     return [models.Message.model_validate(result) for result in results]
@@ -196,6 +197,7 @@ async def get_messages_by_semantics_similarity(
         ],
         filter_expression=search_scope,
         num_results=limit,
+        sort_by="timestamp",
     )
     results = await index.query(query)
     return [models.Message.model_validate(result) for result in results]
@@ -241,6 +243,7 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
         return_fields=["message_id", "user_id", "channel_id", "guild_id", "timestamp"],
         filter_expression=filter_expression,
         num_results=limit,
+        sort_by="timestamp",
     )
     results = await index.query(query)
     return [models.Message.model_validate(result) for result in results]
