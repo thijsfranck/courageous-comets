@@ -108,7 +108,7 @@ PROCESSORS: list[Processor] = [
     drop_punctuation,
     partial(drop_very_long_words, max_length=settings.PREPROCESSING_MAX_WORD_LENGTH),
     drop_extra_whitespace,
-    partial(truncate, max_length=settings.PREPROCESSING_MAX_WORD_LENGTH),
+    partial(truncate, max_length=settings.PREPROCESSING_MESSAGE_TRUNCATE_LENGTH),
 ]
 
 
