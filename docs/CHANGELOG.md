@@ -1,3 +1,9 @@
+## v0.5.0 (2024-07-23)
+
+### Feat
+
+- add docker compose and fix production dockerfile
+
 ## v0.4.0 (2024-07-23)
 
 ### Feat
