@@ -32,7 +32,7 @@ Download the file and save it in any directory on your system.
 
 The Docker Compose file defines the following services:
 
-- [**courageous-comets**]((https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets)):
+- [**courageous-comets**](https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets):
   The Courageous Comets Discord application.
 - [**redis-stack**](https://hub.docker.com/r/redis/redis-stack-server): The database used by the application.
 
