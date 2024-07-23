@@ -14,7 +14,11 @@ class BaseModel(pydantic.BaseModel):
     """Base for model definitions."""
 
     # Redis tags need to be strings, thus, coerce integers passed during creation to string
-    model_config = pydantic.ConfigDict(extra="ignore", coerce_numbers_to_str=True)
+    model_config = pydantic.ConfigDict(
+        extra="ignore",
+        coerce_numbers_to_str=True,
+        from_attributes=True,
+    )
 
 
 class Message(BaseModel):

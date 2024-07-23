@@ -2,11 +2,49 @@ from redis.asyncio import Redis
 from redisvl.index import AsyncSearchIndex
 from redisvl.query import FilterQuery, VectorQuery
 from redisvl.query.filter import FilterExpression, Num, Tag
+from redisvl.query.query import BaseQuery
 
 from courageous_comets import models, settings
 from courageous_comets.enums import StatisticScopeEnum
 from courageous_comets.redis import schema
 from courageous_comets.redis.keys import key_schema
+
+# List of courageous_comets.models.Message return fields used acrosss queries
+# that return a list of courageous_comets.models.Message
+RETURN_FIELDS = ["message_id", "user_id", "channel_id", "guild_id", "timestamp"]
+
+
+async def _get_messages_from_query(
+    redis: Redis,
+    query: BaseQuery,
+) -> list[models.Message]:
+    """Get a list of messages from Redis query.
+
+    Assumes the fields returned in the query correspond to the Attributes
+    of the courageous_comets.models.Message.
+
+    Parameters
+    ----------
+    redis: redis.Redis
+        The Redis connection instance.
+    query: redisvl.query.query.BaseQuery
+        The query to run on Redis.
+
+    Returns
+    -------
+    courageous_comets.models.Message
+        The list of messages from the query.
+    """
+    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
+    index.set_client(redis)
+    results = await index.search(
+        query.query.sort_by("timestamp", asc=False),
+        query.params,
+    )
+    if results.total == 0:
+        return []
+
+    return [models.Message.model_validate(doc) for doc in results.docs]
 
 
 def get_search_scope(
@@ -113,21 +151,21 @@ async def save_message(
     )[0]
 
 
-async def get_previous_messages(
+async def get_recent_messages(
     redis: Redis,
     message: models.Message,
     scope: StatisticScopeEnum = StatisticScopeEnum.GUILD,
     limit: int = settings.QUERY_LIMIT,
 ) -> list[models.Message]:
     """
-    Get `limit` messages with timestamp less than or equal to `message` timestamp.
+    Get the most recent `limit` messages.
 
     Parameters
     ----------
     redis : redis.Redis
         The Redis connection instance.
     message: courageous_comets.models.Message
-        The reference message from which to start fetching older messages.
+        The discord message.
     limit : int
         The number of messages to fetch (default: settings.PAGE_SIZE).
     scope : courageous_comets.enums.StatisticScopeEnum
@@ -136,21 +174,14 @@ async def get_previous_messages(
     Returns
     -------
     list[courageous_comets.models.Message]
-        The list of messages whose timestamp is equal to or less than `message`.
+        The list of recent messages.
     """
-    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
-    index.set_client(redis)
-    # Determine the scope to filter the search
-    search_scope = get_search_scope(scope, message)
-    filter_expression = search_scope & (Num("timestamp") <= message.timestamp.timestamp())  # pyright: ignore
     query = FilterQuery(
-        return_fields=["message_id", "user_id", "channel_id", "guild_id", "timestamp"],
-        filter_expression=filter_expression,
+        return_fields=RETURN_FIELDS,
+        filter_expression=get_search_scope(scope, message),
         num_results=limit,
-        sort_by="timestamp",
     )
-    results = await index.query(query)
-    return [models.Message.model_validate(result) for result in results]
+    return await _get_messages_from_query(redis, query)
 
 
 async def get_messages_by_semantics_similarity(
@@ -181,26 +212,14 @@ async def get_messages_by_semantics_similarity(
     list[courageous_comets.models.Message]
         The messages that are semantically similar
     """
-    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
-    index.set_client(redis)
-    # Determine the scope to filter the search
-    search_scope = get_search_scope(scope, message)
     query = VectorQuery(
         vector=embedding,
         vector_field_name="embedding",
-        return_fields=[
-            "message_id",
-            "channel_id",
-            "user_id",
-            "guild_id",
-            "timestamp",
-        ],
-        filter_expression=search_scope,
+        return_fields=RETURN_FIELDS,
+        filter_expression=get_search_scope(scope, message),
         num_results=limit,
-        sort_by="timestamp",
     )
-    results = await index.query(query)
-    return [models.Message.model_validate(result) for result in results]
+    return await _get_messages_from_query(redis, query)
 
 
 async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
@@ -218,8 +237,10 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     ----------
     redis : redis.Redis
         The Redis connection instance.
+    message: courageous_comets.models.Message
+        The discord messaage.
     sentiment : courageous_comets.models.SentimentResult
-        The sentiment analayis result of a message.
+        The sentiment analayis result of message.
     radius: float
         The distance threshold of the search.
     limit : int
@@ -232,18 +253,13 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     list[courageous_comets.models.Message]
         The messages that are sentimentally similar.
     """
-    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
-    index.set_client(redis)
-    # Determine the scope to filter the search
     search_scope = get_search_scope(scope, message)
     low = Num("sentiment_compound") >= sentiment.compound  # pyright: ignore
     high = Num("sentiment_compound") <= sentiment.compound + radius  # pyright: ignore
     filter_expression = search_scope & low & high
     query = FilterQuery(
-        return_fields=["message_id", "user_id", "channel_id", "guild_id", "timestamp"],
+        return_fields=RETURN_FIELDS,
         filter_expression=filter_expression,
         num_results=limit,
-        sort_by="timestamp",
     )
-    results = await index.query(query)
-    return [models.Message.model_validate(result) for result in results]
+    return await _get_messages_from_query(redis, query)
