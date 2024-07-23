@@ -1,6 +1,35 @@
 import pytest
 
-from courageous_comets.preprocessing import drop_links, drop_punctuation, drop_very_long_words
+from courageous_comets.preprocessing import (
+    drop_extra_whitespace,
+    drop_links,
+    drop_punctuation,
+    drop_very_long_words,
+)
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Hello, world!", "Hello, world!"),
+        ("Hello,  world!", "Hello, world!"),
+        ("Hello,   world!", "Hello, world!"),
+        ("Hello, world! ", "Hello, world!"),
+        (" Hello, world! ", "Hello, world!"),
+        ("  Hello, world!  ", "Hello, world!"),
+        ("   Hello, world!   ", "Hello, world!"),
+    ],
+)
+def test__drop_extra_whitespace(text: str, expected: str) -> None:
+    """
+    Test whether `drop_extra_whitespace` removes extra whitespace from the given text.
+
+    Asserts
+    -------
+    - Extra whitespace is removed from the given text.
+    - Text without extra whitespace is not modified.
+    """
+    assert drop_extra_whitespace(text) == expected
 
 
 @pytest.mark.parametrize(

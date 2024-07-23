@@ -11,6 +11,23 @@ from courageous_comets import settings
 Processor = Callable[[str], str]
 
 
+def drop_extra_whitespace(text: str) -> str:
+    """
+    Remove extra whitespace from the given text.
+
+    Parameters
+    ----------
+    text : str
+        The text to process.
+
+    Returns
+    -------
+    str
+        The text with extra whitespace removed.
+    """
+    return re.sub(r"\s+", " ", text.strip())
+
+
 def drop_links(text: str) -> str:
     """
     Remove links from the given text.
@@ -90,6 +107,7 @@ PROCESSORS: list[Processor] = [
     contractions.fix,  # type: ignore
     drop_punctuation,
     partial(drop_very_long_words, max_length=settings.PREPROCESSING_MAX_WORD_LENGTH),
+    drop_extra_whitespace,
     partial(truncate, max_length=settings.PREPROCESSING_MAX_WORD_LENGTH),
 ]
 
