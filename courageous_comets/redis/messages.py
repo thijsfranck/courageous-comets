@@ -20,7 +20,7 @@ async def _get_messages_from_query(
 ) -> list[models.Message]:
     """Get a list of messages from Redis query.
 
-    Assumes the fields returned in the query correspond to the Attributes
+    Assumes the fields returned in the query correspond to the attributes
     of the courageous_comets.models.Message.
 
     Parameters
