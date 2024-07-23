@@ -44,6 +44,14 @@ This specifies the location of the bot's configuration file, which is a YAML fil
 cogs:
   - <PACKAGE_NAME>
   - <PACKAGE_NAME>
+# List of NLTK datasets to download on startup.
+nltk:
+  - <DATASET_NAME>
+  - <DATASET_NAME>
+# List of Huggingface Transformers models to download on startup.
+transformers:
+  - <MODEL_NAME>
+  - <MODEL_NAME>
 ```
 
 By default, the application searches for a file named `application.yaml` in the directory from which it is launched.
