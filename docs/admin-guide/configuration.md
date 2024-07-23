@@ -2,18 +2,20 @@
 
 The following environment variables are available to configure the application:
 
-| Variable                                                                  | Description                                                              | Required | Default            |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------ |
-| [`DISCORD_TOKEN`](#discord_token)                                         | The Discord bot token.                                                   | Yes      | -                  |
-| [`BOT_CONFIG_PATH`](#bot_config_path)                                     | The path to the bot's configuration file.                                | No       | `application.yaml` |
-| [`HF_DOWNLOAD_CONCURRENCY`](#hf_download_concurrency)                     | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
-| [`HF_HOME`](#hf_home)                                                     | The directory containing Huggingface Transformers data files.            | No       | `hf_data`          |
-| [`LOG_LEVEL`](#log_level)                                                 | The minimum log level.                                                   | No       | `INFO`             |
-| [`NLTK_DATA`](#nltk_data)                                                 | The directory containing NLTK data files.                                | No       | `nltk_data`        |
-| [`NLTK_DOWNLOAD_CONCURRENCY`](#nltk_download_concurrency)                 | The maximum number of concurrent downloads when installing NLTK data.    | No       | `3`                |
-| [`REDIS_HOST`](#redis_host)                                               | The Redis host.                                                          | No       | `localhost`        |
-| [`REDIS_PORT`](#redis_port)                                               | The Redis port.                                                          | No       | `6379`             |
-| [`REDIS_PASSWORD`](#redis_password)                                       | The Redis password.                                                      | No       | -                  |
+| Variable                                                                          | Description                                                              | Required | Default            |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------ |
+| [`DISCORD_TOKEN`](#discord_token)                                                 | The Discord bot token.                                                   | Yes      | -                  |
+| [`BOT_CONFIG_PATH`](#bot_config_path)                                             | The path to the bot's configuration file.                                | No       | `application.yaml` |
+| [`HF_DOWNLOAD_CONCURRENCY`](#hf_download_concurrency)                             | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
+| [`HF_HOME`](#hf_home)                                                             | The directory containing Huggingface Transformers data files.            | No       | `hf_data`          |
+| [`LOG_LEVEL`](#log_level)                                                         | The minimum log level.                                                   | No       | `INFO`             |
+| [`NLTK_DATA`](#nltk_data)                                                         | The directory containing NLTK data files.                                | No       | `nltk_data`        |
+| [`NLTK_DOWNLOAD_CONCURRENCY`](#nltk_download_concurrency)                         | The maximum number of concurrent downloads when installing NLTK data.    | No       | `3`                |
+| [`PREPROCESSING_MAX_WORD_LENGTH`](#preprocessing_max_word_length)                 | The maximum word length. Longer words are dropped.                       | No       | `35`               |
+| [`PREPROCESSING_MESSAGE_TRUNCATE_LENGTH`](#preprocessing_message_truncate_length) | The maximum message length. Longer messages are truncated.               | No       | `256`              |
+| [`REDIS_HOST`](#redis_host)                                                       | The Redis host.                                                          | No       | `localhost`        |
+| [`REDIS_PORT`](#redis_port)                                                       | The Redis port.                                                          | No       | `6379`             |
+| [`REDIS_PASSWORD`](#redis_password)                                               | The Redis password.                                                      | No       | -                  |
 
 ## Required Settings
 
@@ -78,6 +80,14 @@ application is launched. In the Docker image, this directory is located at `/app
 
 The application automatically downloads NLTK data files on startup. This setting controls the number of concurrent
 downloads. By default, this is set to `3`.
+
+### `PREPROCESSING_MAX_WORD_LENGTH`
+
+The maximum word length. Words longer than this value are dropped. By default, this is set to `35`.
+
+### `PREPROCESSING_MESSAGE_TRUNCATE_LENGTH`
+
+The maximum message length. Messages longer than this value are truncated. By default, this is set to `256`.
 
 ### `REDIS_HOST`
 
