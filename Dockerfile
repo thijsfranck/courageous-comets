@@ -15,18 +15,19 @@ ENV LOG_LEVEL=INFO
 ENV NLTK_DATA=/app/nltk_data
 ENV HF_HOME=/app/hf_data
 
-# Add a non-root user
-RUN adduser --system courageous-comets
+# Add a non-root user and group
+RUN addgroup --system courageous-comets && \
+    adduser --system --ingroup courageous-comets courageous-comets
 
 # Set the working directory
 WORKDIR /app
 
 # Assign the working directory to the non-root user and set the permissions
-RUN chown -R courageous-comets /app && \
-    chmod -R 0600 /app
+RUN chown -R courageous-comets:courageous-comets /app && \
+    chmod -R 0770 /app
 
 # Copy the app config and the wheel file to the working directory and set the permissions
-COPY --chown=courageous-comets --chmod=0400 application.yaml dist/*.whl ./
+COPY --chown=courageous-comets:courageous-comets --chmod=0440 application.yaml dist/*.whl ./
 
 # Install the wheel file and clean up to reduce image size
 RUN pip install --no-cache-dir *.whl && \

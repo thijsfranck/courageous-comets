@@ -71,6 +71,8 @@ COURAGEOUS_COMETS_VERSION=latest
 REDIS_STACK_VERSION=latest
 ```
 
+Replace `latest` with the tag corresponding to the version you want to use.
+
 ??? QUESTION "Where can I find previous versions of the image?"
     Previous versions of the Courageous Comets image are available on the [GitHub Container Registry](https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets).
 

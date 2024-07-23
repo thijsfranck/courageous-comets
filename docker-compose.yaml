@@ -1,0 +1,30 @@
+services:
+  courageous-comets:
+    image: ghcr.io/thijsfranck/courageous-comets:${COURAGEOUS_COMETS_VERSION:-latest}
+    environment:
+      REDIS_HOST: redis-stack
+      REDIS_PORT: 6379
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - redis-stack
+    networks:
+      - comets-network
+
+  redis-stack:
+    image: redis/redis-stack-server:${REDIS_STACK_VERSION:-latest}
+    volumes:
+      - redis-stack-data:/data
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - comets-network
+
+volumes:
+  redis-stack-data:
+
+
+networks:
+  comets-network:
