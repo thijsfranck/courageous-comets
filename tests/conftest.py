@@ -5,6 +5,7 @@ import yaml
 
 from courageous_comets import settings
 from courageous_comets.nltk import init_nltk
+from courageous_comets.redis.schema import MESSAGE_SCHEMA
 from courageous_comets.transformers import init_transformers
 from courageous_comets.vectorizer import Vectorizer
 
@@ -30,10 +31,23 @@ async def _load_transformers(application_config: dict) -> None:
     await init_transformers(transformers)
 
 
-@pytest.fixture(scope="session", autouse=True)
-def _patch_redis_keys_prefix() -> None:
-    """Set the REDIS_KEYS_PREFIX for testing."""
+@pytest.fixture(autouse=True)
+def _patch_redis_keys_prefix(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Set the REDIS_KEYS_PREFIX for testing.
+
+    The patch applies the following steps:
+
+    - Append _test to the courageous_comets.settings.REDIS_KEYS_PREFIX
+    - Update the names of Redis indexes using courageous_comets.settings.REDIS_KEYS_PREFIX
+
+    """
     settings.REDIS_KEYS_PREFIX = settings.REDIS_KEYS_PREFIX + "_test"
+    # MonkeyPatch the name of the Redis index for testing
+    monkeypatch.setitem(
+        MESSAGE_SCHEMA["index"],
+        "prefix",
+        f"{settings.REDIS_KEYS_PREFIX}:messages",
+    )
 
 
 @pytest.fixture(scope="session")

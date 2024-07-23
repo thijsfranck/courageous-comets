@@ -7,6 +7,7 @@ from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.models import VectorizedMessage
 from courageous_comets.redis import messages
+from courageous_comets.sentiment import calculate_sentiment
 from courageous_comets.vectorizer import Vectorizer
 
 logger = logging.getLogger(__name__)
@@ -63,6 +64,7 @@ class Messages(commands.Cog):
             )
 
         embedding = await self.vectorizer.aencode(text)
+        sentiment = calculate_sentiment(text)
 
         vectorized_message = VectorizedMessage(
             user_id=str(message.author.id),
@@ -73,7 +75,7 @@ class Messages(commands.Cog):
             embedding=embedding,
         )
 
-        key = await messages.save_message(self.bot.redis, vectorized_message)
+        key = await messages.save_message(self.bot.redis, vectorized_message, sentiment)
 
         return logger.info(
             "Saved message %s to Redis with key %s",
