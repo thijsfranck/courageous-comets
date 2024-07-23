@@ -1,3 +1,15 @@
+## v0.4.0 (2024-07-23)
+
+### Feat
+
+- revert back to hash data type for storing messages (#41)
+
+### Fix
+
+- open app config in read mode
+- trucate uses correct length
+- preprocessing drops extra whitespace
+
 ## v0.3.0 (2024-07-22)
 
 ### Feat

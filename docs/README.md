@@ -9,7 +9,7 @@ Code Jam 2024.
 
 Click the button below to install the bot in your Discord server:
 
-<!-- markdownlint-disable MD013 - All syntax has to be on the same line -->
+<!-- markdownlint-disable-next-line MD013 - All syntax has to be on the same line -->
 [Add to Discord :fontawesome-brands-discord:](https://discord.com/oauth2/authorize?client_id=1262672493978714174){ .md-button .md-button--primary }
 
 ## Contents
