@@ -55,8 +55,7 @@ file:
 DISCORD_TOKEN=<YOUR_TOKEN>
 ```
 
-Replace `<YOUR_TOKEN>` with your Discord bot token. When the application starts, it will use this token to authenticate
-with Discord.
+Replace `<YOUR_TOKEN>` with your Discord bot token.
 
 ??? QUESTION "Where do I find my Discord bot token?"
     See the configuration section for instructions on [how to obtain a Discord bot token](./configuration.md#discord_token).
