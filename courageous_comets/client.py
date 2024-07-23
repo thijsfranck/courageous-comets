@@ -18,7 +18,7 @@ intents = Intents.default()
 intents.members = True
 intents.message_content = True
 
-with settings.BOT_CONFIG_PATH.open() as config_file:
+with settings.BOT_CONFIG_PATH.open("r") as config_file:
     CONFIG = yaml.safe_load(config_file)
 
 
