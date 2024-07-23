@@ -9,6 +9,7 @@ from courageous_comets.redis.keys import key_schema
 from courageous_comets.redis.messages import (
     get_messages_by_semantics_similarity,
     get_messages_by_sentiment_similarity,
+    get_previous_messages,
     save_message,
 )
 from courageous_comets.sentiment import calculate_sentiment
@@ -111,8 +112,8 @@ async def test__save_message(
     """
     key = await save_message(redis, vectorized_message, sentiment)
     assert key == key_schema.guild_messages(
-        guild_id=vectorized_message.guild_id,
-        message_id=vectorized_message.message_id,
+        guild_id=int(vectorized_message.guild_id),
+        message_id=int(vectorized_message.message_id),
     )
 
 
@@ -183,3 +184,45 @@ async def test__get_messages_by_sentiment_similarity(
     )
     assert len(messages) == 1
     assert messages[0].model_dump() == message.model_dump()
+
+
+@pytest.mark.parametrize(
+    ("message_timestamp", "expected_output"),
+    [(datetime.datetime.fromtimestamp(0, datetime.UTC), 1)],
+)
+async def test__get_previous_messages(  # noqa: PLR0913
+    redis: Redis,
+    message: models.Message,
+    vectorized_message: models.VectorizedMessage,
+    sentiment: models.SentimentResult,
+    message_timestamp: datetime.datetime,
+    expected_output: int,
+) -> None:
+    """
+    Tests that the correct number of messages are returned from `get_previous_messages`.
+
+    Parameters
+    ----------
+    redis: redis.Redis
+        The Redis connection instance.
+    message: courageous_comets.models.Message
+        The (base) model of the Discord message.
+    vectorized_message: courageous_comets.models.VectorizedMessage
+        The Discord message with an embedding vector of its content.
+    sentiment: courageous_comets.models.SentimentResult
+        The sentiment analayis result of the message
+    message_timestamp: datetime.datetime
+        The timestamp of the comparison message.
+    expected_output: int
+        The number of messages with timestamp older than or equal to `message_timestamp`
+
+    Asserts
+    -------
+    - The number of messages returned is equal to the expected_output.
+    """
+    # Save the default message to the database.
+    await save_message(redis, vectorized_message, sentiment)
+    # Update its timestamp with the provided message_timestamp
+    message.timestamp = message_timestamp
+    messages = await get_previous_messages(redis, message)
+    assert len(messages) == expected_output

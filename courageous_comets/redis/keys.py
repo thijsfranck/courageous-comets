@@ -42,7 +42,7 @@ class KeySchema:
     """
 
     @prefix_key
-    def guild_messages(self, *, guild_id: int | str, message_id: int | str) -> str:
+    def guild_messages(self, *, guild_id: int, message_id: int) -> str:
         """Key to messages for a Discord guild.
 
         Redis type: hash

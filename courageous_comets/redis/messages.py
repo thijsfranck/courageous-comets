@@ -105,12 +105,51 @@ async def save_message(
             [{**message.model_dump(), **sentiment.model_dump(by_alias=True)}],
             keys=[
                 key_schema.guild_messages(
-                    guild_id=message.guild_id,
-                    message_id=message.message_id,
+                    guild_id=int(message.guild_id),
+                    message_id=int(message.message_id),
                 ),
             ],
         )
     )[0]
+
+
+async def get_previous_messages(
+    redis: Redis,
+    message: models.Message,
+    scope: StatisticScopeEnum = StatisticScopeEnum.GUILD,
+    limit: int = settings.QUERY_LIMIT,
+) -> list[models.Message]:
+    """
+    Get `limit` messages with timestamp less than or equal to `message` timestamp.
+
+    Parameters
+    ----------
+    redis : redis.Redis
+        The Redis connection instance.
+    message: courageous_comets.models.Message
+        The reference message from which to start fetching older messages.
+    limit : int
+        The number of messages to fetch (default: settings.PAGE_SIZE).
+    scope : courageous_comets.enums.StatisticScopeEnum
+        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
+
+    Returns
+    -------
+    list[courageous_comets.models.Message]
+        The list of messages whose timestamp is equal to or less than `message`.
+    """
+    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
+    index.set_client(redis)
+    # Determine the scope to filter the search
+    search_scope = get_search_scope(scope, message)
+    filter_expression = search_scope & (Num("timestamp") <= message.timestamp.timestamp())  # pyright: ignore
+    query = FilterQuery(
+        return_fields=["message_id", "user_id", "channel_id", "guild_id", "timestamp"],
+        filter_expression=filter_expression,
+        num_results=limit,
+    )
+    results = await index.query(query)
+    return [models.Message.model_validate(result) for result in results]
 
 
 async def get_messages_by_semantics_similarity(
