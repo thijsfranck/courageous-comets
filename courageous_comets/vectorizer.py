@@ -37,7 +37,7 @@ class Vectorizer:
             cache_dir=settings.HF_HOME,
         )
 
-    def encode(self, message: str) -> list[float]:
+    def encode(self, message: str) -> bytes:
         """
         Create vector embedding of a message.
 
@@ -57,7 +57,7 @@ class Vectorizer:
 
         Returns
         -------
-        list[float]
+        bytes
             The vector embeddings of the message
         """
 
@@ -97,9 +97,9 @@ class Vectorizer:
             torch_nn_functional.normalize(sentence_embeddings, p=2, dim=1)
             .numpy()
             .astype(np.float32)
-            .tolist()[0]
+            .tobytes()
         )
 
-    async def aencode(self, message: str) -> list[float]:
+    async def aencode(self, message: str) -> bytes:
         """Create a vector embedding of message asynchronously."""
         return await asyncio.to_thread(self.encode, message)

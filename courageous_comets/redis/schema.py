@@ -4,7 +4,6 @@ MESSAGE_SCHEMA = {
     "index": {
         "name": "message_idx",
         "prefix": settings.REDIS_KEYS_PREFIX,
-        "storage_type": "json",
     },
     "fields": [
         {"name": "content", "type": "text"},
@@ -23,9 +22,5 @@ MESSAGE_SCHEMA = {
                 "datatype": "float32",
             },
         },
-        {"name": "neu", "type": "numeric", "path": "$.sentiment.neu"},
-        {"name": "neg", "type": "numeric", "path": "$.sentiment.neg"},
-        {"name": "pos", "type": "numeric", "path": "$.sentiment.pos"},
-        {"name": "compound", "type": "numeric", "path": "$.sentiment.compound"},
     ],
 }
