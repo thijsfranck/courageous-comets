@@ -160,6 +160,8 @@ try:
     REDIS_PORT = read_redis_port()
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
     REDIS_KEYS_PREFIX = os.getenv("REDIS_KEYS_PREFIX", "courageous_comets")
+    # Maximum number of items to return from a query
+    QUERY_LIMIT = read_int("QUERY_LIMIT", 10)
     # Huggingface environment variable for caching downloaded models.
     # https://huggingface.co/docs/huggingface_hub/v0.24.0/package_reference/environment_variables#hf_home
     HF_HOME = os.getenv(
