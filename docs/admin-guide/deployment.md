@@ -4,8 +4,6 @@ This section provides instructions on how to deploy the application in a product
 
 ## Checklist
 
-Use the checklist below to keep track of your progress while deploying the application:
-
 - [ ] Set up Docker and Docker Compose on your system.
 - [ ] Get the Docker Compose file.
 - [ ] Set up a `.env` file.
