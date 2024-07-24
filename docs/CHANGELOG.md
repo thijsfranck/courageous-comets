@@ -1,3 +1,15 @@
+## v0.6.0 (2024-07-24)
+
+### Feat
+
+- store message tokens (#45)
+- limit queries to most recent messsages (#43)
+- store sentiment results along with message (#42)
+
+### Refactor
+
+- simplify function signatures and make it easier to build scope filters (#44)
+
 ## v0.5.0 (2024-07-23)
 
 ### Feat
