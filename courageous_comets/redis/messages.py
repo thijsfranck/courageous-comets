@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 
 from redis.asyncio import Redis
 from redisvl.index import AsyncSearchIndex
@@ -220,7 +221,7 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     sentiment: float,
     radius: float,
     ids: list[str] | None = None,
-    scope: StatisticScope = StatisticScope.GUILD,
+    scope: StatisticScope = StatisticScope.CHANNEL,
     limit: int = settings.QUERY_LIMIT,
 ) -> list[models.Message]:
     """
@@ -264,3 +265,55 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     )
 
     return await _get_messages_from_query(redis, query)
+
+
+async def get_tokens_count(
+    redis: Redis,
+    *,
+    guild_id: str,
+    ids: list[str] | None = None,
+    scope: StatisticScope = StatisticScope.CHANNEL,
+    limit: int = settings.QUERY_LIMIT,
+) -> Counter:
+    """
+    Get the count of tokens across messages.
+
+    Parameters
+    ----------
+    redis: redis.Redis
+        The Redis connection instance.
+    guild_id: str
+        The ID of the guild to make the search
+    ids: list[strr]
+        Optional list of IDs to search for.
+    scope : courageous_comets.enums.StatisticScope
+        The scope of additional IDs (default: courageous_comets.enums.StatisticScope.CHANNEL).
+        Ignored it is equal to courageous_comets.enums.StatisticScope.GUILD,
+    limit : int
+        The number of messages to fetch (default: courageous_comets.settings.QUERY_LIMIT).
+
+    Returns
+    -------
+    collections.Counter
+        Mapping of each token to its count.
+    """
+    search_scope = build_search_scope(guild_id, ids, scope)
+    query = FilterQuery(
+        return_fields=["tokens"],
+        filter_expression=search_scope,
+        num_results=limit,
+    )
+    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
+    index.set_client(redis)
+
+    results = await index.search(
+        query.query.sort_by("timestamp", asc=False),
+        query.params,
+    )
+    counter = Counter()
+    if results.total == 0:
+        return counter
+    tokens = [json.loads(doc.tokens) for doc in results.docs]
+    for token in tokens:
+        counter.update(token)
+    return counter
