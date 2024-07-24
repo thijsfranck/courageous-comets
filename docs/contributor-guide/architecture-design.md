@@ -92,10 +92,10 @@ are structured as follows:
 | `sentiment_compound` | Number | The compound sentiment score of the message.                     |
 | `embedding`          | Vector | The vector representation of the message.                        |
 
-Messages are keyed by namespace prefix combined with the `guild_id` and the `message_id`. This combination ensures
+Messages are keyed by a namespace prefix combined with the `guild_id` and the `message_id`. This combination ensures
 that messages can always be uniquely identified within the context of a guild.
 
-The fields with type`Tag` can be efficiently used for keyword search and filtering. This way we can quickly retrieve,
+The fields with type `Tag` can be efficiently used for keyword search and filtering. This way we can quickly retrieve,
 filter and aggregate messages based on the context of an interaction, such as a user, channel, or guild.
 
 The `embedding` field is used to store the vector representation of the message. This field is used for
