@@ -1,9 +1,9 @@
-import enum
+from enum import StrEnum
 
 
-class StatisticScopeEnum(enum.Enum):
+class StatisticScope(StrEnum):
     """Scope of statistics results to fetch."""
 
-    GUILD = enum.auto()
-    CHANNEL = enum.auto()
-    USER = enum.auto()
+    GUILD = "guild_id"
+    CHANNEL = "channel_id"
+    USER = "user_id"
