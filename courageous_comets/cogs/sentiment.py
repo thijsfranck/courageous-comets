@@ -1,12 +1,11 @@
-import typing
-
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from courageous_comets.client import CourageousCometsBot
-from courageous_comets.models import Message
-from courageous_comets.redis.messages import get_similar_messages
+from courageous_comets.enums import StatisticScope
+from courageous_comets.redis.messages import get_messages_by_semantics_similarity
+from courageous_comets.utils import contextmenu
 from courageous_comets.vectorizer import Vectorizer
 
 
@@ -14,19 +13,8 @@ class MessagesNotFound(app_commands.AppCommandError):
     """No messages were found."""
 
 
-def contextmenu(name: str) -> typing.Callable:
-    """Mark a function as a context menu."""
-
-    def wrap(func: typing.Callable) -> typing.Callable:
-        func.is_contextmenu = True
-        func.name = name
-        return func
-
-    return wrap
-
-
-class Interactions(commands.Cog):
-    """A boilerplate cog."""
+class Sentiment(commands.Cog):
+    """Sentiment related commands."""
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
@@ -51,16 +39,13 @@ class Interactions(commands.Cog):
         await interaction.response.defer()
 
         embedding = await self.vectorizer.aencode(message.content)
-        model_message = Message(
-            user_id=str(message.author.id),
-            message_id=str(message.id),
-            channel_id=str(message.channel.id),
-            guild_id=str(message.guild.id),  # type: ignore
-            content=message.content,
-            timestamp=message.created_at,
-        )
 
-        messages = await get_similar_messages(self.bot.redis, model_message, embedding)  # type: ignore
+        messages = await get_messages_by_semantics_similarity(
+            self.bot.redis,  # type: ignore
+            message.guild.id,  # type: ignore
+            embedding,
+            StatisticScope.GUILD,
+        )
 
         if not messages:
             raise MessagesNotFound
@@ -70,4 +55,4 @@ class Interactions(commands.Cog):
 
 async def setup(bot: CourageousCometsBot) -> None:
     """Load the cog."""
-    await bot.add_cog(Interactions(bot))
+    await bot.add_cog(Sentiment(bot))
