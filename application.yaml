@@ -1,6 +1,7 @@
 cogs:
   - courageous_comets.cogs.messages
   - courageous_comets.cogs.ping
+dev-cogs:
   - jishaku
 nltk:
   - punkt
