@@ -52,7 +52,8 @@ async def _get_messages_from_query(
 
 
 def build_search_scope(
-    id_: str,
+    guild_id: str,
+    ids: list[str] | None,
     scope: StatisticScope,
 ) -> FilterExpression:
     """
@@ -60,17 +61,30 @@ def build_search_scope(
 
     Parameters
     ----------
-    id_ : str
-        The ID to search for.
+    guild_id: str
+        The ID of the guild to make the search.
+    ids : list[str] | None
+        The additional IDs to limit the search to.
     scope : courageous_comets.enums.StatisticScope
-        The scope to limit the search.
+        The scope of the additional IDs.
+
+    Notes
+    -----
+    If the scope of the search is courageous_comets.enums.StatisticScope.GUILD,
+        the `ids` are ignored.
 
     Returns
     -------
     redisvl.query.FilterExpression
         The redis filter expression for the specified scope.
     """
-    return Tag(scope) == id_
+    search_scope = Tag(StatisticScope.GUILD) == guild_id
+
+    # Ignore the other IDs as this would imply searching across multiple scopes.
+    if scope == StatisticScope.GUILD or not ids:
+        return search_scope
+
+    return search_scope & (Tag(scope) == ids)
 
 
 async def save_message(
@@ -114,8 +128,10 @@ async def save_message(
 
 async def get_recent_messages(
     redis: Redis,
-    id_: str,
-    scope: StatisticScope = StatisticScope.GUILD,
+    *,
+    guild_id: str,
+    ids: list[str] | None = None,
+    scope: StatisticScope = StatisticScope.CHANNEL,
     limit: int = settings.QUERY_LIMIT,
 ) -> list[models.Message]:
     """
@@ -125,19 +141,22 @@ async def get_recent_messages(
     ----------
     redis : redis.Redis
         The Redis connection instance.
-    id_ : str
-        The ID of the entity to search for. It should correspond to the given scope.
+    guild_id: str
+        The ID of the guild to make the search.
+    ids : list[str]
+        Optional list of IDs to search for.
     scope : courageous_comets.enums.StatisticScope
-        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
+        The scope of additional IDs (default: courageous_comets.enums.StatisticScope.CHANNEL).
+        Ignored it is equal to courageous_comets.enums.StatisticScope.GUILD,
     limit : int
-        The number of messages to fetch (default: settings.PAGE_SIZE).
+        The number of messages to fetch (default: courageous_comets.settings.QUERY_LIMIT).
 
     Returns
     -------
     list[courageous_comets.models.Message]
         The list of recent messages.
     """
-    search_scope = build_search_scope(id_, scope)
+    search_scope = build_search_scope(guild_id, ids, scope)
 
     query = FilterQuery(
         return_fields=RETURN_FIELDS,
@@ -148,11 +167,13 @@ async def get_recent_messages(
     return await _get_messages_from_query(redis, query)
 
 
-async def get_messages_by_semantics_similarity(
+async def get_messages_by_semantics_similarity(  # noqa: PLR0913
     redis: Redis,
-    id_: str,
+    *,
+    guild_id: str,
     embedding: bytes,
-    scope: StatisticScope = StatisticScope.GUILD,
+    ids: list[str] | None = None,
+    scope: StatisticScope = StatisticScope.CHANNEL,
     limit: int = settings.QUERY_LIMIT,
 ) -> list[models.Message]:
     """
@@ -162,21 +183,24 @@ async def get_messages_by_semantics_similarity(
     ----------
     redis : redis.Redis
         The Redis connection instance.
-    id_ : str
-        The ID of the entity to search for. It should correspond to the given scope.
+    guild_id: str
+        The ID of the guild to make the search.
     embedding: bytes
         The vector embedding of the message.
+    ids : list[str] | None
+        Optional list of IDs to search for.
     scope : courageous_comets.enums.StatisticScope
-        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
+        The scope of additional IDs (default: courageous_comets.enums.StatisticScopeEnum.CHANNEL).
+        Ignored if it is set to courageous_comets.enums.StatisticScope.GUILD.
     limit : int
-        The number of similar messages to fetch (default: settings.PAGE_SIZE).
+        The number of similar messages to fetch (default: courageous_comets.settings.QUERY_LIMIT).
 
     Returns
     -------
     list[courageous_comets.models.Message]
         The messages that are semantically similar
     """
-    search_scope = build_search_scope(id_, scope)
+    search_scope = build_search_scope(guild_id, ids, scope)
 
     query = VectorQuery(
         vector=embedding,
@@ -191,9 +215,11 @@ async def get_messages_by_semantics_similarity(
 
 async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     redis: Redis,
-    id_: str,
+    *,
+    guild_id: str,
     sentiment: float,
     radius: float,
+    ids: list[str] | None = None,
     scope: StatisticScope = StatisticScope.GUILD,
     limit: int = settings.QUERY_LIMIT,
 ) -> list[models.Message]:
@@ -204,23 +230,26 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     ----------
     redis : redis.Redis
         The Redis connection instance.
-    id_ : str
-        The ID of the entity to search for. It should correspond to the given scope.
+    guild_id: str
+        The ID of the guild to make the search.
     sentiment : float
         The sentiment analayis result of message.
     radius: float
         The distance threshold of the search.
+    ids : list[str] | None
+        Optional list of IDs to search for.
+    scope : courageous_comets.enums.StatisticScope
+        The scope of additional IDs (default: courageous_comets.enums.StatisticScopeEnum.CHANNEL).
+        Ignored if it is set to courageous_comets.enums.StatisticScope.GUILD.
     limit : int
         The number of similar messages to fetch (default: settings.PAGE_SIZE).
-    scope : courageous_comets.enums.StatisticScopeEnum
-        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
 
     Returns
     -------
     list[courageous_comets.models.Message]
         The messages that are sentimentally similar.
     """
-    search_scope = build_search_scope(id_, scope)
+    search_scope = build_search_scope(guild_id, ids, scope)
 
     # Define lower and upper bounds for the sentiment compound score
     low = Num("sentiment_compound") >= sentiment - radius  # type: ignore
