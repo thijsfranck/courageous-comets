@@ -5,7 +5,7 @@ from redisvl.query.filter import FilterExpression, Num, Tag
 from redisvl.query.query import BaseQuery
 
 from courageous_comets import models, settings
-from courageous_comets.enums import StatisticScopeEnum
+from courageous_comets.enums import StatisticScope
 from courageous_comets.redis import schema
 from courageous_comets.redis.keys import key_schema
 
@@ -37,46 +37,38 @@ async def _get_messages_from_query(
     """
     index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
     index.set_client(redis)
+
     results = await index.search(
         query.query.sort_by("timestamp", asc=False),
         query.params,
     )
+
     if results.total == 0:
         return []
 
     return [models.Message.model_validate(doc) for doc in results.docs]
 
 
-def get_search_scope(
-    scope: StatisticScopeEnum,
-    message: models.Message,
+def build_search_scope(
+    id_: str,
+    scope: StatisticScope,
 ) -> FilterExpression:
-    """Determine the scope of a search.
+    """
+    Build a filter expression based on the given id and specified scope.
 
     Parameters
     ----------
-    scope : courageous_comets.enums.StatisticScopeEnum
-        The scope of a search.
-    message : courageous_comets.models.Message
-        The comparison message.
+    id_ : str
+        The ID to search for.
+    scope : courageous_comets.enums.StatisticScope
+        The scope to limit the search.
 
     Returns
     -------
     redisvl.query.FilterExpression
-        The redis filter expression for the specified scope
-
+        The redis filter expression for the specified scope.
     """
-    match scope:
-        case StatisticScopeEnum.GUILD:
-            filter_expression = Tag("guild_id") == message.guild_id
-        case StatisticScopeEnum.CHANNEL:
-            filter_expression = Tag("channel_id") == message.channel_id
-        case StatisticScopeEnum.USER:
-            filter_expression = Tag("user_id") == message.user_id
-        case _:
-            error_message = f"Unhandled scope: {scope!r}"
-            raise ValueError(error_message)
-    return filter_expression
+    return Tag(scope) == id_
 
 
 async def update_message_tokens(
@@ -138,23 +130,24 @@ async def save_message(
     """
     index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
     index.set_client(redis)
-    return (
-        await index.load(
-            [{**message.model_dump(), **sentiment.model_dump(by_alias=True)}],
-            keys=[
-                key_schema.guild_messages(
-                    guild_id=int(message.guild_id),
-                    message_id=int(message.message_id),
-                ),
-            ],
-        )
-    )[0]
+
+    # Merge the message and sentiment data into a single record
+    data = {**message.model_dump(), **sentiment.model_dump(by_alias=True)}
+
+    key = key_schema.guild_messages(
+        guild_id=int(message.guild_id),
+        message_id=int(message.message_id),
+    )
+
+    results = await index.load(data=[data], keys=[key])
+
+    return results[0]
 
 
 async def get_recent_messages(
     redis: Redis,
-    message: models.Message,
-    scope: StatisticScopeEnum = StatisticScopeEnum.GUILD,
+    id_: str,
+    scope: StatisticScope = StatisticScope.GUILD,
     limit: int = settings.QUERY_LIMIT,
 ) -> list[models.Message]:
     """
@@ -164,32 +157,35 @@ async def get_recent_messages(
     ----------
     redis : redis.Redis
         The Redis connection instance.
-    message: courageous_comets.models.Message
-        The discord message.
+    id_ : str
+        The ID of the entity to search for. It should correspond to the given scope.
+    scope : courageous_comets.enums.StatisticScope
+        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
     limit : int
         The number of messages to fetch (default: settings.PAGE_SIZE).
-    scope : courageous_comets.enums.StatisticScopeEnum
-        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
 
     Returns
     -------
     list[courageous_comets.models.Message]
         The list of recent messages.
     """
+    search_scope = build_search_scope(id_, scope)
+
     query = FilterQuery(
         return_fields=RETURN_FIELDS,
-        filter_expression=get_search_scope(scope, message),
+        filter_expression=search_scope,
         num_results=limit,
     )
+
     return await _get_messages_from_query(redis, query)
 
 
 async def get_messages_by_semantics_similarity(
     redis: Redis,
-    message: models.Message,
+    id_: str,
     embedding: bytes,
+    scope: StatisticScope = StatisticScope.GUILD,
     limit: int = settings.QUERY_LIMIT,
-    scope: StatisticScopeEnum = StatisticScopeEnum.GUILD,
 ) -> list[models.Message]:
     """
     Get the messages with similar semantics to the provided message.
@@ -198,37 +194,40 @@ async def get_messages_by_semantics_similarity(
     ----------
     redis : redis.Redis
         The Redis connection instance.
-    message : courageous_comets.models.Message
-        The comparison message.
+    id_ : str
+        The ID of the entity to search for. It should correspond to the given scope.
     embedding: bytes
         The vector embedding of the message.
+    scope : courageous_comets.enums.StatisticScope
+        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
     limit : int
         The number of similar messages to fetch (default: settings.PAGE_SIZE).
-    scope : courageous_comets.enums.StatisticScopeEnum
-        The scope to limit the search (default: enums.StatisticScopeEnum.GUILD).
 
     Returns
     -------
     list[courageous_comets.models.Message]
         The messages that are semantically similar
     """
+    search_scope = build_search_scope(id_, scope)
+
     query = VectorQuery(
         vector=embedding,
         vector_field_name="embedding",
         return_fields=RETURN_FIELDS,
-        filter_expression=get_search_scope(scope, message),
+        filter_expression=search_scope,
         num_results=limit,
     )
+
     return await _get_messages_from_query(redis, query)
 
 
 async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     redis: Redis,
-    message: models.Message,
-    sentiment: models.SentimentResult,
+    id_: str,
+    sentiment: float,
     radius: float,
+    scope: StatisticScope = StatisticScope.GUILD,
     limit: int = settings.QUERY_LIMIT,
-    scope: StatisticScopeEnum = StatisticScopeEnum.GUILD,
 ) -> list[models.Message]:
     """
     Get the messages with similar sentiment analysis.
@@ -237,9 +236,9 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     ----------
     redis : redis.Redis
         The Redis connection instance.
-    message: courageous_comets.models.Message
-        The discord messaage.
-    sentiment : courageous_comets.models.SentimentResult
+    id_ : str
+        The ID of the entity to search for. It should correspond to the given scope.
+    sentiment : float
         The sentiment analayis result of message.
     radius: float
         The distance threshold of the search.
@@ -253,13 +252,18 @@ async def get_messages_by_sentiment_similarity(  # noqa: PLR0913
     list[courageous_comets.models.Message]
         The messages that are sentimentally similar.
     """
-    search_scope = get_search_scope(scope, message)
-    low = Num("sentiment_compound") >= sentiment.compound  # pyright: ignore
-    high = Num("sentiment_compound") <= sentiment.compound + radius  # pyright: ignore
+    search_scope = build_search_scope(id_, scope)
+
+    # Define lower and upper bounds for the sentiment compound score
+    low = Num("sentiment_compound") >= sentiment - radius  # type: ignore
+    high = Num("sentiment_compound") <= sentiment + radius  # type: ignore
+
     filter_expression = search_scope & low & high
+
     query = FilterQuery(
         return_fields=RETURN_FIELDS,
         filter_expression=filter_expression,
         num_results=limit,
     )
+
     return await _get_messages_from_query(redis, query)
