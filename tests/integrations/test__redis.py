@@ -128,8 +128,8 @@ async def test__get_messages_by_semantics_similarity(
     await save_message(redis, message)
     messages = await get_messages_by_semantics_similarity(
         redis,
-        message.guild_id,
-        message.embedding,
+        guild_id=message.guild_id,
+        embedding=message.embedding,
     )
     assert len(messages) == 1
     assert messages[0].message_id == message.message_id
@@ -159,8 +159,8 @@ async def test__get_messages_by_sentiment_similarity(
     await save_message(redis, message)
     messages = await get_messages_by_sentiment_similarity(
         redis,
-        message.guild_id,
-        sentiment.compound,
+        guild_id=message.guild_id,
+        sentiment=sentiment.compound,
         radius=0.1,
     )
     assert len(messages) == 1
@@ -188,6 +188,6 @@ async def test__get_recent_messages(
     # Save the default message to the database.
     await save_message(redis, message)
     # Update its timestamp with the provided message_timestamp
-    messages = await get_recent_messages(redis, message.guild_id)
+    messages = await get_recent_messages(redis, guild_id=message.guild_id)
     assert len(messages) == 1
     assert messages[0].message_id == message.message_id
