@@ -9,6 +9,7 @@ from courageous_comets.redis.keys import key_schema
 from courageous_comets.redis.messages import (
     get_messages_by_semantics_similarity,
     get_messages_by_sentiment_similarity,
+    get_recent_messages,
     save_message,
 )
 from courageous_comets.sentiment import calculate_sentiment
@@ -111,8 +112,8 @@ async def test__save_message(
     """
     key = await save_message(redis, vectorized_message, sentiment)
     assert key == key_schema.guild_messages(
-        guild_id=vectorized_message.guild_id,
-        message_id=vectorized_message.message_id,
+        guild_id=int(vectorized_message.guild_id),
+        message_id=int(vectorized_message.message_id),
     )
 
 
@@ -181,5 +182,37 @@ async def test__get_messages_by_sentiment_similarity(
         sentiment,
         radius=0.1,
     )
+    assert len(messages) == 1
+    assert messages[0].model_dump() == message.model_dump()
+
+
+async def test__get_recent_messages(
+    redis: Redis,
+    message: models.Message,
+    vectorized_message: models.VectorizedMessage,
+    sentiment: models.SentimentResult,
+) -> None:
+    """
+    Tests that the most recently saved message is returned by get_recent_messages .
+
+    Parameters
+    ----------
+    redis: redis.Redis
+        The Redis connection instance.
+    message: courageous_comets.models.Message
+        The (base) model of the Discord message.
+    vectorized_message: courageous_comets.models.VectorizedMessage
+        The Discord message with an embedding vector of its content.
+    sentiment: courageous_comets.models.SentimentResult
+        The sentiment analayis result of the message
+
+    Asserts
+    -------
+    - The most recently saved message is returned.
+    """
+    # Save the default message to the database.
+    await save_message(redis, vectorized_message, sentiment)
+    # Update its timestamp with the provided message_timestamp
+    messages = await get_recent_messages(redis, message)
     assert len(messages) == 1
     assert messages[0].model_dump() == message.model_dump()
