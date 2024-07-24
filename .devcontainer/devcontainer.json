@@ -1,6 +1,7 @@
 {
   "containerEnv": {
     "BOT_CONFIG_PATH": "${containerWorkspaceFolder}/application.yaml",
+    "ENVIRONMENT": "development",
     "HF_HOME": "${containerWorkspaceFolder}/hf_data",
     "NLTK_DATA": "${containerWorkspaceFolder}/nltk_data",
     "POETRY_VIRTUALENVS_CREATE": "false",

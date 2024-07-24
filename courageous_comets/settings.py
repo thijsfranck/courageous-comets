@@ -148,6 +148,12 @@ LOG_LEVEL = logging.getLevelNamesMapping().get(
 
 setup_logging()
 
+# Determine whether the application is running in a development environment
+IS_DEV = os.getenv("ENVIRONMENT", "production") == "development"
+
+if IS_DEV:
+    logging.warning("🚨 Application is running in development mode! 🚨")
+
 # Load configuration values from the environment
 try:
     DISCORD_TOKEN = read_discord_token()
