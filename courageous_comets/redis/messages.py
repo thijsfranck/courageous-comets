@@ -1,3 +1,5 @@
+import json
+
 from redis.asyncio import Redis
 from redisvl.index import AsyncSearchIndex
 from redisvl.query import FilterQuery, VectorQuery
@@ -71,46 +73,9 @@ def build_search_scope(
     return Tag(scope) == id_
 
 
-async def update_message_tokens(
-    redis: Redis,
-    guild_id: int,
-    words: dict[str, int],
-) -> dict[str, int]:
-    """
-    Update the word frequencies for a guild's messages in the database.
-
-    Parameters
-    ----------
-    redis : redis.Redis
-        The Redis connection instance.
-    guild_id : int
-        The ID of the guild.
-    words : dict[str, int]
-        The words and their frequencies to update.
-
-    Returns
-    -------
-    dict[str, int]
-        The updated word frequencies.
-    """
-    async with redis.pipeline() as pipe:
-        # Queue the increment operations for each word
-        for word, frequency in words.items():
-            pipe.hincrby(key_schema.guild_message_tokens(guild_id), word, frequency)
-
-        # Execute the pipeline
-        new_frequencies: list[int] = await pipe.execute()
-
-    # Given dictionary keys are iterated in insertion order, execution of the
-    # instructions are evaluated in the same order, thus, the return values are
-    # in the same order.
-    return dict(zip(words.keys(), new_frequencies, strict=False))
-
-
 async def save_message(
     redis: Redis,
-    message: models.VectorizedMessage,
-    sentiment: models.SentimentResult,
+    message: models.MessageAnalysis,
 ) -> str:
     """Save a message on Redis.
 
@@ -118,30 +83,33 @@ async def save_message(
     ----------
     redis : redis.Redis
         The Redis connection instance.
-    message : courageous_comets.models.VectorizedMessage
-        The message to save
-    sentiment: courageous_comets.models.SentimentResult
-        The sentiment analayis result of the message
+    message : courageous_comets.models.MessageAnalysis
+        The message to save.
 
     Returns
     -------
     str
         The key to the data on Redis.
     """
-    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
-    index.set_client(redis)
-
-    # Merge the message and sentiment data into a single record
-    data = {**message.model_dump(), **sentiment.model_dump(by_alias=True)}
-
+    payload = {
+        "message_id": message.message_id,
+        "channel_id": message.channel_id,
+        "guild_id": message.guild_id,
+        "timestamp": message.timestamp.timestamp(),
+        "user_id": message.user_id,
+        "sentiment_neg": message.sentiment.neg,
+        "sentiment_neu": message.sentiment.neu,
+        "sentiment_pos": message.sentiment.pos,
+        "sentiment_compound": message.sentiment.compound,
+        "embedding": message.embedding,
+        "tokens": json.dumps(message.tokens),
+    }
     key = key_schema.guild_messages(
         guild_id=int(message.guild_id),
         message_id=int(message.message_id),
     )
-
-    results = await index.load(data=[data], keys=[key])
-
-    return results[0]
+    await redis.hset(key, mapping=payload)  # type: ignore
+    return key
 
 
 async def get_recent_messages(

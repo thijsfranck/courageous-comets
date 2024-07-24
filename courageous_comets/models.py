@@ -46,19 +46,6 @@ class Message(BaseModel):
     user_id: str
 
 
-class VectorizedMessage(Message):
-    """Message with vector embedding of content.
-
-    Attributes
-    ----------
-    embedding : bytes
-        The embedding of the content.
-    embedding: bytes
-    """
-
-    embedding: bytes
-
-
 class SentimentResult(BaseModel):
     """
     Result of sentiment analysis.
@@ -79,3 +66,22 @@ class SentimentResult(BaseModel):
     neu: float = Field(..., serialization_alias="sentiment_neu")
     pos: float = Field(..., serialization_alias="sentiment_pos")
     compound: float = Field(..., serialization_alias="sentiment_compound")
+
+
+class MessageAnalysis(Message):
+    """
+    Analysis of a discord message.
+
+    Attributes
+    ----------
+    sentiment: courageous_comets.models.SentimentResult
+        The result of sentiment analysis on the message.
+    tokens: dict[str, int]
+        Mapping of token to number of times it appears in message.
+    embedding : bytes
+        The embedding vector of the content.
+    """
+
+    sentiment: SentimentResult
+    tokens: dict[str, int]
+    embedding: bytes
