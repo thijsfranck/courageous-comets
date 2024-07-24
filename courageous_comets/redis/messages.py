@@ -79,14 +79,11 @@ def build_search_scope(
         The redis filter expression for the specified scope.
     """
     search_scope = Tag(StatisticScope.GUILD) == guild_id
-    # Ignore the other IDs as this would imply searching across multiple
-    # scopes.
-    if scope == StatisticScope.GUILD:
+    # Ignore the other IDs as this would imply searching across multiple scopes.
+    if scope == StatisticScope.GUILD or not ids:
         return search_scope
-
-    if ids:
-        search_scope = search_scope & (Tag(scope) == ids)
-    return search_scope
+    
+    return search_scope & (Tag(scope) == ids)
 
 
 async def save_message(
