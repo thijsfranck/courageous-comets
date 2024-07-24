@@ -46,10 +46,7 @@ async def _get_messages_from_query(
         query.params,
     )
 
-    if results.total == 0:
-        return []
-
-    return [models.Message.model_validate(doc) for doc in results.docs]
+    return [models.Message.model_validate(doc) for doc in results.docs if results.total]
 
 
 def build_search_scope(
@@ -311,9 +308,7 @@ async def get_tokens_count(
         query.params,
     )
     counter = Counter()
-    if results.total == 0:
-        return counter
-    tokens = [json.loads(doc.tokens) for doc in results.docs]
+    tokens: list[dict[str, int]] = [json.loads(doc.tokens) for doc in results.docs if results.total]
     for token in tokens:
         counter.update(token)
     return counter
