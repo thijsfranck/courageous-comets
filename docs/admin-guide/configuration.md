@@ -6,6 +6,7 @@ The following environment variables are available to configure the application:
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------ |
 | [`DISCORD_TOKEN`](#discord_token)                                                 | The Discord bot token.                                                   | Yes      | -                  |
 | [`BOT_CONFIG_PATH`](#bot_config_path)                                             | The path to the bot's configuration file.                                | No       | `application.yaml` |
+| [`ENVIRONMENT`](#environment)                                                     | The environment in which the application is running.                     | No       | `production`       |
 | [`HF_DOWNLOAD_CONCURRENCY`](#hf_download_concurrency)                             | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
 | [`HF_HOME`](#hf_home)                                                             | The directory containing Huggingface Transformers data files.            | No       | `hf_data`          |
 | [`LOG_LEVEL`](#log_level)                                                         | The minimum log level.                                                   | No       | `INFO`             |
@@ -44,6 +45,10 @@ This specifies the location of the bot's configuration file, which is a YAML fil
 cogs:
   - <PACKAGE_NAME>
   - <PACKAGE_NAME>
+# List of cogs to load in development mode only, identified by their package name.
+dev-cogs:
+  - <PACKAGE_NAME>
+  - <PACKAGE_NAME>
 # List of NLTK datasets to download on startup.
 nltk:
   - <DATASET_NAME>
@@ -56,6 +61,11 @@ transformers:
 
 By default, the application searches for a file named `application.yaml` in the directory from which it is launched.
 In the Docker image, this file is located at `/app/application.yaml`.
+
+### `ENVIRONMENT`
+
+The environment in which the application is running. Set this to `development` to enable development features
+such as loading development cogs. By default, this is set to `production`.
 
 ### `HF_DOWNLOAD_CONCURRENCY`
 

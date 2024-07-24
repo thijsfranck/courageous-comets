@@ -93,6 +93,10 @@ class CourageousCometsBot(commands.Bot):
         cogs = CONFIG.get("cogs", [])
         await self.load_cogs(cogs)
 
+        if settings.IS_DEV:
+            dev_cogs = CONFIG.get("dev-cogs", [])
+            await self.load_cogs(dev_cogs)
+
         logger.info("Initialization complete 🚀")
 
 
