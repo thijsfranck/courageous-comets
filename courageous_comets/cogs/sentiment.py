@@ -27,21 +27,25 @@ class Sentiment(commands.Cog):
                 menu = app_commands.ContextMenu(name=obj.name, callback=obj)
                 self.bot.tree.add_command(menu)
 
-    @contextmenu(name="Show similar messages")
+    @contextmenu(name="Show Sentiment")
     async def _get_message_similarities(
         self,
         interaction: discord.Interaction,
         message: discord.Message,
     ) -> None:
         """Get similar messages based on semantics."""
-        # TODO(isaa-ctaylor): interaction checks
-        # TODO(isaa-ctaylor): check redis connection
+        if self.bot.redis is None:
+            return await interaction.response.send_message(
+                "This feature is currently unavailable. Please try again later.",
+                ephemeral=True,
+            )
+
         await interaction.response.defer()
 
         embedding = await self.vectorizer.aencode(message.content)
 
         messages = await get_messages_by_semantics_similarity(
-            self.bot.redis,  # type: ignore
+            self.bot.redis,
             message.guild.id,  # type: ignore
             embedding,
             StatisticScope.GUILD,
@@ -51,6 +55,7 @@ class Sentiment(commands.Cog):
             raise MessagesNotFound
 
         # TODO(isaa-ctaylor): Display messages
+        return None
 
 
 async def setup(bot: CourageousCometsBot) -> None:
