@@ -61,7 +61,7 @@ filterwarnings = [
     "ignore:datetime.datetime.utcnow",
 ]
 markers = [
-    "num_messages(num=10): create num messages on Redis.",
+    "num_messages(num=10): create num messages.",
 ]
 
 [tool.ruff]

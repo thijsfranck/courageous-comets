@@ -347,9 +347,7 @@ def _serialize_aggregation_result(
     Each row in a Redis aggregation result is of the format:
         ['key1', 'value1', 'key2', 'value2', ...]
     """
-    return [
-        dict(itertools.zip_longest(*[iter(row)] * num_keys, fillvalue="")) for row in result.rows
-    ]
+    return [dict(itertools.zip_longest(*[iter(row)] * num_keys)) for row in result.rows]
 
 
 async def get_message_rate(  # noqa: PLR0913
