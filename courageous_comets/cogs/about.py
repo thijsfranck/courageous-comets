@@ -39,11 +39,14 @@ class About(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
+        about_menu = app_commands.ContextMenu(name="About", callback=self.about_menu)
+        self.bot.tree.add_command(about_menu)
+
     @app_commands.command(
         name="about",
         description="Get information about the app.",
     )
-    async def about(self, interaction: discord.Interaction) -> None:
+    async def about_command(self, interaction: discord.Interaction) -> None:
         """
         Respond to the `/about` command with information about the app.
 
@@ -56,6 +59,29 @@ class About(commands.Cog):
             "User %s requested the about message using the /about command.",
             interaction.user.id,
         )
+        await self.respond(interaction)
+
+    async def about_menu(
+        self,
+        interaction: discord.Interaction,
+        _: discord.Member | discord.User,
+    ) -> None:
+        """
+        Respond to the context menu with information about the app.
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            The interaction that triggered the context menu
+        """
+        logger.info(
+            "User %s requested the about message using the context menu.",
+            interaction.user.id,
+        )
+        await self.respond(interaction)
+
+    async def respond(self, interaction: discord.Interaction) -> None:
+        """Respond to an interaction."""
         try:
             await interaction.response.send_message(embed=render(), ephemeral=True)
         except discord.HTTPException as e:
