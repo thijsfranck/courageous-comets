@@ -304,50 +304,27 @@ async def get_tokens_count(
         Mapping of each token to its count.
     """
     search_scope = build_search_scope(guild_id, ids, scope)
+    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
+    index.set_client(redis)
+
     query = FilterQuery(
         return_fields=["tokens"],
         filter_expression=search_scope,
         num_results=limit,
     )
-    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
-    index.set_client(redis)
 
     results = await index.search(
         query.query.sort_by("timestamp", asc=False),
         query.params,
     )
+
     counter = Counter()
     tokens: list[dict[str, int]] = [json.loads(doc.tokens) for doc in results.docs if results.total]
+
     for token in tokens:
         counter.update(token)
+
     return counter
-
-
-def _serialize_aggregation_result(
-    result: aggregations.AggregateResult,
-    *,
-    num_keys: int,
-) -> list[dict[str, str]]:
-    """Convert redis aggregations result to a list of dictionaries.
-
-    Parameters
-    ----------
-    result: redis.commands.search.aggregation.AggregateResult
-        The results of the redis aggregation query.
-    num_keys: int
-        The number of keys returned for each row of the result.
-
-    Returns
-    -------
-    list[dict[str, int]]
-        Results of the query as a list of dictionaries.
-
-    Notes
-    -----
-    Each row in a Redis aggregation result is of the format:
-        ['key1', 'value1', 'key2', 'value2', ...]
-    """
-    return [dict(itertools.zip_longest(*[iter(row)] * num_keys)) for row in result.rows]
 
 
 async def get_message_rate(  # noqa: PLR0913
@@ -359,58 +336,50 @@ async def get_message_rate(  # noqa: PLR0913
     limit: int = settings.QUERY_LIMIT,
     duration: Duration = Duration.HOUR,
 ) -> list[dict[str, str]]:
-    """Get the rate of messages over an interval.
+    """
+    Get the rate of messages over an interval.
 
     Parameters
     ----------
-    redis: redis.Redis
+    redis : Redis
         The Redis connection instance.
-    guild_id: str
-        The ID of the guild to make the search
-    ids: list[strr]
-        Optional list of IDs to search for.
-    scope : courageous_comets.enums.StatisticScope
-        The scope of additional IDs (default: courageous_comets.enums.StatisticScope.CHANNEL).
-        Ignored it is equal to courageous_comets.enums.StatisticScope.GUILD,
-    duration: courageous_comets.enums.Duration (default: courageous_comets.enums.Duration.HOUR).
-        The duration over which to make the aggregation.
-    limit : int
-        The number of messages to aggregate over (default: courageous_comets.settings.QUERY_LIMIT).
+    guild_id : str
+        The ID of the guild to make the search.
+    ids : list[str], optional
+        Optional list of IDs to search for. Defaults to None.
+    scope : StatisticScope, optional
+        The scope of additional IDs (default: StatisticScope.CHANNEL).
+        Ignored if it is equal to StatisticScope.GUILD.
+    duration : Duration, optional
+        The duration over which to make the aggregation (default: Duration.HOUR).
+    limit : int, optional
+        The number of messages to aggregate over (default: settings.QUERY_LIMIT).
 
     Returns
     -------
-    collections.Counter
-        Mapping of each timestamp to its count.
+    list[dict[str, str]]
+        A list of dictionaries mapping each timestamp to its count of distinct messages.
     """
-    # In order to build the query:
-    # - use the search scope determined from the client call
-    # - add the @timestamp field which is a sortable field, allowing us to limit the query
-    #       before the aggregation begins
-    # - use the minute function on redis to round the UNIX timestamps to the beginning
-    #       of the current minute.
-    # create new property `timestamp` by stripping the sub-{duration} information from the
-    #   original message timestamp in the aggregation pipeline.
-    # - group the results by the new property.
-    # - count the number of distict message_id in each group and alias the return
-    #       field to num_messages
-    # - sort the results in order of increasing number of messages.
     search_scope = build_search_scope(guild_id, ids, scope)
+    index = _get_raw_index(redis)
+
+    # Define a reducer to count distinct message IDs and alias the result as "num_messages"
+    reducer = reducers.count_distinct("@message_id").alias("num_messages")
+
+    # Build the aggregation query
     query = (
         aggregations.AggregateRequest(f"{search_scope!s} @timestamp:[0 inf]")
         .limit(0, limit)
-        .apply(
-            timestamp=f"minute(@timestamp) - ((minute(@timestamp) % {duration.value}))",
-        )
-        .group_by(
-            ["@timestamp"],
-            reducers.count_distinct("@message_id").alias("num_messages"),
-        )
-        .sort_by(
-            aggregations.Asc(
-                "@num_messages",
-            ),  # type: ignore
-        )
+        # Create a new property `timestamp` rounded to the start of the interval
+        .apply(timestamp=f"minute(@timestamp) - ((minute(@timestamp) % {duration.value}))")
+        # Group results by interval using the new `timestamp` property
+        .group_by(["@timestamp"], reducer)
+        # Sort results by the number of messages in each interval
+        .sort_by(aggregations.Asc("@num_messages"))  # type: ignore
     )
-    index = _get_raw_index(redis)
+
+    # Execute the aggregation query on the index
     results = await index.aggregate(query)  # type: ignore
-    return _serialize_aggregation_result(results, num_keys=2)
+
+    # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
+    return [dict(itertools.batched(row, 2)) for row in results.rows]
