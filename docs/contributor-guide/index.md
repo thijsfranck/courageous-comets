@@ -5,6 +5,7 @@ set up a new development environment, along with guidelines on version control, 
 
 ## Contents
 
+- [Architecture & Design](./architecture-design.md): How the application is structured and key design decisions.
 - [Development Environment](./development-environment.md): How to set up your development environment.
 - [Version Control](./version-control.md): How to manage changes using version control.
 - [Documentation](./documentation.md): How to write good documentation.
