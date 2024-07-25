@@ -167,27 +167,33 @@ async def test__get_messages_by_sentiment_similarity(
     assert messages[0].message_id == message.message_id
 
 
+@pytest.mark.parametrize(("limit", "expect"), [(10, 10), (100, 100)])
+@pytest.mark.num_messages(100)
 async def test__get_recent_messages(
     redis: Redis,
-    message: models.MessageAnalysis,
+    messages: list[models.MessageAnalysis],
+    limit: int,
+    expect: int,
 ) -> None:
-    """
-    Tests that the most recently saved message is returned from the list of messages.
+    """Tests that the expected number of messages are returned from Redis.
 
     Parameters
     ----------
     redis: redis.Redis
         The Redis connection instance.
-    message: courageous_comets.models.MessageAnalysis
-        The message to save.
+    messages list[courageous_comets.models.MessageAnalysis]
+        The messages to save
 
     Asserts
     -------
-    - The most recently saved message is returned.
+    - The number of mesages returned does not exceed specified limit.
     """
-    # Save the default message to the database.
-    await save_message(redis, message)
+    # Save the messages to the database.
+    for message in messages:
+        await save_message(redis, message)
+    # All messages have the same guild_id
+    guild_id = messages[0].guild_id
+
     # Update its timestamp with the provided message_timestamp
-    messages = await get_recent_messages(redis, guild_id=message.guild_id)
-    assert len(messages) == 1
-    assert messages[0].message_id == message.message_id
+    db_messages = await get_recent_messages(redis, guild_id=guild_id, limit=limit)
+    assert len(db_messages) == expect
