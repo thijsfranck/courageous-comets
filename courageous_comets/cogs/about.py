@@ -81,7 +81,14 @@ class About(commands.Cog):
         await self.respond(interaction)
 
     async def respond(self, interaction: discord.Interaction) -> None:
-        """Respond to an interaction."""
+        """
+        Respond to an interaction.
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            The interaction to respond to
+        """
         try:
             await interaction.response.send_message(embed=render(), ephemeral=True)
         except discord.HTTPException as e:
