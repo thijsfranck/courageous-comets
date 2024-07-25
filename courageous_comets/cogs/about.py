@@ -39,7 +39,10 @@ class About(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @app_commands.command(name="about")
+    @app_commands.command(
+        name="about",
+        description="Get information about the app.",
+    )
     async def about(self, interaction: discord.Interaction) -> None:
         """
         Respond to the `/about` command with information about the app.
