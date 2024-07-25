@@ -1,20 +1,29 @@
+import itertools
 import json
 from collections import Counter
 
+import redis.commands.search.aggregation as aggregations
 from redis.asyncio import Redis
+from redis.commands.search import AsyncSearch, reducers
 from redisvl.index import AsyncSearchIndex
 from redisvl.query import FilterQuery, VectorQuery
 from redisvl.query.filter import FilterExpression, Num, Tag
 from redisvl.query.query import BaseQuery
 
 from courageous_comets import models, settings
-from courageous_comets.enums import StatisticScope
+from courageous_comets.enums import Duration, StatisticScope
 from courageous_comets.redis import schema
 from courageous_comets.redis.keys import key_schema
 
 # List of courageous_comets.models.Message return fields used acrosss queries
 # that return a list of courageous_comets.models.Message
 RETURN_FIELDS = ["message_id", "user_id", "channel_id", "guild_id", "timestamp"]
+
+
+def _get_raw_index(redis: Redis) -> AsyncSearch:
+    """Get the raw messages index on Redis."""
+    index = AsyncSearchIndex.from_dict(schema.MESSAGE_SCHEMA)
+    return redis.ft(index.schema.index.name)
 
 
 async def _get_messages_from_query(
@@ -312,3 +321,98 @@ async def get_tokens_count(
     for token in tokens:
         counter.update(token)
     return counter
+
+
+def _serialize_aggregation_result(
+    result: aggregations.AggregateResult,
+    *,
+    num_keys: int,
+) -> list[dict[str, str]]:
+    """Convert redis aggregations result to a list of dictionaries.
+
+    Parameters
+    ----------
+    result: redis.commands.search.aggregation.AggregateResult
+        The results of the redis aggregation query.
+    num_keys: int
+        The number of keys returned for each row of the result.
+
+    Returns
+    -------
+    list[dict[str, int]]
+        Results of the query as a list of dictionaries.
+
+    Notes
+    -----
+    Each row in a Redis aggregation result is of the format:
+        ['key1', 'value1', 'key2', 'value2', ...]
+    """
+    return [
+        dict(itertools.zip_longest(*[iter(row)] * num_keys, fillvalue="")) for row in result.rows
+    ]
+
+
+async def get_message_rate(  # noqa: PLR0913
+    redis: Redis,
+    *,
+    guild_id: str,
+    ids: list[str] | None = None,
+    scope: StatisticScope = StatisticScope.CHANNEL,
+    limit: int = settings.QUERY_LIMIT,
+    duration: Duration = Duration.HOUR,
+) -> list[dict[str, str]]:
+    """Get the rate of messages over an interval.
+
+    Parameters
+    ----------
+    redis: redis.Redis
+        The Redis connection instance.
+    guild_id: str
+        The ID of the guild to make the search
+    ids: list[strr]
+        Optional list of IDs to search for.
+    scope : courageous_comets.enums.StatisticScope
+        The scope of additional IDs (default: courageous_comets.enums.StatisticScope.CHANNEL).
+        Ignored it is equal to courageous_comets.enums.StatisticScope.GUILD,
+    duration: courageous_comets.enums.Duration (default: courageous_comets.enums.Duration.HOUR).
+        The duration over which to make the aggregation.
+    limit : int
+        The number of messages to aggregate over (default: courageous_comets.settings.QUERY_LIMIT).
+
+    Returns
+    -------
+    collections.Counter
+        Mapping of each timestamp to its count.
+    """
+    # In order to build the query:
+    # - use the search scope determined from the client call
+    # - add the @timestamp field which is a sortable field, allowing us to limit the query
+    #       before the aggregation begins
+    # - use the minute function on redis to round the UNIX timestamps to the beginning
+    #       of the current minute.
+    # create new property `timestamp` by stripping the sub-{duration} information from the
+    #   original message timestamp in the aggregation pipeline.
+    # - group the results by the new property.
+    # - count the number of distict message_id in each group and alias the return
+    #       field to num_messages
+    # - sort the results in order of increasing number of messages.
+    search_scope = build_search_scope(guild_id, ids, scope)
+    query = (
+        aggregations.AggregateRequest(f"{search_scope!s} @timestamp:[0 inf]")
+        .limit(0, limit)
+        .apply(
+            timestamp=f"minute(@timestamp) - ((minute(@timestamp) % {duration.value}))",
+        )
+        .group_by(
+            ["@timestamp"],
+            reducers.count_distinct("@message_id").alias("num_messages"),
+        )
+        .sort_by(
+            aggregations.Asc(
+                "@num_messages",
+            ),  # type: ignore
+        )
+    )
+    index = _get_raw_index(redis)
+    results = await index.aggregate(query)  # type: ignore
+    return _serialize_aggregation_result(results, num_keys=2)

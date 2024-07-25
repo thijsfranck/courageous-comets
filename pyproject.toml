@@ -42,6 +42,10 @@ name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 priority = "explicit"
 
+
+[tool.poetry.group.dev.dependencies]
+faker = "^26.0.0"
+
 [tool.pyright]
 typeCheckingMode = "basic"
 pythonVersion = "3.12"
@@ -55,6 +59,9 @@ filterwarnings = [
     "ignore:invalid escape sequence *",
     "ignore:`resume_download` is deprecated and will be removed *",
     "ignore:datetime.datetime.utcnow",
+]
+markers = [
+    "num_messages(num=10): create num messages on Redis.",
 ]
 
 [tool.ruff]
