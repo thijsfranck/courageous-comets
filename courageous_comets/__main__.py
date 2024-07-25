@@ -15,7 +15,7 @@ async def main() -> None:
     # Override logging configuration by dependencies
     settings.setup_logging()
 
-    logging.info("Starting the Courageous Comets application (v%s) ☄️", __version__)
+    logging.info("Starting the Courageous Comets application (%s) ☄️", __version__)
     try:
         await bot.start(settings.DISCORD_TOKEN)
     except discord.LoginFailure:
