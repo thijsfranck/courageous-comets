@@ -25,10 +25,10 @@ Click the link in the header to visit the documentation!
 def render() -> Embed:
     """Render the about message."""
     return Embed(
-        title=f"Courageous Comets (v{__version__})",
+        title=f"Courageous Comets ({__version__})",
         description=DESCRIPTION,
         color=discord.Color.blurple(),
-        url=f"https://thijsfranck.github.io/courageous-comets/v{__version__}/",
+        url=f"https://thijsfranck.github.io/courageous-comets/{__version__}/",
         timestamp=discord.utils.utcnow(),
     )
 
