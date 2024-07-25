@@ -12,7 +12,20 @@ from courageous_comets import settings
 from courageous_comets.nltk import init_nltk
 from courageous_comets.redis import init_redis
 
+DESCRIPTION = """
+Thank you for using Courageous Comets! ☄️
+
+This is a Discord app that provides various statistical analyses on messages.
+
+- **Sentiment Analysis**: Analyze the sentiment of a message.
+- **Word Frequency**: Analyze the frequency of words in a message.
+- **Similarity Analysis**: Analyze the similarity between two messages.
+
+Click the link in the header to visit the documentation!
+"""
+
 logger = logging.getLogger(__name__)
+
 
 intents = Intents.default()
 intents.members = True
@@ -38,6 +51,7 @@ class CourageousCometsBot(commands.Bot):
         super().__init__(
             command_prefix=commands.when_mentioned,
             intents=intents,
+            description=DESCRIPTION,
         )
 
     @override

@@ -9,38 +9,11 @@ from courageous_comets import __version__
 logger = logging.getLogger(__name__)
 
 
-DESCRIPTION = """
-Thank you for using Courageous Comets! ☄️
-
-This is a Discord app that provides various statistical analyses on messages.
-
-- **Sentiment Analysis**: Analyze the sentiment of a message.
-- **Word Frequency**: Analyze the frequency of words in a message.
-- **Similarity Analysis**: Analyze the similarity between two messages.
-
-Click the link in the header to visit the documentation!
-"""
-
-
-def render() -> Embed:
-    """Render the about message."""
-    return Embed(
-        title=f"Courageous Comets ({__version__})",
-        description=DESCRIPTION,
-        color=discord.Color.blurple(),
-        url=f"https://thijsfranck.github.io/courageous-comets/{__version__}/",
-        timestamp=discord.utils.utcnow(),
-    )
-
-
 class About(commands.Cog):
     """A cog that provides information about the app upon request."""
 
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-
-        about_menu = app_commands.ContextMenu(name="About", callback=self.about_menu)
-        self.bot.tree.add_command(about_menu)
 
     @app_commands.command(
         name="about",
@@ -59,38 +32,17 @@ class About(commands.Cog):
             "User %s requested the about message using the /about command.",
             interaction.user.id,
         )
-        await self.respond(interaction)
-
-    async def about_menu(
-        self,
-        interaction: discord.Interaction,
-        _: discord.Member | discord.User,
-    ) -> None:
-        """
-        Respond to the context menu with information about the app.
-
-        Parameters
-        ----------
-        interaction : discord.Interaction
-            The interaction that triggered the context menu
-        """
-        logger.info(
-            "User %s requested the about message using the context menu.",
-            interaction.user.id,
-        )
-        await self.respond(interaction)
-
-    async def respond(self, interaction: discord.Interaction) -> None:
-        """
-        Respond to an interaction.
-
-        Parameters
-        ----------
-        interaction : discord.Interaction
-            The interaction to respond to
-        """
         try:
-            await interaction.response.send_message(embed=render(), ephemeral=True)
+            await interaction.response.send_message(
+                embed=Embed(
+                    title=f"Courageous Comets ({__version__})",
+                    description=self.bot.description,
+                    color=discord.Color.blurple(),
+                    url=f"https://thijsfranck.github.io/courageous-comets/{__version__}/",
+                    timestamp=discord.utils.utcnow(),
+                ),
+                ephemeral=True,
+            )
         except discord.HTTPException as e:
             logger.exception("Could not deliver the about message.", exc_info=e)
 
