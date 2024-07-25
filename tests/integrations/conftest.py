@@ -44,17 +44,40 @@ async def messages(
     faker: Faker,
     request: pytest.FixtureRequest,
 ) -> list[models.MessageAnalysis]:
-    """Generate messages using the num_messages mark."""
+    """
+    Generate random messages for testing.
+
+    The number of messages to generate can be specified using the `num_messages` mark.
+
+    Example
+    -------
+    ```python
+    @pytest.mark.num_messages(100)
+    async def test__something(messages: list[models.MessageAnalysis]):
+        assert len(messages) == 100
+    ```
+    """
+    # Retrieve the number of messages to generate from the test function
+    # If the mark is not present, or the number of messages is not specified, generate 10 messages
     mark = request.node.get_closest_marker("num_messages")
     num_messages = int(mark.args[0]) if mark and len(mark.args) > 0 else 10
-    messages: list[models.MessageAnalysis] = []
+
+    # Message ID range
     min_id = 1
     max_id = 1_0000_000
+
+    messages: list[models.MessageAnalysis] = []
+
     for _ in range(num_messages):
+        # Generate a random message of 10 words
         sentence = faker.sentence(nb_words=10)
+
+        # Process the message
         embedding = await vectorizer.aencode(sentence)
         sentiment = calculate_sentiment(sentence)
         tokens = tokenize_sentence(sentence)
+
+        # Create a message object and append it to the list
         messages.append(
             models.MessageAnalysis(
                 guild_id="1",
@@ -67,4 +90,5 @@ async def messages(
                 tokens=word_frequency(tokens),
             ),
         )
+
     return messages
