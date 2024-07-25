@@ -5,6 +5,7 @@ from .client import bot
 
 __all__ = ["bot"]
 
+# Package version may not be available in CI.
 try:
     __version__ = importlib.metadata.version("courageous_comets")
 except importlib.metadata.PackageNotFoundError:

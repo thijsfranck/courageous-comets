@@ -1,4 +1,5 @@
 cogs:
+  - courageous_comets.cogs.about
   - courageous_comets.cogs.messages
   - courageous_comets.cogs.ping
 dev-cogs:
