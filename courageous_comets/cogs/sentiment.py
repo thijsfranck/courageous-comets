@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from discord import app_commands
 from discord.ext import commands
 
+from courageous_comets import models
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.enums import StatisticScope
 from courageous_comets.redis.keys import key_schema
@@ -13,6 +14,7 @@ from courageous_comets.redis.messages import (
     get_message_sentiment,
     get_messages_by_sentiment_similarity,
 )
+from courageous_comets.sentiment import calculate_sentiment
 from courageous_comets.utils import contextmenu
 from courageous_comets.vectorizer import Vectorizer
 
@@ -37,15 +39,18 @@ Overall the sentiment of the message is **{sentiment}**.
 
 Here's a breakdown of the scores:
 
-- Negative: {sentiment_neg}
-- Neutral: {sentiment_neu}
-- Positive: {sentiment_pos}
+- Negative: {neg}
+- Neutral: {neu}
+- Positive: {pos}
 
-The compound score is {sentiment_compound}.
+The compound score is {compound}.
 """
 
 
-def plot_sentiment_analysis(message_id: str | int, analysis_result: dict[str, float]) -> Path:
+def plot_sentiment_analysis(
+    message_id: str | int,
+    analysis_result: models.SentimentResult,
+) -> Path:
     """
     Plot the sentiment analysis of a message.
 
@@ -56,7 +61,7 @@ def plot_sentiment_analysis(message_id: str | int, analysis_result: dict[str, fl
     ----------
     message_id : str | int
         The id of the message.
-    analysis_result : MessageAnalysis
+    analysis_result : SentimentResult
         The result of sentiment analysis on a message.
 
     Returns
@@ -79,9 +84,9 @@ def plot_sentiment_analysis(message_id: str | int, analysis_result: dict[str, fl
             "Positive",
         ],
         [
-            analysis_result["sentiment_neg"],
-            analysis_result["sentiment_neu"],
-            analysis_result["sentiment_pos"],
+            analysis_result.neg,
+            analysis_result.neu,
+            analysis_result.pos,
         ],
         color=[
             "red",
@@ -149,7 +154,10 @@ class Sentiment(commands.Cog):
                 ephemeral=True,
             )
 
-        key = key_schema.guild_messages(guild_id=message.guild.id, message_id=message.id)
+        key = key_schema.guild_messages(
+            guild_id=message.guild.id,
+            message_id=message.id,
+        )
 
         analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
 
@@ -159,23 +167,19 @@ class Sentiment(commands.Cog):
                 ephemeral=True,
             )
 
-        color = (
-            discord.Color.green()
-            if analysis_result["sentiment_compound"] >= 0
-            else discord.Color.red()
-        )
+        color = discord.Color.green() if analysis_result.compound >= 0 else discord.Color.red()
 
         sentiment = next(
             (
                 value
                 for key, value in SENTIMENT.items()
-                if int(analysis_result["sentiment_compound"] * 100) in key
+                if int(analysis_result.compound * 100) in key
             ),
             "unknown",
         )
 
         template_vars = {
-            **analysis_result,
+            **analysis_result.model_dump(),
             "sentiment": sentiment,
         }
 
@@ -211,13 +215,13 @@ class Sentiment(commands.Cog):
 
         await interaction.response.defer()
 
-        embedding = await self.vectorizer.aencode(message.content)
-
+        sentiment = calculate_sentiment(message.content)
         messages = await get_messages_by_sentiment_similarity(
             self.bot.redis,
-            message.guild.id,  # type: ignore
-            embedding,
-            StatisticScope.GUILD,
+            guild_id=str(message.guild.id),  # type: ignore
+            sentiment=sentiment.compound,
+            scope=StatisticScope.GUILD,
+            radius=0.1,
         )
 
         if not messages:
