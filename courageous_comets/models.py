@@ -20,6 +20,11 @@ class BaseModel(pydantic.BaseModel):
         from_attributes=True,
     )
 
+    def __hash__(
+        self,
+    ) -> int:  # make hashable BaseModel subclass for async_lru.alru_cache decorator
+        return hash((type(self), *tuple(self.__dict__.values())))
+
 
 class Message(BaseModel):
     """

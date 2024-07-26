@@ -159,13 +159,7 @@ async def get_message_sentiment(
     if not data:
         return None
     return models.SentimentResult.model_validate(
-        dict(
-            zip(
-                fields,
-                (float(value) if value is not None else 0 for value in data),
-                strict=True,
-            ),
-        ),
+        dict(zip(fields, map(float, data), strict=True)),
     )
 
 
