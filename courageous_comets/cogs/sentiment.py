@@ -1,7 +1,6 @@
 import logging
 
 import discord
-import matplotlib.pyplot as plt
 from discord import app_commands
 from discord.ext import commands
 
@@ -32,6 +31,7 @@ SENTIMENT: dict[range, str] = {
     range(50, 100): "very positive 😍",
 }
 
+
 SENTIMENT_DESCRIPTION_TEMPLATE = """
 Overall the sentiment of the message is **{sentiment}**.
 
@@ -43,6 +43,7 @@ Here's a breakdown of the scores:
 
 The compound score is {compound}.
 """
+
 
 class Sentiment(commands.Cog):
     """Sentiment related commands."""
@@ -62,7 +63,7 @@ class Sentiment(commands.Cog):
     async def show_message_sentiment(
         self,
         interaction: discord.Interaction,
-        user: discord.User | discord.Member,
+        message: discord.Message,
     ) -> None:
         """
         Allow users to view the sentiment analysis of a message using a context menu.
@@ -75,7 +76,6 @@ class Sentiment(commands.Cog):
         ----------
         interaction : discord.Interaction
             The interaction that triggered the command.
-
         message : discord.Message
             The message to analyze.
         """
@@ -186,107 +186,11 @@ class Sentiment(commands.Cog):
             radius=0.1,
         )
 
-        if not user_sentiment:
+        if not messages:
             raise MessagesNotFound
 
-        view = discord.Embed(
-            title="User Sentiment",
-            description=USER_SENTIMENT_TEMPLATE.format(
-                sentiment=sentiment,
-                user=user.mention,
-                compound=average_sentiment,
-            ),
-            timestamp=discord.utils.utcnow(),
-        )
-
-        return await interaction.response.send_message(
-            embed=view,
-            ephemeral=True,
-        )
-
-    @contextmenu(name="Show message sentiment")
-    async def show_message_sentiment(
-        self,
-        interaction: discord.Interaction,
-        message: discord.Message,
-    ) -> None:
-        """
-        Allow users to view the sentiment analysis of a message using a context menu.
-
-        Generates an embed with the sentiment analysis of a message and sends it to the user.
-
-        The embed contains a text description of the sentiment analysis and a bar chart.
-
-        Parameters
-        ----------
-        interaction : discord.Interaction
-            The interaction that triggered the command.
-        message : discord.Message
-            The message to analyze.
-        """
-        logger.info(
-            "User %s requested sentiment analysis results for message %s.",
-            interaction.user.id,
-            message.id,
-        )
-
-        if self.bot.redis is None:
-            return await interaction.response.send_message(
-                "This feature is currently unavailable. Please try again later.",
-                ephemeral=True,
-            )
-
-        if message.guild is None:
-            return await interaction.response.send_message(
-                "This feature is only available in guilds.",
-                ephemeral=True,
-            )
-
-        key = key_schema.guild_messages(
-            guild_id=message.guild.id,
-            message_id=message.id,
-        )
-
-        analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
-
-        if analysis_result is None:
-            return await interaction.response.send_message(
-                "No sentiment analysis found for this message.",
-                ephemeral=True,
-            )
-
-        color = discord.Color.green() if analysis_result.compound >= 0 else discord.Color.red()
-
-        sentiment = next(
-            (
-                value
-                for key, value in SENTIMENT.items()
-                if int(analysis_result.compound * 100) in key
-            ),
-            "unknown",
-        )
-
-        template_vars = {
-            **analysis_result.model_dump(),
-            "sentiment": sentiment,
-        }
-
-        view = discord.Embed(
-            title="Message Sentiment",
-            description=MESSAGE_SENTIMENT_TEMPLATE.format(**template_vars),
-            color=color,
-            timestamp=discord.utils.utcnow(),
-        )
-
-        chart = plot_sentiment_analysis(message.id, analysis_result)
-        chart_file = discord.File(chart, filename="sentiment_analysis.png")
-        view.set_image(url="attachment://sentiment_analysis.png")
-
-        return await interaction.response.send_message(
-            embed=view,
-            file=chart_file,
-            ephemeral=True,
-        )
+        # TODO(isaa-ctaylor): Display messages
+        return None
 
 
 async def setup(bot: CourageousCometsBot) -> None:
