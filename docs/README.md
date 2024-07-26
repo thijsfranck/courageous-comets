@@ -47,7 +47,7 @@ This documentation is divided into the following sections:
 
 ## Authors
 
-Thank you for your interest in our project! It was built as part of the Python Discord Summer Code Jam 2024.
+Thank you for your interest in our project! It was built as part of the [Python Discord Summer Code Jam 2024](https://www.pythondiscord.com/events/code-jams/11/).
 
 The following team members contributed to the project:
 
