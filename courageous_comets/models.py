@@ -106,3 +106,18 @@ class MessageAnalysis(Message):
     sentiment: SentimentResult
     tokens: dict[str, int]
     embedding: bytes
+
+
+class MessageFrequency(BaseModel):
+    """Number of messages sent over a duration.
+
+    Attributes
+    ----------
+    timestamp: UnixTimestamp
+        The timestamp when the messages were sent.
+    nb_messages: int
+        The number of messages sent at `timestamp`
+    """
+
+    timestamp: UnixTimestamp
+    num_messages: int

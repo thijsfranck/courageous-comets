@@ -12,6 +12,6 @@ class StatisticScope(StrEnum):
 class Duration(IntEnum):
     """Number of seconds in time durations."""
 
-    MINUTE = 60
-    HOUR = 60 * 60
-    DAY = 60 * 60 * 24
+    minute = 60
+    hourly = 60 * 60
+    daily = 60 * 60 * 24
