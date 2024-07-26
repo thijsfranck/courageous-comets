@@ -133,6 +133,36 @@ async def save_message(
     return key
 
 
+async def get_message_sentiment(
+    key: str,
+    *,
+    redis: Redis,
+) -> models.SentimentResult | None:
+    """
+    Get the sentiment of message from the database given its key.
+
+    Parameters
+    ----------
+    key: str
+        The key of the message to fetch.
+    redis : redis.Redis
+        The Redis connection instance.
+
+    Returns
+    -------
+    courageous_comets.models.SentimentResult | None
+        The sentiment analysis result if found, else None.
+    """
+    fields = ["sentiment_neg", "sentiment_neu", "sentiment_pos", "sentiment_compound"]
+    data = await redis.hmget(key, fields)  # type: ignore
+
+    if not data:
+        return None
+    return models.SentimentResult.model_validate(
+        dict(zip(fields, map(float, data), strict=True)),
+    )
+
+
 async def get_recent_messages(
     redis: Redis,
     *,
@@ -369,9 +399,14 @@ async def get_message_rate(  # noqa: PLR0913
     # Build the aggregation query
     query = (
         aggregations.AggregateRequest(f"{search_scope!s} @timestamp:[0 inf]")
-        .limit(0, limit)
+        .limit(
+            0,
+            limit,
+        )
         # Create a new property `timestamp` rounded to the start of the interval
-        .apply(timestamp=f"minute(@timestamp) - ((minute(@timestamp) % {duration.value}))")
+        .apply(
+            timestamp=f"minute(@timestamp) - ((minute(@timestamp) % {duration.value}))",
+        )
         # Group results by interval using the new `timestamp` property
         .group_by(["@timestamp"], reducer)
         # Sort results by the number of messages in each interval
