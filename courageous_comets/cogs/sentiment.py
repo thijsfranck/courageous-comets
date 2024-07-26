@@ -183,7 +183,7 @@ class Sentiment(commands.Cog):
             "sentiment": sentiment,
         }
 
-        view = discord.Embed(
+        embed = discord.Embed(
             title="Message Sentiment",
             description=SENTIMENT_DESCRIPTION_TEMPLATE.format(**template_vars),
             color=color,
@@ -192,10 +192,10 @@ class Sentiment(commands.Cog):
 
         chart = plot_sentiment_analysis(message.id, analysis_result)
         chart_file = discord.File(chart, filename="sentiment_analysis.png")
-        view.set_image(url="attachment://sentiment_analysis.png")
+        embed.set_image(url="attachment://sentiment_analysis.png")
 
         return await interaction.response.send_message(
-            embed=view,
+            embed=embed,
             file=chart_file,
             ephemeral=True,
         )
