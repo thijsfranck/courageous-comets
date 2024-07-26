@@ -363,15 +363,15 @@ async def get_tokens_count(
     return counter
 
 
-async def get_message_rate(  # noqa: PLR0913
+async def get_messages_frequency(  # noqa: PLR0913
     redis: Redis,
     *,
     guild_id: str,
     ids: list[str] | None = None,
     scope: StatisticScope = StatisticScope.CHANNEL,
     limit: int = settings.QUERY_LIMIT,
-    duration: Duration = Duration.HOUR,
-) -> list[dict[str, str]]:
+    duration: Duration = Duration.hourly,
+) -> list[models.MessageFrequency]:
     """
     Get the rate of messages over an interval.
 
@@ -393,8 +393,8 @@ async def get_message_rate(  # noqa: PLR0913
 
     Returns
     -------
-    list[dict[str, str]]
-        A list of dictionaries mapping each timestamp to its count of distinct messages.
+    list[models.MessageFrequency]
+        A list of message frequency at different timestamps.
     """
     search_scope = build_search_scope(guild_id, ids, scope)
     index = _get_raw_index(redis)
@@ -415,15 +415,17 @@ async def get_message_rate(  # noqa: PLR0913
         )
         # Group results by interval using the new `timestamp` property
         .group_by(["@timestamp"], reducer)
-        # Sort results by the number of messages in each interval
-        .sort_by(aggregations.Asc("@num_messages"))  # type: ignore
+        # Sort results by the timestamp
+        .sort_by(aggregations.Asc("@timestamp"))  # type: ignore
     )
 
     # Execute the aggregation query on the index
     results = await index.aggregate(query)  # type: ignore
-
     # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
-    return [dict(itertools.batched(row, 2)) for row in results.rows]
+    return [
+        models.MessageFrequency.model_validate_strings(dict(itertools.batched(row, 2)))
+        for row in results.rows
+    ]
 
 
 async def get_average_sentiment(
@@ -469,4 +471,6 @@ async def get_average_sentiment(
     results = await index.aggregate(query)  # type: ignore
 
     # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
-    return [{key: float(value) for row in results.rows for key, value in itertools.batched(row, 2)}]
+    return [
+        {key: float(value) for row in results.rows for key, value in itertools.batched(row, 2)},
+    ]
