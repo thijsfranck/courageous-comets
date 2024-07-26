@@ -244,3 +244,30 @@ All [pre-commit](#pre-commit) checks are also run in the CI pipeline to avoid an
 and remote environments.
 
 When all tests and checks pass, there is a final peer review before the changes are merged into the main branch.
+
+### Release Flow
+
+The release flow is triggered when a developer bumps the version of the application and creates a new release.
+
+#### Release
+
+The first part of the release flow involves determining the version number for the new release. This is done using
+[`Commitizen`](https://commitizen-tools.github.io/commitizen/), which automatically increments the version based
+on the commit messages. Version numbers follow the [Semantic Versioning](https://semver.org/) specification.
+
+Secondly, a changelog is generated using [`commitizen`](https://commitizen-tools.github.io/commitizen/). The changelog
+provides a summary of the changes included in the release, making it easier for users to understand what has been
+updated.
+
+The new changelog is committed to the repository, and the version tag is created. This tag is used to trigger the
+continuous deployment process.
+
+#### Continuous Deployment
+
+The continuous deployment process involves building the Docker image for the application and pushing it to the
+[GitHub Container Registry](https://github.com/features/packages) (GHCR). The Docker image is versioned
+on the release tag.
+
+Additionally, the documentation is built using [MkDocs](https://www.mkdocs.org/) and publishedb to GitHub Pages.
+The documentation is also tagged with the release version using [mike](https://github.com/jimporter/mike). This
+way, users can access the documentation corresponding to the version of the app they are using.
