@@ -1,3 +1,23 @@
+## v0.7.0 (2024-07-26)
+
+### Feat
+
+- add user sentiment interaction (#54)
+- set up frequency cog (#53)
+- add sentiment chart (#52)
+- add cog that returns information about the app (#50)
+- add drop_code_blocks processor
+- get message rate by duration (#49)
+- calculate count of tokens across messages (#48)
+- allow redis search filtering across multiple ids (#47)
+- add development mode (#46)
+
+### Fix
+
+- remove reference to link from general bot description and add it to the about message
+- handle PackageNotFoundError
+- add __version__ and log version on startup
+
 ## v0.6.0 (2024-07-24)
 
 ### Feat
