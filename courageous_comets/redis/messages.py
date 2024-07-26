@@ -159,7 +159,13 @@ async def get_message_sentiment(
     if not data:
         return None
     return models.SentimentResult.model_validate(
-        dict(zip(fields, map(float, data), strict=True)),
+        dict(
+            zip(
+                fields,
+                (float(value) if value is not None else 0 for value in data),
+                strict=True,
+            ),
+        ),
     )
 
 
@@ -427,7 +433,7 @@ async def get_average_sentiment(
     ids: list[str] | None = None,
     scope: StatisticScope = StatisticScope.CHANNEL,
     limit: int = settings.QUERY_LIMIT,
-) -> list[dict[int, float]]:
+) -> list[dict[str, float]]:
     """
     Get the average sentiment of messages for the given ids and scope.
 
@@ -463,4 +469,4 @@ async def get_average_sentiment(
     results = await index.aggregate(query)  # type: ignore
 
     # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
-    return [dict(itertools.batched(row, 2)) for row in results.rows]
+    return [{key: float(value) for row in results.rows for key, value in itertools.batched(row, 2)}]

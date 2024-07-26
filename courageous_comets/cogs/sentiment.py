@@ -46,7 +46,7 @@ The compound score is {compound}.
 """
 
 USER_SENTIMENT_TEMPLATE = """
-Overall the sentiment of the user is **{sentiment}**.
+Overall the sentiment of {user} is **{sentiment}**.
 
 Their average compound score is {compound}.
 """
@@ -166,7 +166,10 @@ class Sentiment(commands.Cog):
             scope=StatisticScope.USER,
         )
 
-        average_sentiment = user_sentiment[0][user.id]
+        if not user_sentiment:
+            raise MessagesNotFound
+
+        average_sentiment = user_sentiment[0]["avg_sentiment"]
 
         sentiment = next(
             (value for key, value in SENTIMENT.items() if int(average_sentiment * 100) in key),
@@ -180,6 +183,7 @@ class Sentiment(commands.Cog):
             title="User Sentiment",
             description=USER_SENTIMENT_TEMPLATE.format(
                 sentiment=sentiment,
+                user=user.mention,
                 compound=average_sentiment,
             ),
             timestamp=discord.utils.utcnow(),

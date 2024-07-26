@@ -31,7 +31,7 @@ mkdocs = "1.6.0"
 mkdocs-material = "9.5.29"
 pre-commit = "3.7.1"
 pymdown-extensions = "10.8.1"
-pyright = "^1.1.372"
+pyright = "^1.1.373"
 pytest = "8.2.2"
 pytest-asyncio = "0.23.7"
 pytest-mock = "3.14.0"
@@ -61,9 +61,7 @@ filterwarnings = [
     "ignore:`resume_download` is deprecated and will be removed *",
     "ignore:datetime.datetime.utcnow",
 ]
-markers = [
-    "num_messages(num=10): create num messages.",
-]
+markers = ["num_messages(num=10): create num messages."]
 
 [tool.ruff]
 line-length = 100
