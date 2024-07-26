@@ -12,6 +12,7 @@ LABEL org.opencontainers.image.title="Courageous Comets"
 # Set default environment variables
 ENV BOT_CONFIG_PATH=/app/application.yaml
 ENV LOG_LEVEL=INFO
+ENV MPLCONFIGDIR=/app/matplotlib
 ENV NLTK_DATA=/app/nltk_data
 ENV HF_HOME=/app/hf_data
 
