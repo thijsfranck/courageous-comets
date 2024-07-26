@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import discord
@@ -15,9 +16,33 @@ from courageous_comets.redis.messages import (
 from courageous_comets.utils import contextmenu
 from courageous_comets.vectorizer import Vectorizer
 
+logger = logging.getLogger(__name__)
+
 
 class MessagesNotFound(app_commands.AppCommandError):
     """No messages were found."""
+
+
+SENTIMENT: dict[range, str] = {
+    range(-100, -50): "very negative 😡",
+    range(-50, -10): "negative 🙁",
+    range(-10, 10): "neutral 🙂",
+    range(10, 50): "positive 😁",
+    range(50, 100): "very positive 😍",
+}
+
+
+SENTIMENT_DESCRIPTION_TEMPLATE = """
+Overall the sentiment of the message is **{sentiment}**.
+
+Here's a breakdown of the scores:
+
+- Negative: {sentiment_neg}
+- Neutral: {sentiment_neu}
+- Positive: {sentiment_pos}
+
+The compound score is {sentiment_compound}.
+"""
 
 
 def plot_sentiment_analysis(message_id: str | int, analysis_result: dict[str, float]) -> Path:
@@ -40,10 +65,7 @@ def plot_sentiment_analysis(message_id: str | int, analysis_result: dict[str, fl
         The path to the saved image.
     """
     chart_dir = Path("artifacts/charts/sentiment").resolve()
-
-    if not chart_dir.exists():
-        chart_dir.mkdir(parents=True, exist_ok=True)
-
+    chart_dir.mkdir(parents=True, exist_ok=True)
     chart_path = chart_dir / f"{message_id}.png"
 
     if chart_path.exists():
@@ -95,7 +117,26 @@ class Sentiment(commands.Cog):
         interaction: discord.Interaction,
         message: discord.Message,
     ) -> None:
-        """Show the sentiment of a message."""
+        """
+        Allow users to view the sentiment analysis of a message using a context menu.
+
+        Generates an embed with the sentiment analysis of a message and sends it to the user.
+
+        The embed contains a text description of the sentiment analysis and a bar chart.
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            The interaction that triggered the command.
+        message : discord.Message
+            The message to analyze.
+        """
+        logger.info(
+            "User %s requested sentiment analysis results for message %s.",
+            interaction.user.id,
+            message.id,
+        )
+
         if self.bot.redis is None:
             return await interaction.response.send_message(
                 "This feature is currently unavailable. Please try again later.",
@@ -124,12 +165,25 @@ class Sentiment(commands.Cog):
             else discord.Color.red()
         )
 
+        sentiment = next(
+            (
+                value
+                for key, value in SENTIMENT.items()
+                if int(analysis_result["sentiment_compound"] * 100) in key
+            ),
+            "unknown",
+        )
+
+        template_vars = {
+            **analysis_result,
+            "sentiment": sentiment,
+        }
+
         view = discord.Embed(
             title="Message Sentiment",
-            description=f"Sentiment analysis of message with ID {message.id}",
+            description=SENTIMENT_DESCRIPTION_TEMPLATE.format(**template_vars),
             color=color,
             timestamp=discord.utils.utcnow(),
-            type="rich",
         )
 
         chart = plot_sentiment_analysis(message.id, analysis_result)
