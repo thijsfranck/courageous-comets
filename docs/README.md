@@ -1,11 +1,18 @@
 # Courageous Comets ☄️
 
-Navigating a new Discord server can be overwhelming, but it doesn't have to be. Introducing **Courageous Comets**,
+Navigating a new Discord server can be overwhelming, _but it doesn't have to be_. Introducing **Courageous Comets**,
 the Discord bot that helps you feel at home in any server!
+
+## Installation
+
+Adding the bot to your Discord server is easy - just click the button below!
+
+<!-- markdownlint-disable-next-line MD013 - All syntax has to be on the same line -->
+[Add to Discord :fontawesome-brands-discord:](https://discord.com/oauth2/authorize?client_id=1262672493978714174){ .md-button .md-button--primary }
 
 ## Features
 
-Our bot is designed to help you:
+The Courageous Comets bot is designed to help you:
 
 ### Discover and Connect Effortlessly 🚀
 
@@ -29,13 +36,6 @@ a quick overview of their contributions and demeanor.
 a positive environment.
 
 **Reward Positive Contributions**: Recognize and reward community members who make positive or relevant contributions.
-
-## How to Install
-
-Click the button below to install the bot in your Discord server:
-
-<!-- markdownlint-disable-next-line MD013 - All syntax has to be on the same line -->
-[Add to Discord :fontawesome-brands-discord:](https://discord.com/oauth2/authorize?client_id=1262672493978714174){ .md-button .md-button--primary }
 
 ## Contents
 
