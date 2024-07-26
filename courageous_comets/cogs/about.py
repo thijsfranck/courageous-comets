@@ -8,6 +8,12 @@ from courageous_comets import __version__
 
 logger = logging.getLogger(__name__)
 
+DESCRIPTION = """
+%s
+
+Click the link in the header to visit the documentation!
+"""
+
 
 class About(commands.Cog):
     """A cog that provides information about the app upon request."""
@@ -36,7 +42,7 @@ class About(commands.Cog):
             await interaction.response.send_message(
                 embed=Embed(
                     title=f"Courageous Comets ({__version__})",
-                    description=self.bot.description,
+                    description=self.description,
                     color=discord.Color.blurple(),
                     url=f"https://thijsfranck.github.io/courageous-comets/{__version__}/",
                     timestamp=discord.utils.utcnow(),
@@ -45,6 +51,11 @@ class About(commands.Cog):
             )
         except discord.HTTPException as e:
             logger.exception("Could not deliver the about message.", exc_info=e)
+
+    @property
+    def description(self) -> str:
+        """Return the body of the about message."""
+        return DESCRIPTION % self.bot.description
 
 
 async def setup(bot: commands.Bot) -> None:
