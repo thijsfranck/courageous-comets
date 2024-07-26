@@ -83,12 +83,6 @@ class Frequency(commands.Cog):
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
 
-        for attribute in dir(self):
-            obj = getattr(self, attribute, None)
-            if obj and getattr(obj, "is_contextmenu", False):
-                menu = app_commands.ContextMenu(name=obj.name, callback=obj)
-                self.bot.tree.add_command(menu)
-
     @app_commands.command(
         name="frequency",
         description="Get frequency of messages over a duration.",
