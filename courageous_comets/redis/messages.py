@@ -418,3 +418,49 @@ async def get_message_rate(  # noqa: PLR0913
 
     # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
     return [dict(itertools.batched(row, 2)) for row in results.rows]
+
+
+async def get_average_sentiment(
+    redis: Redis,
+    *,
+    guild_id: str,
+    ids: list[str] | None = None,
+    scope: StatisticScope = StatisticScope.CHANNEL,
+    limit: int = settings.QUERY_LIMIT,
+) -> list[dict[int, float]]:
+    """
+    Get the average sentiment of messages for the given ids and scope.
+
+    Parameters
+    ----------
+    redis : Redis
+        The Redis connection instance.
+    guild_id : str
+        The ID of the guild to make the search.
+    ids : list[str], optional
+        Optional list of IDs to search for. Defaults to None.
+    scope : StatisticScope, optional
+        The scope of additional IDs (default: StatisticScope.CHANNEL).
+        Ignored if it is equal to StatisticScope.GUILD.
+    limit : int, optional
+        The number of messages to aggregate over (default: settings.QUERY_LIMIT).
+    """
+    search_scope = build_search_scope(guild_id, ids, scope)
+    index = _get_raw_index(redis)
+
+    # Define a reducer to calculate the average sentiment compound score and alias the result as
+    # "avg_sentiment"
+    reducer = reducers.avg("@sentiment_compound").alias("avg_sentiment")
+
+    # Build the aggregation query
+    query = (
+        aggregations.AggregateRequest(f"{search_scope!s}")
+        .limit(0, limit)
+        .group_by([f"@{scope}"], reducer)
+    )
+
+    # Execute the aggregation query on the index
+    results = await index.aggregate(query)  # type: ignore
+
+    # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
+    return [dict(itertools.batched(row, 2)) for row in results.rows]
