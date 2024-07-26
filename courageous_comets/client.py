@@ -20,8 +20,6 @@ This is a Discord app that provides various statistical analyses on messages.
 - **Sentiment Analysis**: Analyze the sentiment of a message.
 - **Word Frequency**: Analyze the frequency of words in a message.
 - **Similarity Analysis**: Analyze the similarity between two messages.
-
-Click the link in the header to visit the documentation!
 """
 
 logger = logging.getLogger(__name__)
