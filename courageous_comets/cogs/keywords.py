@@ -5,9 +5,14 @@ from async_lru import alru_cache
 from discord import app_commands
 from discord.ext import commands
 
+from courageous_comets.charts import plot_sentiment_analysis
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.models import Message
-from courageous_comets.redis.messages import get_recent_messages
+from courageous_comets.redis.keys import key_schema
+from courageous_comets.redis.messages import (
+    get_message_sentiment,
+    get_recent_messages,
+)
 from courageous_comets.vectorizer import Vectorizer
 
 # from courageous_comets.utils import contextmenu  # noqa: ERA001
@@ -18,6 +23,117 @@ def shorten(string: str, *, limit: int = 50) -> str:
     if len(string) > limit:
         string = string[: limit - 3] + "..."
     return string
+
+
+SENTIMENT: dict[range, str] = {
+    range(-100, -50): "very negative 😡",
+    range(-50, -10): "negative 🙁",
+    range(-10, 10): "neutral 🙂",
+    range(10, 50): "positive 😁",
+    range(50, 100): "very positive 😍",
+}
+
+
+SENTIMENT_DESCRIPTION_TEMPLATE = """
+Overall the sentiment of the message is **{sentiment}**.
+
+Here's a breakdown of the scores:
+
+- Negative: {neg}
+- Neutral: {neu}
+- Positive: {pos}
+
+The compound score is {compound}.
+"""
+
+
+class Dropdown(discord.ui.Select):
+    """A drop down menu."""
+
+    def __init__(self, messages: list[discord.Message | None], bot: CourageousCometsBot) -> None:
+        self.messages = messages
+        self.bot = bot
+
+        options = [
+            discord.SelectOption(
+                label=message.author.display_name,
+                description=shorten(message.content, limit=25),
+                value=str(message.id),
+            )
+            for message in messages
+            if message
+        ]
+
+        super().__init__(
+            placeholder="Get more information...",
+            min_values=1,
+            max_values=1,
+            options=options,
+        )
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        """Handle the callback when the dropdown is selected."""
+        await interaction.response.defer(ephemeral=True)
+        message_id = self.values[0]
+
+        message: discord.Message = discord.utils.get(self.messages, id=int(message_id))  # type: ignore
+
+        key = key_schema.guild_messages(
+            guild_id=message.guild.id,  # type: ignore
+            message_id=message.id,
+        )
+
+        analysis_result = await get_message_sentiment(key, redis=self.bot.redis)  # type: ignore
+
+        if analysis_result is None:
+            return await interaction.response.send_message(
+                "No sentiment analysis found for this message.",
+                ephemeral=True,
+            )
+
+        color = discord.Color.green() if analysis_result.compound >= 0 else discord.Color.red()
+
+        sentiment = next(
+            (
+                value
+                for key, value in SENTIMENT.items()
+                if int(analysis_result.compound * 100) in key
+            ),
+            "unknown",
+        )
+
+        template_vars = {
+            **analysis_result.model_dump(),
+            "sentiment": sentiment,
+        }
+
+        embed = discord.Embed(
+            title="Message Sentiment",
+            description=SENTIMENT_DESCRIPTION_TEMPLATE.format(**template_vars),
+            color=color,
+            timestamp=discord.utils.utcnow(),
+        )
+
+        chart = plot_sentiment_analysis(message.id, analysis_result)
+        chart_file = discord.File(chart, filename="sentiment_analysis.png")
+        embed.set_image(url="attachment://sentiment_analysis.png")
+
+        return await interaction.followup.send(embed=embed, ephemeral=True, file=chart_file)
+
+
+class DropdownView(discord.ui.View):
+    """A view containing a dropdown."""
+
+    def __init__(
+        self,
+        messages: list[discord.Message | None],
+        bot: CourageousCometsBot,
+        *,
+        timeout: float | None = 180,
+    ) -> None:
+        super().__init__(timeout=timeout)
+
+        self.add_item(Dropdown(messages, bot))
 
 
 class MessagesNotFound(app_commands.AppCommandError):
@@ -147,6 +263,7 @@ class Keywords(commands.Cog):
                 colour=discord.Colour.blurple(),
                 timestamp=datetime.datetime.now(datetime.UTC),
             ),
+            view=DropdownView(resolved_messages, self.bot),
         )
 
 
