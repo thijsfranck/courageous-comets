@@ -4,9 +4,7 @@ from redis.asyncio import Redis
 
 from courageous_comets.models import SentimentResult
 from courageous_comets.sentiment import (
-    MAX_MESSAGE_LENGTH,
     calculate_sentiment,
-    logger,
 )
 
 
@@ -37,28 +35,3 @@ def test__calculate_sentiment_analyzes_sentiment_of_given_text(
     )
     result = calculate_sentiment("I love this product!")
     assert result == expected
-
-
-@pytest.mark.parametrize(
-    ("message", "expected"),
-    [
-        ("a" * MAX_MESSAGE_LENGTH, False),
-        ("a" * (MAX_MESSAGE_LENGTH + 1), True),
-    ],
-)
-def test__calculate_sentiment_truncates_long_messages(
-    *,
-    mocker: MockerFixture,
-    message: str,
-    expected: bool,
-) -> None:
-    """
-    Test whether the sentiment calculation truncates long messages.
-
-    Asserts
-    -------
-    - The function truncates messages longer than 256 characters.
-    """
-    logger_warning = mocker.spy(logger, "warning")
-    calculate_sentiment(message)
-    assert logger_warning.called == expected

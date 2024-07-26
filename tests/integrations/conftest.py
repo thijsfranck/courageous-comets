@@ -59,7 +59,7 @@ async def messages(
     """
     # Retrieve the number of messages to generate from the test function
     # If the mark is not present, or the number of messages is not specified, generate 10 messages
-    mark = request.node.get_closest_marker("num_messages")
+    mark: pytest.Mark | None = request.node.get_closest_marker("num_messages")
     num_messages = int(mark.args[0]) if mark and len(mark.args) > 0 else 10
 
     # Message ID range
