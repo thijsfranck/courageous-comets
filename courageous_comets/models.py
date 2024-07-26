@@ -2,7 +2,7 @@ import datetime
 from typing import Annotated
 
 import pydantic
-from pydantic import Field, PlainSerializer
+from pydantic import AliasChoices, Field, PlainSerializer
 
 UnixTimestamp = Annotated[
     datetime.datetime,
@@ -62,10 +62,26 @@ class SentimentResult(BaseModel):
         The compound sentiment score.
     """
 
-    neg: float = Field(..., serialization_alias="sentiment_neg")
-    neu: float = Field(..., serialization_alias="sentiment_neu")
-    pos: float = Field(..., serialization_alias="sentiment_pos")
-    compound: float = Field(..., serialization_alias="sentiment_compound")
+    neg: float = Field(
+        ...,
+        serialization_alias="sentiment_neg",
+        validation_alias=AliasChoices("neg", "sentiment_neg"),
+    )
+    neu: float = Field(
+        ...,
+        serialization_alias="sentiment_neu",
+        validation_alias=AliasChoices("neu", "sentiment_neu"),
+    )
+    pos: float = Field(
+        ...,
+        serialization_alias="sentiment_pos",
+        validation_alias=AliasChoices("pos", "sentiment_pos"),
+    )
+    compound: float = Field(
+        ...,
+        serialization_alias="sentiment_compound",
+        validation_alias=AliasChoices("compound", "sentiment_compound"),
+    )
 
 
 class MessageAnalysis(Message):

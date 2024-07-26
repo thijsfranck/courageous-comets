@@ -167,7 +167,7 @@ async def test__get_messages_by_sentiment_similarity(
     assert messages[0].message_id == message.message_id
 
 
-@pytest.mark.parametrize(("limit", "expect"), [(10, 10), (100, 100)])
+@pytest.mark.parametrize(("limit", "expect"), [(10, 10), (150, 100)])
 @pytest.mark.num_messages(100)
 async def test__get_recent_messages(
     redis: Redis,
