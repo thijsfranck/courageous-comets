@@ -184,3 +184,6 @@ nltk_data
 
 # Huggingface
 hf_data
+
+# Artifacts
+artifacts/

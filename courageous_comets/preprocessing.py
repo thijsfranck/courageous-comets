@@ -11,6 +11,23 @@ from courageous_comets import settings
 Processor = Callable[[str], str]
 
 
+def drop_code_blocks(text: str) -> str:
+    """
+    Remove code blocks from the given text.
+
+    Parameters
+    ----------
+    text : str
+        The text to process.
+
+    Returns
+    -------
+    str
+        The text with code blocks removed.
+    """
+    return re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+
+
 def drop_extra_whitespace(text: str) -> str:
     """
     Remove extra whitespace from the given text.
@@ -102,6 +119,7 @@ def truncate(text: str, max_length: int) -> str:
 
 # Steps are executed in order
 PROCESSORS: list[Processor] = [
+    drop_code_blocks,
     drop_links,
     unidecode,
     contractions.fix,  # type: ignore
