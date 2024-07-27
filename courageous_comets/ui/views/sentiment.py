@@ -70,7 +70,3 @@ class PraiseButton(discord.ui.Button):
             f"Sent praise to {self.user.mention}!",
             ephemeral=True,
         )
-
-        self.disabled = True
-        self.label = "Praise Sent"
-        self.emoji = "✅"
