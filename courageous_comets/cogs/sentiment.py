@@ -86,8 +86,11 @@ class Sentiment(commands.Cog):
             scope=StatisticScope.USER,
         )
 
-        if not sentiment_results:
-            raise MessagesNotFound
+        if not sentiment_results or "avg_sentiment" not in sentiment_results[0]:
+            await interaction.followup.send(
+                f"No sentiment data found for {user.mention}.",
+                ephemeral=True,
+            )
 
         average_sentiment = sentiment_results[0]["avg_sentiment"]
 
