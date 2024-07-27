@@ -1,3 +1,20 @@
+## v0.8.0 (2024-07-27)
+
+### Feat
+
+- plot message frequency graph
+
+### Fix
+
+- reference current version in documentation
+- update app description and set embed footer
+- handle missing sentiment data
+- restore user sentiment interaction
+- add exists check
+- silence KeyboardInterrupt on application shutdown (#59)
+- remove  cog from erroneous merge conflict resolution (#58)
+- remove unused context menu loader
+
 ## v0.7.0 (2024-07-26)
 
 ### Feat
