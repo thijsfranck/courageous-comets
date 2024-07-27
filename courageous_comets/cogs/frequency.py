@@ -1,80 +1,12 @@
-import io
-
 import discord
-import matplotlib.pyplot as plt
 from discord import app_commands
 from discord.ext import commands
-from matplotlib.dates import (
-    AutoDateLocator,
-    ConciseDateFormatter,
-    DayLocator,
-    HourLocator,
-    MinuteLocator,
-)
 
-from courageous_comets import models
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.enums import Duration
 from courageous_comets.redis.messages import get_messages_frequency
-
-
-def plot_message_frequency(
-    frequencies: list[models.MessageFrequency],
-    duration: Duration,
-) -> io.BytesIO:
-    """
-    Plot the frequency of messages.
-
-    Creates a line plot of number of messages over intervals and saves it to a file.
-
-    Parameters
-    ----------
-    frequencies: list[MessageFrequency]
-        A list of message frequency.
-
-    Returns
-    -------
-    io.BytesIO
-        A plot of the frequency in memory.
-
-    Note
-    ----
-    Assumes list of frequencies is not empty.
-    """
-    _, ax = plt.subplots()
-    # If the there's only one point, use a bar plot, otherwise a line plot
-    if len(frequencies) > 1:
-        ax.plot(
-            [frequency.timestamp for frequency in frequencies],  # type: ignore
-            [frequency.num_messages for frequency in frequencies],
-        )
-        locator = AutoDateLocator().get_locator(
-            frequencies[0].timestamp,
-            frequencies[-1].timestamp,
-        )
-    else:
-        ax.bar([frequencies[0].timestamp], [frequencies[0].num_messages], width=0.01)  # type: ignore
-        if duration == Duration.daily:
-            locator = DayLocator()
-        elif duration == Duration.hourly:
-            locator = HourLocator()
-        elif duration == Duration.minute:
-            locator = MinuteLocator()
-        else:
-            locator = AutoDateLocator()
-    formatter = ConciseDateFormatter(locator)
-
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
-
-    ax.set_ylabel("Number of messages.")
-    ax.set_title("Message Frequency")
-
-    file = io.BytesIO()
-    plt.savefig(file)
-    file.seek(0)
-
-    return file
+from courageous_comets.ui.charts import frequency_line
+from courageous_comets.ui.embeds import message_frequency
 
 
 class Frequency(commands.Cog):
@@ -116,6 +48,12 @@ class Frequency(commands.Cog):
                 ephemeral=True,
             )
 
+        if duration not in Duration:
+            return await interaction.response.send_message(
+                "Invalid duration provided.",
+                ephemeral=True,
+            )
+
         frequencies = await get_messages_frequency(
             self.bot.redis,
             guild_id=str(interaction.guild.id),
@@ -128,20 +66,14 @@ class Frequency(commands.Cog):
                 ephemeral=True,
             )
 
-        view = discord.Embed(
-            title="Message frequencies",
-            description="Message frequencies",
-            color=discord.Colour.purple(),
-            timestamp=discord.utils.utcnow(),
-        )
+        embed = message_frequency.render(frequencies, duration)
 
-        chart = plot_message_frequency(frequencies, duration)
-        chart_file = discord.File(chart, filename="frequency.png")
-        view.set_image(url="attachment://frequency.png")
+        chart = frequency_line.render(frequencies, duration)
+        embed.set_image(url=f"attachment://{chart.filename}")
 
         return await interaction.response.send_message(
-            embed=view,
-            file=chart_file,
+            embed=embed,
+            file=chart,
             ephemeral=True,
         )
 
