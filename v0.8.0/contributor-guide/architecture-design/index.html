@@ -1,0 +1,1521 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://thijsfranck.github.io/courageous-comets/v0.8.0/contributor-guide/architecture-design/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../development-environment/">
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+    
+    
+      
+        <title>Architecture & Design - Courageous Comets</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.76a95c52.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/table.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Courageous Comets" class="md-header__button md-logo" aria-label="Courageous Comets" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Courageous Comets
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture & Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thijsfranck/courageous-comets" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    thijsfranck/courageous-comets
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Courageous Comets" class="md-nav__button md-logo" aria-label="Courageous Comets" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Courageous Comets
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thijsfranck/courageous-comets" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    thijsfranck/courageous-comets
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../admin-guide/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Administrators
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Administrators
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../admin-guide/deployment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deployment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../admin-guide/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Contributors
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Contributors
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Architecture & Design
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Architecture & Design
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bot
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controllers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Logic
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Model
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packages-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Packages &amp; Modules
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Packages & Modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#courageous_comets" class="md-nav__link">
+    <span class="md-ellipsis">
+      courageous_comets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Pipeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CI/CD Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development Flow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Quality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release Flow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Release Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous Deployment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development-environment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development Environment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bot
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controllers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Logic
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Model
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packages-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Packages &amp; Modules
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Packages & Modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#courageous_comets" class="md-nav__link">
+    <span class="md-ellipsis">
+      courageous_comets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Pipeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CI/CD Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development Flow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Quality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release Flow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Release Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous Deployment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="architecture-design">Architecture &amp; Design<a class="headerlink" href="#architecture-design" title="Permanent link">&para;</a></h1>
+<p>This page describes the architecture and design of the Courageous Comets application.</p>
+<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
+<p>Below is a high-level view of the application components. Click on the links in the diagram to jump to the
+corresponding details section.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph Discord
+        User["User"]
+    end
+
+    subgraph Courageous Comets
+        subgraph Bot[&lt;a href='#bot'&gt;Bot&lt;/a&gt;]
+            subgraph Controllers[&lt;a href='#controllers'&gt;Controllers&lt;/a&gt;]
+                MessagesCog["Messages"]
+            end
+            subgraph ApplicationLogic[&lt;a href='#application-logic'&gt;Application Logic&lt;/a&gt;]
+                Preprocessing{{"Preprocessing"}}
+                WordCount["Word Count"]
+                Sentiment["Sentiment Analysis"]
+                Vectorization["Vectorization"]
+            end
+        end
+        subgraph Storage[&lt;a href='#storage'&gt;Storage&lt;/a&gt;]
+            Redis[("Redis")]
+        end
+    end
+
+    User --&gt;|"Messages"| MessagesCog
+    MessagesCog --&gt;|"Text"| Preprocessing
+    Preprocessing ---&gt;|"Text"| WordCount
+    Preprocessing ---&gt;|"Text"| Sentiment
+    Preprocessing ---&gt;|"Text"| Vectorization
+    WordCount --&gt;|"Cache"| Redis
+    Sentiment --&gt;|"Cache"| Redis
+    Vectorization --&gt;|"Cache"| Redis</code></pre>
+<h3 id="bot">Bot<a class="headerlink" href="#bot" title="Permanent link">&para;</a></h3>
+<p>The bot is the main component of the Courageous Comets application. It is responsible for processing messages
+and performing analysis on them.</p>
+<p>The bot is built using the <a href="https://discordpy.readthedocs.io/en/stable/">discord.py</a> library. It is designed to
+be modular and extensible, with the core features implemented on separate layers.</p>
+<h4 id="controllers">Controllers<a class="headerlink" href="#controllers" title="Permanent link">&para;</a></h4>
+<p>Controllers are responsible for handling user input and invoking the appropriate application logic. Each controller
+is a separate cog in the bot, allowing for easy extension and maintenance.</p>
+<h4 id="application-logic">Application Logic<a class="headerlink" href="#application-logic" title="Permanent link">&para;</a></h4>
+<p>The application logic is responsible for processing messages and performing analysis on them. The logic is divided
+into several components:</p>
+<ul>
+<li><strong>Preprocessing</strong>: Cleans and normalizes the input text.</li>
+<li><strong>Word Count</strong>: Counts the number of words in the input text.</li>
+<li><strong>Sentiment Analysis</strong>: Analyzes the sentiment of the input text.</li>
+<li><strong>Vectorization</strong>: Generates a vector representation to support similarity search.</li>
+</ul>
+<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
+<p>The bot uses Redis as a caching layer to store the results of the analysis. Redis is a fast and efficient key-value
+store that supports the data structures needed to enable the application logic.</p>
+<h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h2>
+<p>The data model is designed to support a variety of analysis tasks and provide a flexible foundation for future
+extensions.</p>
+<h3 id="message">Message<a class="headerlink" href="#message" title="Permanent link">&para;</a></h3>
+<p>The main entity of the data model is the <code>Message</code> object, which represents a message sent by a user. Messages
+are structured as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>message_id</code></td>
+<td>Tag</td>
+<td>The unique identifier of the message.</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>Tag</td>
+<td>The unique identifier of the user who sent the message.</td>
+</tr>
+<tr>
+<td><code>channel_id</code></td>
+<td>Tag</td>
+<td>The unique identifier of the channel where the message was sent.</td>
+</tr>
+<tr>
+<td><code>guild_id</code></td>
+<td>Tag</td>
+<td>The unique identifier of the guild where the message was sent.</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>String</td>
+<td>The text content of the message after preprocessing.</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td>Number</td>
+<td>The timestamp when the message was sent.</td>
+</tr>
+<tr>
+<td><code>sentiment_neg</code></td>
+<td>Number</td>
+<td>The negative sentiment score of the message.</td>
+</tr>
+<tr>
+<td><code>sentiment_neu</code></td>
+<td>Number</td>
+<td>The neutral sentiment score of the message.</td>
+</tr>
+<tr>
+<td><code>sentiment_pos</code></td>
+<td>Number</td>
+<td>The positive sentiment score of the message.</td>
+</tr>
+<tr>
+<td><code>sentiment_compound</code></td>
+<td>Number</td>
+<td>The compound sentiment score of the message.</td>
+</tr>
+<tr>
+<td><code>embedding</code></td>
+<td>Vector</td>
+<td>The vector representation of the message.</td>
+</tr>
+</tbody>
+</table>
+<p>Messages are keyed by a namespace prefix combined with the <code>guild_id</code> and the <code>message_id</code>. This combination ensures
+that messages can always be uniquely identified within the context of a guild.</p>
+<p>The fields with type <code>Tag</code> can be efficiently used for keyword search and filtering. This way we can quickly retrieve,
+filter and aggregate messages based on the context of an interaction, such as a user, channel, or guild.</p>
+<p>The <code>embedding</code> field is used to store the vector representation of the message. This field is used for
+similarity search and other analysis tasks that require a numerical representation of the text. For the similarity
+search, we use the <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a> metric to compare the vectors.</p>
+<h2 id="packages-modules">Packages &amp; Modules<a class="headerlink" href="#packages-modules" title="Permanent link">&para;</a></h2>
+<p>This section describes the packages included with the project and the underlying module structure.</p>
+<h3 id="courageous_comets"><code>courageous_comets</code><a class="headerlink" href="#courageous_comets" title="Permanent link">&para;</a></h3>
+<p>The application is fully contained within the <code>courageous_comets</code> package. The package is structured as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cogs</code></td>
+<td>Contains the bot controllers (cogs) that handle user input.</td>
+</tr>
+<tr>
+<td><code>nltk</code></td>
+<td>Contains helpers for using the Natural Language Toolkit (NLTK) library.</td>
+</tr>
+<tr>
+<td><code>redis</code></td>
+<td>Contains the data access layer for interacting with Redis.</td>
+</tr>
+<tr>
+<td><code>transformers</code></td>
+<td>Contains helpers for working with Huggingface Transformers.</td>
+</tr>
+<tr>
+<td><code>client.py</code></td>
+<td>Contains the main application client class.</td>
+</tr>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Entrypoint for the package. Exports the application client instance.</td>
+</tr>
+<tr>
+<td><code>__main__.py</code></td>
+<td>Entrypoint for the application. Responsible for setup, teardown and root error handling.</td>
+</tr>
+<tr>
+<td><code>enums.py</code></td>
+<td>Shared enumerations used across the application.</td>
+</tr>
+<tr>
+<td><code>exceptions.py</code></td>
+<td>Includes the base exception clss and custom exceptions used in the application.</td>
+</tr>
+<tr>
+<td><code>models.py</code></td>
+<td>Defines the entities used by the application using Pydantic models.</td>
+</tr>
+<tr>
+<td><code>preprocessing.py</code></td>
+<td>Contains the preprocessing logic for cleaning and normalizing text.</td>
+</tr>
+<tr>
+<td><code>sentiment.py</code></td>
+<td>Implements the sentiment analysis logic using the NLTK library.</td>
+</tr>
+<tr>
+<td><code>settings.py</code></td>
+<td>Provides input validation, default values and type hints for the app settings.</td>
+</tr>
+<tr>
+<td><code>vectorizer.py</code></td>
+<td>Implements the vectorization logic using the Huggingface Transformers library.</td>
+</tr>
+<tr>
+<td><code>words.py</code></td>
+<td>Contains the word count logic for counting the number of words in a text.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tests"><code>tests</code><a class="headerlink" href="#tests" title="Permanent link">&para;</a></h3>
+<p>The <code>tests</code> package organizes the test suite for the application. The package is structured as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>conftest.py</code></td>
+<td>Contains shared fixtures and ensures NLTK and Huggingface data is loaded in CI.</td>
+</tr>
+<tr>
+<td><code>courageous_comets</code></td>
+<td>Includes tests that validate the behavior of each application module.</td>
+</tr>
+<tr>
+<td><code>integrations</code></td>
+<td>Provides tests that validate how the app interacts with Discord and the database.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cicd-pipeline">CI/CD Pipeline<a class="headerlink" href="#cicd-pipeline" title="Permanent link">&para;</a></h2>
+<p>The CI/CD (Continuous Integration and Continuous Deployment) pipeline automates the build, test, and deployment
+processes of the application. This achieves the following goals:</p>
+<ol>
+<li>The process ensures that code changes are consistently tested, maintaining high code quality and reliability</li>
+<li>It also enables full traceability and reproducibility of any
+artifact released to production.</li>
+</ol>
+<p>This section provides a comprehensive overview of each stage in the pipeline, its purpose, and its components.</p>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>The diagram below illustrates the stages of the CI/CD pipeline and the flow of code changes from development to
+deployment. The pipeline consists of the <a href="#development-flow">development flow</a> and the release flow.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Local["Development Environment"]
+        subgraph Developer["Developer"]
+            Codebase[("Codebase")]
+            Commit["Commit Changes"]
+            Release["Create Release"]
+        end
+        subgraph Precommit["Pre-commit"]
+            CodeQuality["Code Quality"]
+            CommitQuality["Commit Quality"]
+        end
+        subgraph Commitizen["Release"]
+            Tag["Create Tag"]
+            Changelog["Generate Changelog"]
+        end
+    end
+
+    subgraph Remote["GitHub"]
+        subgraph CI["Continuous Integration"]
+            Unit["Unit Tests"]
+            Integration["Integration Tests"]
+            PeerReview["Peer Review"]
+        end
+        subgraph Repository["Repository"]
+            Main[("Main Branch")]
+            Version[("vX.Y.Z Tag")]
+        end
+        subgraph CD["Continuous Deployment"]
+            Docker["Build Docker Image"]
+            GHCR[("GitHub Container Registry")]
+            MkDocs["Build Documentation"]
+            Pages[("GitHub Pages")]
+        end
+    end
+
+    Codebase --&gt; Commit
+    Codebase --&gt; Release
+
+    Commit --&gt;|"Commit"| CodeQuality
+    CodeQuality --&gt; CommitQuality
+    CommitQuality --&gt;|"Push"| Unit
+    Unit --&gt; Integration
+    Integration --&gt; PeerReview
+    PeerReview --&gt;|"Merge"| Main
+
+    Release --&gt;|"Bump"| Tag
+    Tag --&gt; Changelog
+    Changelog -----&gt;|"Push"| Version
+    Version --&gt; Docker
+    Docker --&gt; GHCR
+    Version --&gt; MkDocs
+    MkDocs --&gt; Pages</code></pre>
+<h3 id="development-flow">Development Flow<a class="headerlink" href="#development-flow" title="Permanent link">&para;</a></h3>
+<p>In the development flow, developers are responsible for making changes to the codebase and committing these changes
+to the repository. When changes are ready, developers commit these changes, triggering the pre-commit checks.</p>
+<h4 id="pre-commit">Pre-commit<a class="headerlink" href="#pre-commit" title="Permanent link">&para;</a></h4>
+<p>The pre-commit checks involve several steps to ensure that the codebase and the repository stay in a maintainable
+state. These steps are executed locally using the <a href="https://pre-commit.com/"><code>pre-commit</code></a> framework and block
+the commit if any of the checks fail.</p>
+<h5 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h5>
+<p>First, the code is formatted and linted using <a href="https://docs.astral.sh/ruff/"><code>ruff</code></a>. Next, the code is type-checked
+using <a href="https://github.com/microsoft/pyright"><code>pyright</code></a>. Markdown is also treated as code for this project, so
+it is linted using <a href="https://github.com/DavidAnson/markdownlint"><code>markdownlint</code></a>.</p>
+<h5 id="commit-quality">Commit Quality<a class="headerlink" href="#commit-quality" title="Permanent link">&para;</a></h5>
+<p>Since commit messages are a key input to the release process, they validated using <a href="https://commitizen-tools.github.io/commitizen/"><code>commitizen</code></a>.
+Commitizen enforces a consistent commit message format and ensures that the messages follow the <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a>
+specification.</p>
+<h4 id="continuous-integration">Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permanent link">&para;</a></h4>
+<p>Once changes are pushed to the repository, the continuous integration process starts. In this stage, a series
+of tests are run to ensure the new code works as expected and does not introduce regressions.</p>
+<p>Unit tests are in place to validate the behavior of individual components, while integration tests validate the
+interaction between components. We use the <a href="https://docs.pytest.org/"><code>pytest</code></a> framework to run the tests.</p>
+<p>All <a href="#pre-commit">pre-commit</a> checks are also run in the CI pipeline to avoid any discrepancies between the local
+and remote environments.</p>
+<p>When all tests and checks pass, there is a final peer review before the changes are merged into the main branch.</p>
+<h3 id="release-flow">Release Flow<a class="headerlink" href="#release-flow" title="Permanent link">&para;</a></h3>
+<p>The release flow is triggered when a developer bumps the version of the application and creates a new release.</p>
+<h4 id="release">Release<a class="headerlink" href="#release" title="Permanent link">&para;</a></h4>
+<p>The first part of the release flow involves determining the version number for the new release. This is done using
+<a href="https://commitizen-tools.github.io/commitizen/"><code>Commitizen</code></a>, which automatically increments the version based
+on the commit messages. Version numbers follow the <a href="https://semver.org/">Semantic Versioning</a> specification.</p>
+<p>Secondly, a changelog is generated using <a href="https://commitizen-tools.github.io/commitizen/"><code>commitizen</code></a>. The changelog
+provides a summary of the changes included in the release, making it easier for users to understand what has been
+updated.</p>
+<p>The new changelog is committed to the repository, and the version tag is created. This tag is used to trigger the
+continuous deployment process.</p>
+<h4 id="continuous-deployment">Continuous Deployment<a class="headerlink" href="#continuous-deployment" title="Permanent link">&para;</a></h4>
+<p>The continuous deployment process involves building the Docker image for the application and pushing it to the
+<a href="https://github.com/features/packages">GitHub Container Registry</a> (GHCR). The Docker image is versioned
+on the release tag.</p>
+<p>Additionally, the documentation is built using <a href="https://www.mkdocs.org/">MkDocs</a> and publishedb to GitHub Pages.
+The documentation is also tagged with the release version using <a href="https://github.com/jimporter/mike">mike</a>. This
+way, users can access the documentation corresponding to the version of the app they are using.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2024 Courageous Comets ☄️
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/thijsfranck/courageous-comets" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "navigation.indexes", "navigation.instant", "navigation.instant.progress", "navigation.sections"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+    
+  </body>
+</html>
