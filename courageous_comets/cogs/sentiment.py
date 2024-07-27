@@ -85,16 +85,22 @@ class Sentiment(commands.Cog):
             scope=StatisticScope.USER,
         )
 
-        if not sentiment_results or "avg_sentiment" not in sentiment_results[0]:
+        if not sentiment_results:
             await interaction.followup.send(
                 f"No sentiment data found for {user.mention}.",
                 ephemeral=True,
             )
 
-        average_sentiment = sentiment_results[0]["avg_sentiment"]
+        average_sentiment = sentiment_results[0]
+
+        embed = user_sentiment.render(user, average_sentiment)
+
+        chart = sentiment_bars.for_user(average_sentiment)
+        embed.set_image(url=f"attachment://{chart.filename}")
 
         return await interaction.followup.send(
-            embed=user_sentiment.render(user.mention, average_sentiment),
+            embed=embed,
+            file=chart,
             ephemeral=True,
         )
 
@@ -162,7 +168,7 @@ class Sentiment(commands.Cog):
 
         embed = message_sentiment.render(analysis_result)
 
-        chart = sentiment_bars.render(message.id, analysis_result)
+        chart = sentiment_bars.for_message(message.id, analysis_result)
         embed.set_image(url=f"attachment://{chart.filename}")
 
         return await interaction.followup.send(embed=embed, file=chart, ephemeral=True)

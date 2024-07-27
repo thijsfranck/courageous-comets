@@ -427,6 +427,7 @@ async def get_messages_frequency(  # noqa: PLR0913
 
     # Execute the aggregation query on the index
     results = await index.aggregate(query)  # type: ignore
+
     # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
     return [
         models.MessageFrequency.model_validate_strings(dict(itertools.batched(row, 2)))
@@ -441,7 +442,7 @@ async def get_average_sentiment(
     ids: list[str] | None = None,
     scope: StatisticScope = StatisticScope.CHANNEL,
     limit: int = settings.QUERY_LIMIT,
-) -> list[dict[str, float]]:
+) -> list[models.SentimentResult]:
     """
     Get the average sentiment of messages for the given ids and scope.
 
@@ -462,15 +463,23 @@ async def get_average_sentiment(
     search_scope = build_search_scope(guild_id, ids, scope)
     index = _get_raw_index(redis)
 
-    # Define a reducer to calculate the average sentiment compound score and alias the result as
-    # "avg_sentiment"
-    reducer = reducers.avg("@sentiment_compound").alias("avg_sentiment")
+    # Define reducers to calculate the average scores for each sentiment type
+    avg_sentiment = reducers.avg("@sentiment_compound").alias("sentiment_compound")
+    avg_negativity = reducers.avg("@sentiment_neg").alias("sentiment_neg")
+    avg_neutrality = reducers.avg("@sentiment_neu").alias("sentiment_neu")
+    avg_positivity = reducers.avg("@sentiment_pos").alias("sentiment_pos")
 
     # Build the aggregation query
     query = (
         aggregations.AggregateRequest(f"{search_scope!s}")
         .limit(0, limit)
-        .group_by([f"@{scope}"], reducer)
+        .group_by(
+            [f"@{scope}"],
+            avg_sentiment,
+            avg_negativity,
+            avg_neutrality,
+            avg_positivity,
+        )
     )
 
     # Execute the aggregation query on the index
@@ -478,10 +487,12 @@ async def get_average_sentiment(
 
     # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
     return [
-        {
-            key: float(value)
-            for row in results.rows
-            for key, value in itertools.batched(row, 2)
-            if value is not None
-        },
+        models.SentimentResult.model_validate(
+            {
+                key: float(value)
+                for row in results.rows
+                for key, value in itertools.batched(row, 2)
+                if value is not None
+            },
+        ),
     ]

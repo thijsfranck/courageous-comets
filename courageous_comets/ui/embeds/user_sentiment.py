@@ -1,28 +1,58 @@
 import discord
 
-from courageous_comets.ui.components import user_sentiment
+from courageous_comets.models import SentimentResult
+from courageous_comets.ui.components import sentiment
 from courageous_comets.ui.embeds import format_embed
 
+TEMPLATE = """
+Overall the sentiment of {user} is **{sentiment}**.
+"""
 
-def render(user: str, compound: float) -> discord.Embed:
+
+def render(user: discord.User | discord.Member, data: SentimentResult) -> discord.Embed:
     """
-    Render the sentiment analysis results for the given user into an embed.
+    Render the sentiment analysis results into an embed.
 
     Parameters
     ----------
-    user : str
-        The user's name.
-    compound : float
-        The compound sentiment score.
+    data : SentimentResult
+        The sentiment analysis results.
 
     Returns
     -------
     discord.Embed
         The rendered embed.
     """
+    color = discord.Color.green() if data.compound >= 0 else discord.Color.red()
+
+    template_vars = {
+        "user": user.mention,
+        "sentiment": sentiment.render(data.compound),
+    }
+
     embed = discord.Embed(
-        title="User Sentiment",
-        description=user_sentiment.render(user, compound),
+        title="Message Sentiment",
+        description=TEMPLATE.format_map(template_vars),
+        color=color,
         timestamp=discord.utils.utcnow(),
     )
+
+    embed.add_field(
+        name="Negative",
+        value=f"{int(data.neg * 100)}%",
+        inline=True,
+    )
+
+    embed.add_field(
+        name="Neutral",
+        value=f"{int(data.neu * 100)}%",
+        inline=True,
+    )
+
+    embed.add_field(
+        name="Positive",
+        value=f"{int(data.pos * 100)}%",
+        inline=True,
+    )
+
     return format_embed(embed)
