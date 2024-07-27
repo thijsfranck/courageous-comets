@@ -15,11 +15,11 @@ from courageous_comets.redis import init_redis
 DESCRIPTION = """
 Thank you for using Courageous Comets! ☄️
 
-This is a Discord app that provides various statistical analyses on messages.
+This bot is designed to help you:
 
-- **Sentiment Analysis**: Analyze the sentiment of a message.
-- **Word Frequency**: Analyze the frequency of words in a message.
-- **Similarity Analysis**: Analyze the similarity between two messages.
+- 🚀 Connect with others who share your interests.
+- 🤗 Find the friendliest communities.
+- 🛡️ Moderate your server with ease.
 """
 
 logger = logging.getLogger(__name__)

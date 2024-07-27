@@ -39,14 +39,20 @@ class About(commands.Cog):
             interaction.user.id,
         )
         try:
+            embed = Embed(
+                title=f"Courageous Comets ({__version__})",
+                description=self.description,
+                color=discord.Color.blurple(),
+                url=f"https://thijsfranck.github.io/courageous-comets/{__version__}/",
+                timestamp=discord.utils.utcnow(),
+            )
+
+            footer_text = f"Generated using Courageous Comets {__version__}"
+
+            embed.set_footer(text=footer_text)
+
             await interaction.response.send_message(
-                embed=Embed(
-                    title=f"Courageous Comets ({__version__})",
-                    description=self.description,
-                    color=discord.Color.blurple(),
-                    url=f"https://thijsfranck.github.io/courageous-comets/{__version__}/",
-                    timestamp=discord.utils.utcnow(),
-                ),
+                embed=embed,
                 ephemeral=True,
             )
         except discord.HTTPException as e:
