@@ -1,5 +1,6 @@
 import itertools
 import json
+import logging
 from collections import Counter
 
 import redis.commands.search.aggregation as aggregations
@@ -14,6 +15,8 @@ from courageous_comets import models, settings
 from courageous_comets.enums import Duration, StatisticScope
 from courageous_comets.redis import schema
 from courageous_comets.redis.keys import key_schema
+
+logger = logging.getLogger(__name__)
 
 # List of courageous_comets.models.Message return fields used acrosss queries
 # that return a list of courageous_comets.models.Message
@@ -160,11 +163,15 @@ async def get_message_sentiment(
 
     data = await redis.hmget(key, fields)  # type: ignore
 
-    if not data:
+    has_all_fields = len(data) == len(fields)
+    any_none = any(value is None for value in data)
+
+    if not has_all_fields or any_none:
+        logger.warning("Missing sentiment analysis data for message %s.", key)
         return None
 
     return models.SentimentResult.model_validate(
-        dict(zip(fields, map(float, data), strict=True)),
+        {key: float(value) for key, value in zip(fields, data, strict=True)},
     )
 
 
