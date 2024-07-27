@@ -6,7 +6,7 @@ TEMPLATE = """
 """
 
 
-def _shorten(string: str, *, limit: int = 50) -> str:
+def _shorten(string: str, *, limit: int = 200) -> str:
     """Trim a string if necessary given `limit`."""
     if len(string) > limit:
         string = string[: limit - 3] + "..."
