@@ -38,6 +38,7 @@ def render(
     Assumes list of frequencies is not empty.
     """
     _, ax = plt.subplots()
+
     # If the there's only one point, use a bar plot, otherwise a line plot
     if len(frequencies) > 1:
         ax.plot(
@@ -56,6 +57,7 @@ def render(
             locator = HourLocator()
         elif duration == Duration.minute:
             locator = MinuteLocator()
+
     formatter = ConciseDateFormatter(locator)
 
     ax.xaxis.set_major_locator(locator)
