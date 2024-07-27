@@ -1,18 +1,12 @@
 import logging
 
 import discord
-from discord import Embed, app_commands
+from discord import app_commands
 from discord.ext import commands
 
-from courageous_comets import __version__
+from courageous_comets.ui.embeds import about
 
 logger = logging.getLogger(__name__)
-
-DESCRIPTION = """
-%s
-
-Click the link in the header to visit the documentation!
-"""
 
 
 class About(commands.Cog):
@@ -38,30 +32,11 @@ class About(commands.Cog):
             "User %s requested the about message using the /about command.",
             interaction.user.id,
         )
-        try:
-            embed = Embed(
-                title=f"Courageous Comets ({__version__})",
-                description=self.description,
-                color=discord.Color.blurple(),
-                url=f"https://thijsfranck.github.io/courageous-comets/{__version__}/",
-                timestamp=discord.utils.utcnow(),
-            )
 
-            footer_text = f"Generated using Courageous Comets {__version__}"
-
-            embed.set_footer(text=footer_text)
-
-            await interaction.response.send_message(
-                embed=embed,
-                ephemeral=True,
-            )
-        except discord.HTTPException as e:
-            logger.exception("Could not deliver the about message.", exc_info=e)
-
-    @property
-    def description(self) -> str:
-        """Return the body of the about message."""
-        return DESCRIPTION % self.bot.description
+        await interaction.response.send_message(
+            embed=about.render(self.bot.description),
+            ephemeral=True,
+        )
 
 
 async def setup(bot: commands.Bot) -> None:

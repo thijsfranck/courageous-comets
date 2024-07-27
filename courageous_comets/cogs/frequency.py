@@ -115,22 +115,26 @@ class Frequency(commands.Cog):
                 "This feature is only available in guilds.",
                 ephemeral=True,
             )
+
         frequencies = await get_messages_frequency(
             self.bot.redis,
             guild_id=str(interaction.guild.id),
             duration=duration,
         )
+
         if not frequencies:
             return await interaction.response.send_message(
                 "No messages were found over the specified duration at this time.",
                 ephemeral=True,
             )
+
         view = discord.Embed(
             title="Message frequencies",
             description="Message frequencies",
             color=discord.Colour.purple(),
             timestamp=discord.utils.utcnow(),
         )
+
         chart = plot_message_frequency(frequencies, duration)
         chart_file = discord.File(chart, filename="frequency.png")
         view.set_image(url="attachment://frequency.png")

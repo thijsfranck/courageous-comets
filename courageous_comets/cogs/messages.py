@@ -33,7 +33,7 @@ class Messages(commands.Cog):
         """
         await self.save_message(message)
 
-    async def save_message(self, message: discord.Message) -> None:
+    async def save_message(self, message: discord.Message) -> None:  # noqa: PLR0911
         """
         Save a message on Redis.
 
@@ -53,6 +53,24 @@ class Messages(commands.Cog):
         if not message.guild:
             return logger.debug(
                 "Ignoring message %s because it's not in a guild",
+                message.id,
+            )
+
+        if message.author.bot:
+            return logger.debug(
+                "Ignoring message %s because it's from a bot",
+                message.id,
+            )
+
+        if not message.clean_content:
+            return logger.debug(
+                "Ignoring message %s because it's empty",
+                message.id,
+            )
+
+        if self.bot.user in message.mentions and "sync" in message.clean_content:
+            return logger.debug(
+                "Ignoring message %s because it's a sync message",
                 message.id,
             )
 

@@ -4,8 +4,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from courageous_comets.charts import plot_sentiment_analysis
+from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
+from courageous_comets.discord.messages import resolve_messages
 from courageous_comets.enums import StatisticScope
 from courageous_comets.redis.keys import key_schema
 from courageous_comets.redis.messages import (
@@ -14,6 +15,8 @@ from courageous_comets.redis.messages import (
     get_messages_by_sentiment_similarity,
 )
 from courageous_comets.sentiment import calculate_sentiment
+from courageous_comets.ui.charts import sentiment_bars
+from courageous_comets.ui.embeds import message_sentiment, search_results, user_sentiment
 from courageous_comets.utils import contextmenu
 from courageous_comets.vectorizer import Vectorizer
 
@@ -24,38 +27,11 @@ class MessagesNotFound(app_commands.AppCommandError):
     """No messages were found."""
 
 
-SENTIMENT: dict[range, str] = {
-    range(-100, -50): "very negative 😡",
-    range(-50, -10): "negative 🙁",
-    range(-10, 10): "neutral 🙂",
-    range(10, 50): "positive 😁",
-    range(50, 100): "very positive 😍",
-}
-
-USER_SENTIMENT_TEMPLATE = """
-Overall the sentiment of {user} is **{sentiment}**.
-Their average compound score is {compound}.
-"""
-
-MESSAGE_SENTIMENT_TEMPLATE = """
-Overall the sentiment of the message is **{sentiment}**.
-
-Here's a breakdown of the scores:
-
-- Negative: {neg}
-- Neutral: {neu}
-- Positive: {pos}
-
-The compound score is {compound}.
-"""
-
-
 class Sentiment(commands.Cog):
     """Sentiment related commands."""
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
-
         self.vectorizer = Vectorizer()
 
         for attribute in dir(self):
@@ -101,38 +77,22 @@ class Sentiment(commands.Cog):
                 ephemeral=True,
             )
 
-        user_sentiment = await get_average_sentiment(
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        sentiment_results = await get_average_sentiment(
             redis=self.bot.redis,
             guild_id=str(interaction.guild.id),
             ids=[str(user.id)],
             scope=StatisticScope.USER,
         )
 
-        if not user_sentiment:
+        if not sentiment_results:
             raise MessagesNotFound
 
-        average_sentiment = user_sentiment[0]["avg_sentiment"]
+        average_sentiment = sentiment_results[0]["avg_sentiment"]
 
-        sentiment = next(
-            (value for key, value in SENTIMENT.items() if int(average_sentiment * 100) in key),
-            "unknown",
-        )
-
-        if not user_sentiment:
-            raise MessagesNotFound
-
-        view = discord.Embed(
-            title="User Sentiment",
-            description=USER_SENTIMENT_TEMPLATE.format(
-                sentiment=sentiment,
-                user=user.mention,
-                compound=average_sentiment,
-            ),
-            timestamp=discord.utils.utcnow(),
-        )
-
-        return await interaction.response.send_message(
-            embed=view,
+        return await interaction.followup.send(
+            embed=user_sentiment.render(user.mention, average_sentiment),
             ephemeral=True,
         )
 
@@ -174,6 +134,8 @@ class Sentiment(commands.Cog):
                 ephemeral=True,
             )
 
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
         key = key_schema.guild_messages(
             guild_id=message.guild.id,
             message_id=message.id,
@@ -181,67 +143,96 @@ class Sentiment(commands.Cog):
 
         analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
 
-        if analysis_result is None:
+        if not analysis_result:
+            prepared_content = preprocessing.process(message.clean_content)
+            analysis_result = calculate_sentiment(prepared_content)
+
+        embed = message_sentiment.render(analysis_result)
+
+        chart = sentiment_bars.render(message.id, analysis_result)
+        embed.set_image(url=f"attachment://{chart.filename}")
+
+        return await interaction.followup.send(embed=embed, file=chart, ephemeral=True)
+
+    @app_commands.command(
+        name="sentiment_search",
+        description="Search for messages with similar sentiment.",
+    )
+    async def search_by_sentiment(
+        self,
+        interaction: discord.Interaction,
+        query: str,
+    ) -> None:
+        """
+        Allow users to search for messages with similar sentiment using a context menu.
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            The interaction that triggered the command.
+        query : str
+            The message to use as a reference for the search
+        """
+        logger.info(
+            "User %s requested search by sentiment using a custom query.",
+            interaction.user.id,
+        )
+
+        if self.bot.redis is None:
             return await interaction.response.send_message(
-                "No sentiment analysis found for this message.",
+                "This feature is currently unavailable. Please try again later.",
                 ephemeral=True,
             )
 
-        color = discord.Color.green() if analysis_result.compound >= 0 else discord.Color.red()
+        if interaction.guild is None:
+            return await interaction.response.send_message(
+                "This feature is only available in guilds.",
+                ephemeral=True,
+            )
 
-        sentiment = next(
-            (
-                value
-                for key, value in SENTIMENT.items()
-                if int(analysis_result.compound * 100) in key
-            ),
-            "unknown",
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        prepared_content = preprocessing.process(query)
+        sentiment = calculate_sentiment(prepared_content)
+
+        messages = await get_messages_by_sentiment_similarity(
+            self.bot.redis,
+            guild_id=str(interaction.guild.id),
+            sentiment=sentiment.compound,
+            radius=0.1,
+            limit=5,
         )
 
-        template_vars = {
-            **analysis_result.model_dump(),
-            "sentiment": sentiment,
-        }
+        resolved_messages = await resolve_messages(self.bot, messages)
 
-        embed = discord.Embed(
-            title="Message Sentiment",
-            description=MESSAGE_SENTIMENT_TEMPLATE.format(**template_vars),
-            color=color,
-            timestamp=discord.utils.utcnow(),
-        )
+        if not resolved_messages:
+            return await interaction.followup.send(
+                "No related messages were found.",
+                ephemeral=True,
+            )
 
-        chart = plot_sentiment_analysis(message.id, analysis_result)
-        chart_file = discord.File(chart, filename="sentiment_analysis.png")
-        embed.set_image(url="attachment://sentiment_analysis.png")
+        embed = search_results.render(query, resolved_messages)
 
-        return await interaction.response.send_message(
-            embed=embed,
-            file=chart_file,
-            ephemeral=True,
-        )
+        return await interaction.followup.send(embed=embed, ephemeral=True)
 
-    @contextmenu(name="Show similar sentiment")
-    async def get_similar_messages(
+    @contextmenu(name="Search by sentiment")
+    async def search_by_sentiment_with_message(
         self,
         interaction: discord.Interaction,
         message: discord.Message,
     ) -> None:
         """
-        Allow users to view the sentiment analysis of a message using a context menu.
-
-        Generates an embed with the sentiment analysis of a message and sends it to the user.
-
-        The embed contains a text description of the sentiment analysis and a bar chart.
+        Allow users to search for messages with similar sentiment using a context menu.
 
         Parameters
         ----------
         interaction : discord.Interaction
             The interaction that triggered the command.
         message : discord.Message
-            The message to analyze.
+            The message to use as a reference for the search.
         """
         logger.info(
-            "User %s requested sentiment analysis results for message %s.",
+            "User %s requested search by sentiment for message %s.",
             interaction.user.id,
             message.id,
         )
@@ -252,22 +243,49 @@ class Sentiment(commands.Cog):
                 ephemeral=True,
             )
 
-        await interaction.response.defer()
+        if message.guild is None:
+            return await interaction.response.send_message(
+                "This feature is only available in guilds.",
+                ephemeral=True,
+            )
 
-        sentiment = calculate_sentiment(message.content)
-        messages = await get_messages_by_sentiment_similarity(
-            self.bot.redis,
-            guild_id=str(message.guild.id),  # type: ignore
-            sentiment=sentiment.compound,
-            scope=StatisticScope.GUILD,
-            radius=0.1,
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        key = key_schema.guild_messages(
+            guild_id=message.guild.id,
+            message_id=message.id,
         )
 
-        if not messages:
-            raise MessagesNotFound
+        # Check whether the sentiment analysis is cached
+        analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
 
-        # TODO(isaa-ctaylor): Display messages
-        return None
+        if not analysis_result:
+            prepared_content = preprocessing.process(message.clean_content)
+            analysis_result = calculate_sentiment(prepared_content)
+
+        messages = await get_messages_by_sentiment_similarity(
+            self.bot.redis,
+            guild_id=str(message.guild.id),
+            sentiment=analysis_result.compound,
+            radius=0.1,
+            limit=6,
+        )
+
+        resolved_messages = [
+            resolved_message
+            for resolved_message in await resolve_messages(self.bot, messages)
+            if resolved_message.id != message.id
+        ]
+
+        if not resolved_messages:
+            return await interaction.followup.send(
+                "No related messages were found.",
+                ephemeral=True,
+            )
+
+        embed = search_results.render(message.clean_content, resolved_messages)
+
+        return await interaction.followup.send(embed=embed, ephemeral=True)
 
 
 async def setup(bot: CourageousCometsBot) -> None:

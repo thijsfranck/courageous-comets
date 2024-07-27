@@ -158,6 +158,7 @@ if IS_DEV:
 try:
     DISCORD_TOKEN = read_discord_token()
     BOT_CONFIG_PATH = read_bot_config_path()
+    DISCORD_API_CONCURRENCY = read_int("DISCORD_API_CONCURRENCY", 3)
     NLTK_DATA_DIR = os.getenv("NLTK_DATA", "nltk_data")
     NLTK_DOWNLOAD_CONCURRENCY = read_int("NLTK_DOWNLOAD_CONCURRENCY", 3)
     PREPROCESSING_MAX_WORD_LENGTH = read_int("MAX_WORD_LENGTH", 35)

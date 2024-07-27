@@ -1,14 +1,17 @@
-from pathlib import Path
-
+import discord
 import matplotlib.pyplot as plt
 
 from courageous_comets import models
+from courageous_comets.ui.charts import CACHE_ROOT
+
+CACHE_DIR = CACHE_ROOT / "sentiment_bars"
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def plot_sentiment_analysis(
+def render(
     message_id: str | int,
-    analysis_result: models.SentimentResult,
-) -> Path:
+    data: models.SentimentResult,
+) -> discord.File:
     """
     Plot the sentiment analysis of a message.
 
@@ -24,15 +27,17 @@ def plot_sentiment_analysis(
 
     Returns
     -------
-    Path
-        The path to the saved image.
+    discord.File
+        The file containing the saved image.
+
+    Notes
+    -----
+    Charts are cached in the `CACHE_DIR` directory using the message id as the filename.
     """
-    chart_dir = Path("artifacts/charts/sentiment").resolve()
-    chart_dir.mkdir(parents=True, exist_ok=True)
-    chart_path = chart_dir / f"{message_id}.png"
+    chart_path = CACHE_DIR / f"{message_id}.png"
 
     if chart_path.exists():
-        return chart_path
+        return discord.File(chart_path, filename=f"{message_id}.png")
 
     _, ax = plt.subplots()
     ax.bar(
@@ -42,9 +47,9 @@ def plot_sentiment_analysis(
             "Positive",
         ],
         [
-            analysis_result.neg,
-            analysis_result.neu,
-            analysis_result.pos,
+            data.neg,
+            data.neu,
+            data.pos,
         ],
         color=[
             "red",
@@ -57,4 +62,4 @@ def plot_sentiment_analysis(
 
     plt.savefig(chart_path)
 
-    return chart_path
+    return discord.File(chart_path, filename=f"{message_id}.png")
