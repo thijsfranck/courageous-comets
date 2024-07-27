@@ -31,6 +31,7 @@ async def test__messages_on_message__message_saved_to_redis(
     message.clean_content = "The quick brown fox jumps over the lazy dog."
     message.id = 1
     message.author.id = 1
+    message.author.bot = False
     message.channel.id = 1
     message.guild.id = 1
 
