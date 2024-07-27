@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import logging
 
 import discord
@@ -29,4 +30,5 @@ async def main() -> None:
         await bot.close()
 
 
-asyncio.run(main())
+with contextlib.suppress(KeyboardInterrupt):
+    asyncio.run(main())
