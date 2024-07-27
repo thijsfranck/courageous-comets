@@ -1,7 +1,6 @@
 cogs:
   - courageous_comets.cogs.about
   - courageous_comets.cogs.keywords
-  - courageous_comets.cogs.interactions
   - courageous_comets.cogs.messages
   - courageous_comets.cogs.ping
   - courageous_comets.cogs.sentiment
