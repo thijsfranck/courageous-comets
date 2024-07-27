@@ -18,6 +18,7 @@ from courageous_comets.redis.messages import (
 from courageous_comets.sentiment import calculate_sentiment
 from courageous_comets.ui.charts import sentiment_bars
 from courageous_comets.ui.embeds import message_sentiment, search_results, user_sentiment
+from courageous_comets.ui.views.sentiment import SentimentView
 from courageous_comets.utils import contextmenu
 
 logger = logging.getLogger(__name__)
@@ -98,9 +99,12 @@ class Sentiment(commands.Cog):
         chart = sentiment_bars.for_user(average_sentiment)
         embed.set_image(url=f"attachment://{chart.filename}")
 
+        view = SentimentView(user, average_sentiment)
+
         return await interaction.followup.send(
             embed=embed,
             file=chart,
+            view=view,
             ephemeral=True,
         )
 
@@ -171,7 +175,14 @@ class Sentiment(commands.Cog):
         chart = sentiment_bars.for_message(message.id, analysis_result)
         embed.set_image(url=f"attachment://{chart.filename}")
 
-        return await interaction.followup.send(embed=embed, file=chart, ephemeral=True)
+        view = SentimentView(message.author, analysis_result)
+
+        return await interaction.followup.send(
+            embed=embed,
+            file=chart,
+            view=view,
+            ephemeral=True,
+        )
 
     @app_commands.command(
         name="sentiment_search",
