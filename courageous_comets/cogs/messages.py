@@ -3,13 +3,8 @@ import logging
 import discord
 from discord.ext import commands
 
-from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
-from courageous_comets.models import MessageAnalysis
-from courageous_comets.redis import messages
-from courageous_comets.sentiment import calculate_sentiment
-from courageous_comets.vectorizer import Vectorizer
-from courageous_comets.words import tokenize_sentence, word_frequency
+from courageous_comets.processing import process_message
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +14,6 @@ class Messages(commands.Cog):
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
-        self.vectorizer = Vectorizer()
 
     @commands.Cog.listener(name="on_message")
     async def on_message(self, message: discord.Message) -> None:
@@ -33,7 +27,7 @@ class Messages(commands.Cog):
         """
         await self.save_message(message)
 
-    async def save_message(self, message: discord.Message) -> None:  # noqa: PLR0911
+    async def save_message(self, message: discord.Message) -> None:
         """
         Save a message on Redis.
 
@@ -50,54 +44,23 @@ class Messages(commands.Cog):
                 message.id,
             )
 
-        if not message.guild:
+        validation_errors = {
+            "bot": message.author.bot,
+            "empty": not message.clean_content,
+            "sync": self.bot.user in message.mentions and "sync" in message.clean_content,
+        }
+
+        if any(validation_errors.values()):
             return logger.debug(
-                "Ignoring message %s because it's not in a guild",
+                "Ignoring message %s, reason: %s",
                 message.id,
+                validation_errors,
             )
 
-        if message.author.bot:
-            return logger.debug(
-                "Ignoring message %s because it's from a bot",
-                message.id,
-            )
-
-        if not message.clean_content:
-            return logger.debug(
-                "Ignoring message %s because it's empty",
-                message.id,
-            )
-
-        if self.bot.user in message.mentions and "sync" in message.clean_content:
-            return logger.debug(
-                "Ignoring message %s because it's a sync message",
-                message.id,
-            )
-
-        text = preprocessing.process(message.clean_content)
-
-        if not text:
-            return logger.debug(
-                "Ignoring message %s because it's empty after processing",
-                message.id,
-            )
-
-        embedding = await self.vectorizer.aencode(text)
-        sentiment = calculate_sentiment(text)
-        tokens = tokenize_sentence(text)
-
-        key = await messages.save_message(
-            self.bot.redis,
-            MessageAnalysis(
-                user_id=str(message.author.id),
-                message_id=str(message.id),
-                channel_id=str(message.channel.id),
-                guild_id=str(message.guild.id),
-                timestamp=message.created_at,
-                embedding=embedding,
-                sentiment=sentiment,
-                tokens=word_frequency(tokens),
-            ),
+        key = await process_message(
+            message,
+            redis=self.bot.redis,
+            vectorizer=self.bot.vectorizer,
         )
 
         return logger.info(

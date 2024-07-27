@@ -8,6 +8,7 @@ from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.discord.messages import resolve_messages
 from courageous_comets.enums import StatisticScope
+from courageous_comets.processing import process_message
 from courageous_comets.redis.keys import key_schema
 from courageous_comets.redis.messages import (
     get_average_sentiment,
@@ -18,7 +19,6 @@ from courageous_comets.sentiment import calculate_sentiment
 from courageous_comets.ui.charts import sentiment_bars
 from courageous_comets.ui.embeds import message_sentiment, search_results, user_sentiment
 from courageous_comets.utils import contextmenu
-from courageous_comets.vectorizer import Vectorizer
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,6 @@ class Sentiment(commands.Cog):
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
-        self.vectorizer = Vectorizer()
 
         for attribute in dir(self):
             obj = getattr(self, attribute, None)
@@ -144,11 +143,22 @@ class Sentiment(commands.Cog):
             message_id=message.id,
         )
 
+        if not await self.bot.redis.exists(key):
+            logger.debug("Message %s is not previously saved. Processing it.", message.id)
+            await process_message(
+                message,
+                redis=self.bot.redis,
+                vectorizer=self.bot.vectorizer,
+            )
+
         analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
 
-        if not analysis_result:
-            prepared_content = preprocessing.process(message.clean_content)
-            analysis_result = calculate_sentiment(prepared_content)
+        if analysis_result is None:
+            logger.warning("Could not find analysis result for message %s.", message.id)
+            return await interaction.followup.send(
+                "No analysis results were found.",
+                ephemeral=True,
+            )
 
         embed = message_sentiment.render(analysis_result)
 
@@ -259,12 +269,22 @@ class Sentiment(commands.Cog):
             message_id=message.id,
         )
 
-        # Check whether the sentiment analysis is cached
+        if not await self.bot.redis.exists(key):
+            logger.debug("Message %s is not previously saved. Processing it.", message.id)
+            await process_message(
+                message,
+                redis=self.bot.redis,
+                vectorizer=self.bot.vectorizer,
+            )
+
         analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
 
-        if not analysis_result:
-            prepared_content = preprocessing.process(message.clean_content)
-            analysis_result = calculate_sentiment(prepared_content)
+        if analysis_result is None:
+            logger.warning("Could not find analysis result for message %s.", message.id)
+            return await interaction.followup.send(
+                "No related messages were found.",
+                ephemeral=True,
+            )
 
         messages = await get_messages_by_sentiment_similarity(
             self.bot.redis,

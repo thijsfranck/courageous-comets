@@ -4,13 +4,14 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from courageous_comets import preprocessing
 from courageous_comets.client import CourageousCometsBot
 from courageous_comets.discord.messages import resolve_messages
-from courageous_comets.preprocessing import process
+from courageous_comets.processing import process_message
+from courageous_comets.redis.keys import key_schema
 from courageous_comets.redis.messages import get_messages_by_semantics_similarity
 from courageous_comets.ui.embeds import search_results
 from courageous_comets.utils import contextmenu
-from courageous_comets.vectorizer import Vectorizer
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,6 @@ class Keywords(commands.Cog):
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
-        self.vectorizer = Vectorizer()
 
         for attribute in dir(self):
             obj = getattr(self, attribute, None)
@@ -75,13 +75,13 @@ class Keywords(commands.Cog):
 
         await interaction.response.defer(ephemeral=True, thinking=True)
 
-        query_processed = process(query)
-        query_vector = await self.vectorizer.aencode(query_processed)
+        query_processed = preprocessing.process(query)
+        embedding = await self.bot.vectorizer.aencode(query_processed)
 
         messages = await get_messages_by_semantics_similarity(
             self.bot.redis,
             guild_id=str(interaction.guild.id),
-            embedding=query_vector,
+            embedding=embedding,
             limit=5,
         )
 
@@ -122,7 +122,7 @@ class Keywords(commands.Cog):
                 ephemeral=True,
             )
 
-        if interaction.guild is None:
+        if message.guild is None:
             return await interaction.response.send_message(
                 "This feature is only available in guilds.",
                 ephemeral=True,
@@ -130,13 +130,25 @@ class Keywords(commands.Cog):
 
         await interaction.response.defer(ephemeral=True, thinking=True)
 
-        query_processed = process(message.clean_content)
-        query_vector = await self.vectorizer.aencode(query_processed)
+        key = key_schema.guild_messages(
+            guild_id=message.guild.id,
+            message_id=message.id,
+        )
+
+        if not self.bot.redis.exists(key):
+            await process_message(
+                message,
+                redis=self.bot.redis,
+                vectorizer=self.bot.vectorizer,
+            )
+
+        content_processed = preprocessing.process(message.clean_content)
+        embedding = await self.bot.vectorizer.aencode(content_processed)
 
         messages = await get_messages_by_semantics_similarity(
             self.bot.redis,
-            guild_id=str(interaction.guild.id),
-            embedding=query_vector,
+            guild_id=str(message.guild.id),
+            embedding=embedding,
             limit=6,
         )
 

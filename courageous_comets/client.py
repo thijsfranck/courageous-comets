@@ -11,6 +11,7 @@ from redis.asyncio import Redis
 from courageous_comets import settings
 from courageous_comets.nltk import init_nltk
 from courageous_comets.redis import init_redis
+from courageous_comets.vectorizer import Vectorizer
 
 DESCRIPTION = """
 Thank you for using Courageous Comets! ☄️
@@ -44,6 +45,7 @@ class CourageousCometsBot(commands.Bot):
     """
 
     redis: Redis | None = None
+    vectorizer = Vectorizer()
 
     def __init__(self) -> None:
         super().__init__(
