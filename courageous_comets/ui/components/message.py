@@ -1,7 +1,7 @@
 import discord
 
 TEMPLATE = """
-{author} {timestamp}:
+{channel} {author} {timestamp}:
 {content}
 """
 
@@ -27,8 +27,14 @@ def render(message: discord.Message) -> str:
     str
         The formatted string.
     """
+    channel = (
+        f"{message.channel.mention}"
+        if isinstance(message.channel, discord.abc.GuildChannel)
+        else ""
+    )
     return TEMPLATE.format_map(
         {
+            "channel": channel,
             "author": message.author.mention,
             "timestamp": discord.utils.format_dt(message.created_at, style="R"),
             "content": _shorten(message.clean_content),
