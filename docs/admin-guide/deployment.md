@@ -22,7 +22,7 @@ The application can be deployed using Docker Compose. You can use the `docker-co
 GitHub repository to start the application.
 
 <!-- markdownlint-disable-next-line MD013 - All syntax has to be on the same line -->
-[Get the Docker Compose :fontawesome-brands-docker:](https://github.com/thijsfranck/courageous-comets/blob/main/docker-compose.yaml){ .md-button .md-button--primary }
+[Get the Docker Compose :fontawesome-brands-docker:](https://github.com/thijsfranck/courageous-comets/blob/<APP_VERSION>/docker-compose.yaml){ .md-button .md-button--primary }
 
 Download the file and save it in any directory on your system.
 
@@ -64,7 +64,7 @@ By default, the application uses the latest version of each Docker image. To spe
 can add the following variables to the `.env` file:
 
 ```dotenv
-COURAGEOUS_COMETS_VERSION=latest
+COURAGEOUS_COMETS_VERSION=<APP_VERSION>
 REDIS_STACK_VERSION=latest
 ```
 

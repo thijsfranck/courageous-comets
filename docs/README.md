@@ -57,4 +57,4 @@ The following team members contributed to the project:
 
 ## License
 
-This project is published under the [MIT license](https://github.com/thijsfranck/courageous-comets/blob/main/LICENSE).
+This project is published under the [MIT license](https://github.com/thijsfranck/courageous-comets/blob/<APP_VERSION>/LICENSE).

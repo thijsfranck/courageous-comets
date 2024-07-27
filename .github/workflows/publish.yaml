@@ -44,6 +44,9 @@ jobs:
       - name: Set up Git user
         uses: fregante/setup-git-user@v2.0.1
 
+      - name: Build documentation
+        run: bash docs/replace-token.sh "<APP_VERSION>" "${{ github.ref_name }}"
+
       - name: Publish documentation
         run: poetry run mike deploy -b public-docs --push --update-aliases ${{ github.ref_name }} latest
         shell: bash
