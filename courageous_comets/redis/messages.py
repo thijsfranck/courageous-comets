@@ -154,10 +154,15 @@ async def get_message_sentiment(
         The sentiment analysis result if found, else None.
     """
     fields = ["sentiment_neg", "sentiment_neu", "sentiment_pos", "sentiment_compound"]
+
+    if not redis.exists(key):
+        return None
+
     data = await redis.hmget(key, fields)  # type: ignore
 
     if not data:
         return None
+
     return models.SentimentResult.model_validate(
         dict(zip(fields, map(float, data), strict=True)),
     )
@@ -466,5 +471,10 @@ async def get_average_sentiment(
 
     # Deserialize all rows as dictionaries. Each row is a flat list of key-value pairs.
     return [
-        {key: float(value) for row in results.rows for key, value in itertools.batched(row, 2)},
+        {
+            key: float(value)
+            for row in results.rows
+            for key, value in itertools.batched(row, 2)
+            if value is not None
+        },
     ]
