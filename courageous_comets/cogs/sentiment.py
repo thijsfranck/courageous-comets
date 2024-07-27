@@ -9,6 +9,7 @@ from courageous_comets.client import CourageousCometsBot
 from courageous_comets.enums import StatisticScope
 from courageous_comets.redis.keys import key_schema
 from courageous_comets.redis.messages import (
+    get_average_sentiment,
     get_message_sentiment,
     get_messages_by_sentiment_similarity,
 )
@@ -31,8 +32,12 @@ SENTIMENT: dict[range, str] = {
     range(50, 100): "very positive 😍",
 }
 
+USER_SENTIMENT_TEMPLATE = """
+Overall the sentiment of {user} is **{sentiment}**.
+Their average compound score is {compound}.
+"""
 
-SENTIMENT_DESCRIPTION_TEMPLATE = """
+MESSAGE_SENTIMENT_TEMPLATE = """
 Overall the sentiment of the message is **{sentiment}**.
 
 Here's a breakdown of the scores:
@@ -58,6 +63,78 @@ class Sentiment(commands.Cog):
             if obj and getattr(obj, "is_contextmenu", False):
                 menu = app_commands.ContextMenu(name=obj.name, callback=obj)
                 self.bot.tree.add_command(menu)
+
+    @contextmenu(name="Show user sentiment")
+    async def show_user_sentiment(
+        self,
+        interaction: discord.Interaction,
+        user: discord.User | discord.Member,
+    ) -> None:
+        """
+        Allow users to view the sentiment analysis of a user using a context menu.
+
+        Generates an embed with the sentiment analysis of a user and sends it to the user.
+        The embed contains a line chart of the sentiment of a user over time.
+
+        Parameters
+        ----------
+        interaction : discord.Interaction
+            The interaction that triggered the command.
+        user : discord.User | discord.Member
+            The user to analyze.
+        """
+        logger.info(
+            "User %s requested sentiment analysis results for user %s.",
+            interaction.user.id,
+            user.id,
+        )
+
+        if self.bot.redis is None:
+            return await interaction.response.send_message(
+                "This feature is currently unavailable. Please try again later.",
+                ephemeral=True,
+            )
+
+        if interaction.guild is None:
+            return await interaction.response.send_message(
+                "This feature is only available in guilds.",
+                ephemeral=True,
+            )
+
+        user_sentiment = await get_average_sentiment(
+            redis=self.bot.redis,
+            guild_id=str(interaction.guild.id),
+            ids=[str(user.id)],
+            scope=StatisticScope.USER,
+        )
+
+        if not user_sentiment:
+            raise MessagesNotFound
+
+        average_sentiment = user_sentiment[0]["avg_sentiment"]
+
+        sentiment = next(
+            (value for key, value in SENTIMENT.items() if int(average_sentiment * 100) in key),
+            "unknown",
+        )
+
+        if not user_sentiment:
+            raise MessagesNotFound
+
+        view = discord.Embed(
+            title="User Sentiment",
+            description=USER_SENTIMENT_TEMPLATE.format(
+                sentiment=sentiment,
+                user=user.mention,
+                compound=average_sentiment,
+            ),
+            timestamp=discord.utils.utcnow(),
+        )
+
+        return await interaction.response.send_message(
+            embed=view,
+            ephemeral=True,
+        )
 
     @contextmenu(name="Show message sentiment")
     async def show_message_sentiment(
@@ -128,7 +205,7 @@ class Sentiment(commands.Cog):
 
         embed = discord.Embed(
             title="Message Sentiment",
-            description=SENTIMENT_DESCRIPTION_TEMPLATE.format(**template_vars),
+            description=MESSAGE_SENTIMENT_TEMPLATE.format(**template_vars),
             color=color,
             timestamp=discord.utils.utcnow(),
         )
