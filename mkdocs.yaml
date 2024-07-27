@@ -75,6 +75,9 @@ plugins:
   - mike
   - search
 
+exclude_docs: |
+  *.sh
+
 extra:
   generator: false
   social:
