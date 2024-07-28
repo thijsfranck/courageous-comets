@@ -1,3 +1,26 @@
+## v0.10.0 (2024-07-28)
+
+### Feat
+
+- frequency time divisions (#62)
+- add topics command that lists the most used keywords (#61)
+- add user keyword frequency (#60)
+
+### Fix
+
+- capitalize embed title
+- ensure consistent styling on embed titles
+- improve logging for all interactions
+
+### Refactor
+
+- log message processed as debug event
+- log database event as error
+- simplify messages cog
+- remove redundant error class
+- remove redundant decorator
+- split up keywords and sentiment cogs, improve cog documentation
+
 ## v0.9.0 (2024-07-28)
 
 ### Feat
