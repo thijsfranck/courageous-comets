@@ -14,7 +14,14 @@ logger = logging.getLogger(__name__)
 
 
 class Frequency(commands.Cog):
-    """Frequency related commands."""
+    """
+    A cog that provides frequency analysis for messages over a duration.
+
+    Attributes
+    ----------
+    bot : CourageousCometsBot
+        The bot instance.
+    """
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot

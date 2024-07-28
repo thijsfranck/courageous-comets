@@ -4,7 +4,14 @@ from discord.ext import commands
 
 
 class Ping(commands.Cog):
-    """A cog containing a simple ping command."""
+    """
+    A cog containing a simple ping command.
+
+    Attributes
+    ----------
+    bot : commands.Bot
+        The bot instance.
+    """
 
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot

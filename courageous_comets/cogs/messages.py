@@ -10,7 +10,14 @@ logger = logging.getLogger(__name__)
 
 
 class Messages(commands.Cog):
-    """A cog that listens for messages from discord."""
+    """
+    A cog that listens for messages from discord and forwards them to processing.
+
+    Attributes
+    ----------
+    bot : CourageousCometsBot
+        The bot instance.
+    """
 
     def __init__(self, bot: CourageousCometsBot) -> None:
         self.bot = bot
