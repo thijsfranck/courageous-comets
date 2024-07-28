@@ -322,7 +322,7 @@ async def get_tokens_count(
     ids: list[str] | None = None,
     scope: StatisticScope = StatisticScope.CHANNEL,
     limit: int = settings.QUERY_LIMIT,
-) -> Counter:
+) -> Counter[str]:
     """
     Get the count of tokens across messages.
 

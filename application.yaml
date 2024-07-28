@@ -2,6 +2,7 @@ cogs:
   - courageous_comets.cogs.about
   - courageous_comets.cogs.keywords.search_command
   - courageous_comets.cogs.keywords.search_context_menu
+  - courageous_comets.cogs.keywords.user_context_menu
   - courageous_comets.cogs.messages
   - courageous_comets.cogs.ping
   - courageous_comets.cogs.sentiment.message_context_menu
