@@ -17,7 +17,7 @@ def render(user: discord.User | discord.Member, keywords: Counter[str]) -> disco
         The keywords and their counts.
     """
     embed = discord.Embed(
-        title="User interests",
+        title="User Interests",
         description=f"Here are the top keywords that {user.mention} has used in their messages.",
         color=discord.Color.blurple(),
         timestamp=discord.utils.utcnow(),
