@@ -22,6 +22,9 @@ def render(counter: Counter[str]) -> discord.File:
     ax.set_ylabel("Count")
     ax.set_title("Top keywords")
 
+    # Rotate the x-axis labels 45 degrees to keep them readable
+    plt.xticks(rotation=45, ha="right")
+
     file_ = io.BytesIO()
     plt.savefig(file_)
     file_.seek(0)
