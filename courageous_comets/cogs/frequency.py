@@ -85,7 +85,7 @@ class Frequency(commands.Cog):
 
         frequencies = await get_messages_frequency(
             self.bot.redis,
-            guild_id="1",
+            guild_id=str(interaction.guild.id),
             duration=duration,
             limit=10_000,
         )
