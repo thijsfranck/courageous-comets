@@ -59,8 +59,8 @@ class Messages(commands.Cog):
             vectorizer=self.bot.vectorizer,
         )
 
-        return logger.info(
-            "Saved message %s to Redis with key %s",
+        return logger.debug(
+            "Processed message %s, saved with key %s",
             message.id,
             key,
         )
