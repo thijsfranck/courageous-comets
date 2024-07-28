@@ -1,3 +1,24 @@
+## v0.9.0 (2024-07-28)
+
+### Feat
+
+- add praise interaction for user and message sentiment
+- harmonize sentiment embeds
+- add details to frequency embed
+- refactor cogs with ui components and complete existing interactions
+
+### Fix
+
+- increase search results max preview length
+- show channel in search results
+- avoid error when no sentiment data is available for a user
+
+### Refactor
+
+- remove redundant code
+- remove unused component
+- move message processing to a separate module
+
 ## v0.8.0 (2024-07-27)
 
 ### Feat
