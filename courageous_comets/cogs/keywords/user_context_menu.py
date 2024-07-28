@@ -91,11 +91,7 @@ class KeywordsUserContextMenu(discord.ext.commands.Cog):
         chart = keywords_bars.render(tokens)
         embed.set_image(url=f"attachment://{chart.filename}")
 
-        return await interaction.followup.send(
-            embed=embed,
-            file=chart,
-            ephemeral=True,
-        )
+        return await interaction.followup.send(embed=embed, file=chart, ephemeral=True)
 
 
 async def setup(bot: CourageousCometsBot) -> None:
