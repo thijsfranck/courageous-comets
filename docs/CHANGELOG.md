@@ -1,3 +1,13 @@
+## v1.0.0 (2024-07-28)
+
+### BREAKING CHANGE
+
+- dependencies are no longer updated
+
+### Feat
+
+- lock dependencies for final version
+
 ## v0.10.0 (2024-07-28)
 
 ### Feat
