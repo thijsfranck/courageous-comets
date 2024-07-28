@@ -11,7 +11,6 @@ from courageous_comets.redis.messages import get_message_sentiment
 from courageous_comets.ui.charts import sentiment_bars
 from courageous_comets.ui.embeds import message_sentiment
 from courageous_comets.ui.views.sentiment import SentimentView
-from courageous_comets.utils import contextmenu
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +38,6 @@ class SentimentMessageContextMenu(commands.Cog):
         )
         self.bot.tree.add_command(menu)
 
-    @contextmenu(name="Show message sentiment")
     async def show_message_sentiment(
         self,
         interaction: discord.Interaction,
