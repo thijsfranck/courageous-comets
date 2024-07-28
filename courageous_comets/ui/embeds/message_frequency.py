@@ -38,7 +38,7 @@ def render(frequencies: list[models.MessageFrequency], duration: Duration) -> di
     }
 
     embed = discord.Embed(
-        title="Message frequencies",
+        title="Message Frequency",
         description=TEMPLATE.format_map(template_vars),
         color=discord.Colour.purple(),
         timestamp=discord.utils.utcnow(),

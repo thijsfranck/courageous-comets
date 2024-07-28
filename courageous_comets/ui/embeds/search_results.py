@@ -21,7 +21,7 @@ def render(query: str, messages: list[discord.Message]) -> discord.Embed:
         The rendered embed.
     """
     embed = discord.Embed(
-        title="Found related messages 🚀",
+        title="Search Results 🚀",
         description=search_results.render(query, messages),
         colour=discord.Colour.blurple(),
         timestamp=discord.utils.utcnow(),

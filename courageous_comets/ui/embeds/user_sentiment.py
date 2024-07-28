@@ -31,7 +31,7 @@ def render(user: discord.User | discord.Member, data: SentimentResult) -> discor
     }
 
     embed = discord.Embed(
-        title="Message Sentiment",
+        title="User Sentiment",
         description=TEMPLATE.format_map(template_vars),
         color=color,
         timestamp=discord.utils.utcnow(),
