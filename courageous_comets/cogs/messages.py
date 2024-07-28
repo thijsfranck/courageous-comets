@@ -35,7 +35,7 @@ class Messages(commands.Cog):
             The message to save.
         """
         if not self.bot.redis:
-            return logger.warning(
+            return logger.error(
                 "Ignoring message %s because the bot is not connected to Redis",
                 message.id,
             )
