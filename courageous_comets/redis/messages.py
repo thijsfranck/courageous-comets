@@ -1,3 +1,4 @@
+import datetime
 import itertools
 import json
 import logging
@@ -369,6 +370,34 @@ async def get_tokens_count(
     return counter
 
 
+def _calculate_duration_range(duration: Duration) -> tuple[float, float]:
+    """Calculate the lower and upper bounds of a duration.
+
+    Parameters
+    ----------
+    duration: courageous_comets.enums.Duration
+        The duration to be used for aggregation.
+
+    Returns
+    -------
+    tuple[float, float]
+        The lower and upper bounds of the duration as UNIX timestamps.
+    """
+    upper = datetime.datetime.now(datetime.UTC)
+    match duration:
+        case Duration.minute:
+            lower = upper - datetime.timedelta(minutes=60)
+        case Duration.hourly:
+            lower = upper - datetime.timedelta(hours=24)
+        case Duration.daily:
+            lower = upper - datetime.timedelta(days=7)
+        case _:
+            error_message = f"Unhandled duration: {duration}"
+            raise ValueError(error_message)
+
+    return (lower.timestamp(), upper.timestamp())
+
+
 async def get_messages_frequency(  # noqa: PLR0913
     redis: Redis,
     *,
@@ -403,6 +432,12 @@ async def get_messages_frequency(  # noqa: PLR0913
         A list of message frequency at different timestamps.
     """
     search_scope = build_search_scope(guild_id, ids, scope)
+    lower_timestamp, upper_timestamp = _calculate_duration_range(duration)
+    filter_expression = (
+        search_scope
+        & (Num("timestamp") >= lower_timestamp)  # type: ignore
+        & (Num("timestamp") <= upper_timestamp)  # type: ignore
+    )
     index = _get_raw_index(redis)
 
     # Define a reducer to count distinct message IDs and alias the result as "num_messages"
@@ -410,19 +445,21 @@ async def get_messages_frequency(  # noqa: PLR0913
 
     # Build the aggregation query
     query = (
-        aggregations.AggregateRequest(f"{search_scope!s} @timestamp:[0 inf]")
+        aggregations.AggregateRequest(str(filter_expression))
         .limit(
             0,
             limit,
         )
         # Create a new property `timestamp` rounded to the start of the interval
         .apply(
-            timestamp=f"minute(@timestamp) - ((minute(@timestamp) % {duration.value}))",
+            timestamp=f"floor(@timestamp) - (floor(@timestamp) % {duration.value})",
         )
         # Group results by interval using the new `timestamp` property
         .group_by(["@timestamp"], reducer)
-        # Sort results by the timestamp
-        .sort_by(aggregations.Asc("@timestamp"))  # type: ignore
+        # Sort results by the timestamp and return at most 60 entries. We never
+        # get more than 60 groups because the smallest time division is 60
+        # minutes according to our duration values.
+        .sort_by(aggregations.Asc("@timestamp"), max=60)  # type: ignore
     )
 
     # Execute the aggregation query on the index
