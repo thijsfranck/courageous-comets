@@ -25,18 +25,7 @@ class Messages(commands.Cog):
     @commands.Cog.listener(name="on_message")
     async def on_message(self, message: discord.Message) -> None:
         """
-        When a message is received, save it to Redis.
-
-        Parameters
-        ----------
-        message : discord.Message
-            The message to save.
-        """
-        await self.save_message(message)
-
-    async def save_message(self, message: discord.Message) -> None:
-        """
-        Save a message on Redis.
+        When a message is received, forward it to processing.
 
         Ignore messages that are not in a guild or if the bot is not connected to Redis.
 
