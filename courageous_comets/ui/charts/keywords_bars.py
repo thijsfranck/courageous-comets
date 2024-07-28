@@ -14,8 +14,7 @@ def render(counter: Counter[str]) -> discord.File:
     counter: Counter[str]
         The keywords and their counts.
     """
-    keywords = [keyword for keyword, _ in counter.most_common(10)]
-    counts = [count for _, count in counter.most_common(10)]
+    keywords, counts = zip(*counter.most_common(10), strict=True)
 
     _, ax = plt.subplots()
     ax.bar(keywords, counts)
