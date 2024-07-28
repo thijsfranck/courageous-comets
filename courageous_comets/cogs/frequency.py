@@ -85,8 +85,9 @@ class Frequency(commands.Cog):
 
         frequencies = await get_messages_frequency(
             self.bot.redis,
-            guild_id=str(interaction.guild.id),
+            guild_id="1",
             duration=duration,
+            limit=10_000,
         )
 
         if not frequencies:
@@ -104,7 +105,10 @@ class Frequency(commands.Cog):
         chart = frequency_line.render(frequencies, duration)
         embed.set_image(url=f"attachment://{chart.filename}")
 
-        logger.debug("Returning frequency chart for frequency request %s.", interaction.id)
+        logger.debug(
+            "Returning frequency chart for frequency request %s.",
+            interaction.id,
+        )
 
         return await interaction.response.send_message(
             embed=embed,
