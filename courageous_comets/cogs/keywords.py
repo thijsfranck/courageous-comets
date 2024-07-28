@@ -45,29 +45,46 @@ class Keywords(commands.Cog):
             The query to search for related messages.
         """
         logger.info(
-            "User %s requested a search for related messages using the /search command.",
+            "User %s requested a search for related messages %s using the /search command.",
             interaction.user.id,
+            interaction.id,
         )
 
         if self.bot.redis is None:
+            logger.error(
+                "Could not answer search request %s due to Redis being unavailable.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is currently unavailable. Please try again later.",
                 ephemeral=True,
             )
 
         if not interaction.guild:
+            logger.debug(
+                "Could not answer search request %s due to it being used outside of a guild.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This command can only be used in a guild.",
                 ephemeral=True,
             )
 
         if not interaction.channel:
+            logger.debug(
+                "Could not answer search request %s due to it being used outside of a channel.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This command can only be used in a channel.",
                 ephemeral=True,
             )
 
         if not query:
+            logger.debug(
+                "Could not answer search request %s due to it not having a query.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "Please provide a query to search for related messages.",
                 ephemeral=True,
@@ -88,9 +105,12 @@ class Keywords(commands.Cog):
         resolved_messages = await resolve_messages(self.bot, messages)
 
         if not resolved_messages:
+            logger.debug("No related messages were found for search request %s.", interaction.id)
             return await interaction.followup.send("No related messages were found.")
 
         embed = search_results.render(query, resolved_messages)
+
+        logger.debug("Returning search results for search request %s.", interaction.id)
 
         return await interaction.followup.send(embed=embed)
 
@@ -111,18 +131,27 @@ class Keywords(commands.Cog):
             The message to use as a reference for the search.
         """
         logger.info(
-            "User %s requested search by sentiment for message %s.",
+            "User %s requested search by topic %s for message %s.",
             interaction.user.id,
+            interaction.id,
             message.id,
         )
 
         if self.bot.redis is None:
+            logger.error(
+                "Could not answer search request %s due to Redis being unavailable.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is currently unavailable. Please try again later.",
                 ephemeral=True,
             )
 
         if message.guild is None:
+            logger.debug(
+                "Could not answer search request %s due to it being used outside of a guild.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is only available in guilds.",
                 ephemeral=True,
@@ -159,12 +188,15 @@ class Keywords(commands.Cog):
         ]
 
         if not resolved_messages:
+            logger.debug("No related messages were found for search request %s.", interaction.id)
             return await interaction.followup.send(
                 "No related messages were found.",
                 ephemeral=True,
             )
 
         embed = search_results.render(message.clean_content, resolved_messages)
+
+        logger.debug("Returning search results for search request %s.", interaction.id)
 
         return await interaction.followup.send(embed=embed, ephemeral=True)
 

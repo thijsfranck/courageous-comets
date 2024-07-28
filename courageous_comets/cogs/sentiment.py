@@ -60,18 +60,27 @@ class Sentiment(commands.Cog):
             The user to analyze.
         """
         logger.info(
-            "User %s requested sentiment analysis results for user %s.",
+            "User %s requested sentiment analysis results %s for user %s.",
             interaction.user.id,
+            interaction.id,
             user.id,
         )
 
         if self.bot.redis is None:
+            logger.error(
+                "Could not answer sentiment request %s due to Redis being unavailable.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is currently unavailable. Please try again later.",
                 ephemeral=True,
             )
 
         if interaction.guild is None:
+            logger.debug(
+                "Could not answer sentiment request %s due to user not being from a guild.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is only available in guilds.",
                 ephemeral=True,
@@ -87,6 +96,7 @@ class Sentiment(commands.Cog):
         )
 
         if not sentiment_results:
+            logger.debug("No data found for sentiment request %s.", interaction.id)
             await interaction.followup.send(
                 f"No sentiment data found for {user.mention}.",
                 ephemeral=True,
@@ -100,6 +110,8 @@ class Sentiment(commands.Cog):
         embed.set_image(url=f"attachment://{chart.filename}")
 
         view = SentimentView(user, average_sentiment)
+
+        logger.debug("Sending sentiment analysis results for %s.", interaction.id)
 
         return await interaction.followup.send(
             embed=embed,
@@ -129,18 +141,27 @@ class Sentiment(commands.Cog):
             The message to analyze.
         """
         logger.info(
-            "User %s requested sentiment analysis results for message %s.",
+            "User %s requested sentiment analysis results %s for message %s.",
             interaction.user.id,
+            interaction.id,
             message.id,
         )
 
         if self.bot.redis is None:
+            logger.error(
+                "Could not answer sentiment request %s due to Redis being unavailable.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is currently unavailable. Please try again later.",
                 ephemeral=True,
             )
 
         if message.guild is None:
+            logger.debug(
+                "Could not answer sentiment request %s due to not message being from a guild.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is only available in guilds.",
                 ephemeral=True,
@@ -164,7 +185,7 @@ class Sentiment(commands.Cog):
         analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
 
         if analysis_result is None:
-            logger.warning("Could not find analysis result for message %s.", message.id)
+            logger.debug("No data found for sentiment request %s.", interaction.id)
             return await interaction.followup.send(
                 "No analysis results were found.",
                 ephemeral=True,
@@ -176,6 +197,8 @@ class Sentiment(commands.Cog):
         embed.set_image(url=f"attachment://{chart.filename}")
 
         view = SentimentView(message.author, analysis_result)
+
+        logger.debug("Sending sentiment analysis results for %s.", interaction.id)
 
         return await interaction.followup.send(
             embed=embed,
@@ -204,17 +227,26 @@ class Sentiment(commands.Cog):
             The message to use as a reference for the search
         """
         logger.info(
-            "User %s requested search by sentiment using a custom query.",
+            "User %s requested search by sentiment %s using a custom query.",
             interaction.user.id,
+            interaction.id,
         )
 
         if self.bot.redis is None:
+            logger.error(
+                "Could not answer sentiment request %s due to Redis being unavailable.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is currently unavailable. Please try again later.",
                 ephemeral=True,
             )
 
         if interaction.guild is None:
+            logger.debug(
+                "Could not answer sentiment request %s due to not being triggered from a guild.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is only available in guilds.",
                 ephemeral=True,
@@ -236,12 +268,15 @@ class Sentiment(commands.Cog):
         resolved_messages = await resolve_messages(self.bot, messages)
 
         if not resolved_messages:
+            logger.debug("No data found for sentiment request %s.", interaction.id)
             return await interaction.followup.send(
                 "No related messages were found.",
                 ephemeral=True,
             )
 
         embed = search_results.render(query, resolved_messages)
+
+        logger.debug("Sending sentiment analysis results for %s.", interaction.id)
 
         return await interaction.followup.send(embed=embed, ephemeral=True)
 
@@ -262,18 +297,27 @@ class Sentiment(commands.Cog):
             The message to use as a reference for the search.
         """
         logger.info(
-            "User %s requested search by sentiment for message %s.",
+            "User %s requested search by sentiment %s for message %s.",
             interaction.user.id,
+            interaction.id,
             message.id,
         )
 
         if self.bot.redis is None:
+            logger.error(
+                "Could not answer sentiment request %s due to Redis being unavailable.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is currently unavailable. Please try again later.",
                 ephemeral=True,
             )
 
         if message.guild is None:
+            logger.debug(
+                "Could not answer sentiment request %s due to message not being from a guild.",
+                interaction.id,
+            )
             return await interaction.response.send_message(
                 "This feature is only available in guilds.",
                 ephemeral=True,
@@ -297,7 +341,7 @@ class Sentiment(commands.Cog):
         analysis_result = await get_message_sentiment(key, redis=self.bot.redis)
 
         if analysis_result is None:
-            logger.warning("Could not find analysis result for message %s.", message.id)
+            logger.debug("No data found for sentiment request %s.", interaction.id)
             return await interaction.followup.send(
                 "No related messages were found.",
                 ephemeral=True,
@@ -318,12 +362,15 @@ class Sentiment(commands.Cog):
         ]
 
         if not resolved_messages:
+            logger.debug("No search results found for sentiment request %s.", interaction.id)
             return await interaction.followup.send(
                 "No related messages were found.",
                 ephemeral=True,
             )
 
         embed = search_results.render(message.clean_content, resolved_messages)
+
+        logger.debug("Sending sentiment analysis results for %s.", interaction.id)
 
         return await interaction.followup.send(embed=embed, ephemeral=True)
 
