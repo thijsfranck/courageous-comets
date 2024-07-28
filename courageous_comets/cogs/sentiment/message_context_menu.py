@@ -15,10 +15,6 @@ from courageous_comets.ui.views.sentiment import SentimentView
 logger = logging.getLogger(__name__)
 
 
-class MessagesNotFound(app_commands.AppCommandError):
-    """No messages were found."""
-
-
 class SentimentMessageContextMenu(commands.Cog):
     """
     A cog that provides sentiment analysis for a message using a context menu.

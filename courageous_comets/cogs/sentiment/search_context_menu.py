@@ -17,10 +17,6 @@ from courageous_comets.ui.embeds import search_results
 logger = logging.getLogger(__name__)
 
 
-class MessagesNotFound(app_commands.AppCommandError):
-    """No messages were found."""
-
-
 class SentimentSearchContextMenu(commands.Cog):
     """
     A cog that provides sentiment search using a context menu.
