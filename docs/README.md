@@ -3,21 +3,14 @@
 Navigating a new Discord server can be overwhelming, _but it doesn't have to be_. Introducing **Courageous Comets**,
 the Discord bot that helps you feel at home in any server!
 
-## Installation
-
-Adding the bot to your Discord server is easy - just click the button below!
-
-<!-- markdownlint-disable-next-line MD013 - All syntax has to be on the same line -->
-[Add to Discord :fontawesome-brands-discord:](https://discord.com/oauth2/authorize?client_id=1262672493978714174){ .md-button .md-button--primary }
-
 ## Features
 
-The Courageous Comets bot is designed to help you:
+Our bot is designed to help you:
 
 ### Discover and Connect Effortlessly 🚀
 
-**Channel and Message Search**: Easily find channels and messages that match your interests. Whether you're into
-gaming, coding, or just chatting, Courageous Comets helps you quickly locate the content you care about.
+**Channel and Message Search**: Easily find channels and messages that match your interests. Courageous Comets
+helps you quickly locate the communities you care about.
 
 **Similar Message Finder**: Found a message you like? Use the bot to find related messages across different channels.
 Stay informed and engaged without endless scrolling.
@@ -30,7 +23,7 @@ sentiment analysis to highlight the friendliest spaces and people.
 **Community Member Insights**: Curious about someone’s activity and attitude? Ask the bot for a summary and get
 a quick overview of their contributions and demeanor.
 
-### Moderate with Ease 🛡️
+#### Moderate with Ease 🛡️
 
 **Toxic Behavior Detection**: Moderators can use Courageous Comets to spot toxic behavior and spam to maintain
 a positive environment.

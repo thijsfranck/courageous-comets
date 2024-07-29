@@ -53,7 +53,7 @@ before each commit.
 The pre-commit hooks include:
 
 - Linting and formatting with [Ruff](https://docs.astral.sh/ruff/)
-- Commit message validation with [Commitlint](https://commitlint.js.org)
+- Commit message validation with [Commitizen](https://commitizen-tools.github.io/commitizen/)
 
 ??? QUESTION "What if the pre-commit hooks fail?"
     If the pre-commit hooks fail, you will need to address the issues before committing your changes. Follow the
@@ -116,7 +116,7 @@ The project includes automated checks to ensure the code meets the quality stand
 
 - All [pre-commit hooks](#automated-checks) must pass
 - Type checking with [Pyright](https://github.com/microsoft/pyright)
-- Unit tests with [pytest](https://docs.pytest.org/en/stable/)
+- Running all tests with [pytest](https://docs.pytest.org/en/stable/)
 
 ??? QUESTION "What if the automated checks fail?"
     If any of the automated checks fail, please address the issues before requesting a review. Feedback from the

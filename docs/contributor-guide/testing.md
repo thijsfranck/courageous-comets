@@ -5,17 +5,24 @@ and accelerate our development pace.
 
 ## Structure
 
-Test modules should be located in the same directory as the module they cover. Test modules should be named
-`test__*.py` (e.g.,`test__example.py`). Individual test methods within those modules should be prefixed with
-`test__` (e.g., `test__my_function`).
+Test modules should be located in the `tests` directory at the root of the project. The `tests` directory is further
+divided into subdirectories for unit tests and integration tests. Each unit tests module should have a corresponding
+module in the `courageous_comets` package.
 
 ??? EXAMPLE "Test Module Structure"
     ```plaintext
     project_root/
     ├── courageous_comets/
     │   ├── __init__.py
-    │   ├── example.py
-    │   └── test__example.py
+    │   └── example.py
+    ├── tests/
+    |   ├── conftest.py
+    │   ├── courageous_comets/
+    │   │   ├── __init__.py
+    │   │   └── test__example.py
+    │   └── integrations/
+    │       ├── __init__.py
+    │       └── test__integration.py
     └── ...
     ```
 

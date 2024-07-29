@@ -1,6 +1,16 @@
 # Deployment
 
-This section provides instructions on how to deploy the application in a production environment.
+This section provides instructions on how to deploy the Courageous Comets application in a production environment.
+Follow the steps below to set up the application.
+
+The application is deployed using [Docker](https://www.docker.com/) [Docker Compose](https://docs.docker.com/compose/).
+It consists of the following services:
+
+- [**courageous-comets**](https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets):
+  The Courageous Comets application.
+- [**redis-stack**](https://hub.docker.com/r/redis/redis-stack-server): The Redis instance used to store data.
+
+By the end of this guide, all services will be running as Docker containers on your system.
 
 ## Checklist
 
@@ -14,10 +24,6 @@ This section provides instructions on how to deploy the application in a product
 
 ## Get the Docker Compose File
 
-!!! NOTE "Prerequisites"
-    The application is distributed as a Docker image. Please ensure that you have [Docker](https://www.docker.com/)
-    and [Docker Compose](https://docs.docker.com/compose/) installed on your system before proceeding.
-
 The application can be deployed using Docker Compose. You can use the `docker-compose.yaml` file provided in the
 GitHub repository to start the application.
 
@@ -25,14 +31,6 @@ GitHub repository to start the application.
 [Get the Docker Compose :fontawesome-brands-docker:](https://github.com/thijsfranck/courageous-comets/blob/<APP_VERSION>/docker-compose.yaml){ .md-button .md-button--primary }
 
 Download the file and save it in any directory on your system.
-
-## Services
-
-The Docker Compose file defines the following services:
-
-- [**courageous-comets**](https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets):
-  The Courageous Comets Discord application.
-- [**redis-stack**](https://hub.docker.com/r/redis/redis-stack-server): The database used by the application.
 
 ## Configuration
 
@@ -55,6 +53,9 @@ DISCORD_TOKEN=<YOUR_TOKEN>
 
 Replace `<YOUR_TOKEN>` with your Discord bot token.
 
+!!! DANGER "Security Warning"
+    Keep your Discord bot token secure and do not share it with anyone!
+
 ??? QUESTION "Where do I find my Discord bot token?"
     See the configuration section for instructions on [how to obtain a Discord bot token](./configuration.md#discord_token).
 
@@ -74,6 +75,10 @@ Replace `latest` with the tag corresponding to the version you want to use.
     Previous versions of the Courageous Comets image are available on the [GitHub Container Registry](https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets).
 
 ## Start the Application
+
+!!! NOTE "Prerequisites"
+    Please ensure that [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
+    are installed on your system, and that the Docker daemon is running.
 
 Once you have set up the configuration, you can start the application using Docker Compose. Open a terminal and
 navigate to the directory where you saved the `docker-compose.yaml` file. Run the following command:

@@ -7,20 +7,16 @@ Follow the steps below to set up your development environment.
 
 ## Environment Setup
 
-You can set up the development environment using either the [automated](#automated-setup) or [manual](#manual-setup)
-setup process.
+You can set up the development environment using either the [development container](#using-the-development-container)
+or following the [manual](#manual-setup) setup process.
 
-### Automated Setup
+### Using the Development Container
 
 The project includes a [development container](https://containers.dev) to automatically set up your development
-environment.
+environment, including the all tools and dependencies required to develop the application locally.
 
 !!! NOTE "Prerequisites"
     [Docker](https://www.docker.com) must be installed on your system to use the development container.
-
-??? TIP "GitHub Codespaces"
-    If your system does not support Docker, you can use a [GitHub Codespace](https://docs.github.com/en/codespaces/getting-started/quickstart)
-    to install a development container in the cloud.
 
 #### Quick Start
 
@@ -46,6 +42,15 @@ For more details, refer to the setup guide for your IDE:
 
 - [Visual Studio Code](https://code.visualstudio.com/docs/devcontainers/tutorial)
 - [PyCharm](https://www.jetbrains.com/help/pycharm/connect-to-devcontainer.html)
+
+#### Services
+
+The development container includes the following services for local development:
+
+| Service      | Description  | Address                                   |
+| ------------ | ------------ | ----------------------------------------- |
+| Redis        | Database     | [`localhost:6379`](http://localhost:6379) |
+| RedisInsight | Database GUI | [`localhost:8001`](http://localhost:8001) |
 
 ### Manual Setup
 
@@ -83,151 +88,50 @@ Next, install the pre-commit hooks to ensure that your code is formatted and lin
 poetry run pre-commit install
 ```
 
-## Secrets Management
+This will set up the pre-commit hooks to run automatically when you commit changes to the repository.
 
-To use our team's shared Discord bot token, you will need to retrieve it from the `.env.lock` file in the project
-root directory. This section will guide you through the process of decrypting the file to access the token.
+#### Redis Database
+
+The application requires a Redis database to run. We recommend setting up a local Redis instance using Docker
+for development purposes.
+
+To start a Redis instance using Docker, run the following command:
+
+```bash
+docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+```
+
+This will start a Redis server on port `6379` and a RedisInsight GUI on port `8001`.
+
+## Configuring your Environment
+
+To run the application, you will need to provide the following configurations in a `.env` file at the project
+root directory.
+
+### Discord Token
+
+The application requires a Discord bot token to run. It should be stored in the `.env` file as follows:
+
+```dotenv
+DISCORD_TOKEN=<YOUR DISCORD_TOKEN>
+```
+
+The repository includes an encrypted `.env.lock` file with the shared Discord bot token for our team. Follow the
+[Secrets Management](./secrets-management.md) guide to decrypt the file and start using the token.
 
 ??? QUESTION "Can I use my own Discord bot token?"
-    Yes, you can use your own Discord bot token.
+    Yes, you can use your own Discord bot token. If you do so, there's need to decrypt the `.env.lock` file.
 
-    First, create a new bot account on the [Discord Developer Portal](https://discord.com/developers/applications).
-    Generate a token for your bot account and create a `.env` file in the project root directory. Add the following
-    line to the file:
+### Redis Configuration
 
-    ```plaintext
-    DISCORD_TOKEN=<YOUR DISCORD TOKEN>
-    ```
+If you're not using the development container, you will need to configure the Redis connection in the `.env` file:
 
-    If you choose to use your own token, you can skip the steps below.
-
-### Install Tools
-
-First, you will need to install [`age`](https://github.com/FiloSottile/age) and [`SOPS`](https://github.com/getsops/sops)
-on your system. Follow the instructions for your operating system below.
-
-=== "Windows"
-
-    Open a PowerShell terminal and run the following command to install `SOPS`:
-
-    ```bash
-    winget install -e --id Mozilla.SOPS
-    ```
-
-    To install `age`, download the [latest binary for Windows](https://github.com/FiloSottile/age/releases) and
-    add your `age` binary to the system `PATH`.
-
-=== "macOS"
-
-    Open a terminal and run the following command:
-
-    ```bash
-    brew install age sops
-    ```
-
-=== "Linux"
-
-    Download the [`SOPS` binary](https://github.com/getsops/sops/releases) for your platform. For instance, if
-    you are on an amd64 architecture:
-
-    ```bash
-    curl -LO https://github.com/getsops/sops/releases/download/v3.9.0/sops-v3.9.0.linux.amd64
-    ```
-
-    Move the binary into your `PATH`:
-
-    ```bash
-    mv sops-v3.9.0.linux.amd64 /usr/local/bin/sops
-    ```
-
-    Make the binary executable:
-
-    ```bash
-    chmod +x /usr/local/bin/sops
-    ```
-
-    Finally, install `age`:
-
-    ```bash
-    sudo apt-get install -y age
-    ```
-
-=== "Development Container"
-
-    If you are using the development container, the tools are already installed! 🎉
-
-### Generate Keys
-
-Next, you will need to generate a new key pair using `age`. Run the following command from the root directory of
-the project:
-
-```bash
-age-keygen -o > secrets/keys.txt
+```dotenv
+REDIS_HOST=localhost
+REDIS_PORT=6379
 ```
 
-This will create a new key pair and save it to the `secrets/keys.txt` file. Share your public key with the team
-so it can be registered.
-
-!!! DANGER "Security Warning"
-    Only your public key can be safely shared. Do not share the private key with anyone!
-
-??? QUESTION "Where can I find my public key?"
-    You can find your public key in the `secrets/keys.txt` file or in the terminal output after generating the
-    key pair.
-
-??? TIP "Development Container Automation"
-    On initial setup, the key pair is generated automatically in the development container.
-
-### Registering a new Public Key
-
-!!! NOTE "Prerequisite"
-    This step needs to be performed by a team member who already has access to the `.env` file.
-
-To register a new public key, first extend the `.sops.yaml` file in the project root directory.
-Add the public key to the list of `age` keys. Each key is separated by a comma and a newline.
-
-```yaml
-creation_rules:
-  - age: >-
-      <KEY1>,
-      <KEY2>,
-      <KEY3>
-```
-
-Next, [encrypt](#encrypting-secrets) the `.env` file with the updated list of keys and push it to the repository.
-
-### Decrypting Secrets
-
-Once your public key is added to the `.env.lock` file, you can decrypt the file to access the Discord bot token.
-First, pull the latest changes from the repository:
-
-```bash
-git pull
-```
-
-!!! NOTE "Prerequisite"
-    `SOPS` requires the `SOPS_AGE_KEY_FILE` environment variable to be set to the path of your private key file.
-    This is automatically set up in the development container.
-
-Next, run the following command to decrypt the `.env.lock` file:
-
-```bash
-sops decrypt --input-type dotenv --output-type dotenv .env.lock > .env
-```
-
-This will decrypt the file and save the contents to a new `.env` file in the project root directory. You can now
-access the Discord bot token.
-
-!!! DANGER "Security Warning"
-    Do not commit your decrypted `.env` file to version control or share the contents with anyone!
-
-### Encrypting Secrets
-
-To encrypt the `.env` file after making changes, run the following command:
-
-```bash
-sops encrypt .env > .env.lock
-```
+This configuration assumes you are running a local Redis instance on the default port.
 
 ## Running the Application
 
@@ -239,13 +143,13 @@ poetry run python -m courageous_comets
 
 The application should now be online and ready to respond to input from your Discord server.
 
-## Building the Application
+## Building the Docker Image
 
 !!! INFO "Production Builds"
-    Production builds are fully automated. See the [GitHub Actions](./version-control.md#github-actions) section
-    of the version control page for more information.
+    The release process is fully automated and does not require you to build the docker image locally. See the
+    [GitHub Actions](./version-control.md#github-actions) section of the version control guide for more information.
 
-To run a local build for testing, first build the Python package with Poetry:
+Before building the Docker image, first build the Python package with Poetry:
 
 ```bash
 poetry build -f wheel
@@ -254,16 +158,33 @@ poetry build -f wheel
 This will create a `.whl` file in the `dist` directory. Next, build the Docker image as follows:
 
 ```bash
-docker build -t courageous-comets .
+docker build -t ghcr.io/thijsfranck/courageous-comets:latest .
 ```
 
-Finally, run the Docker container:
+## Running the Docker Container
+
+Once you have [built the Docker image](#building-the-docker-image), use the following command to run the production
+container locally:
 
 ```bash
-docker run -i --env-file .env courageous-comets
+docker run -i --env-file .env ghcr.io/thijsfranck/courageous-comets:latest
 ```
 
-This will run the application just as it would in production, using your local `.env` file.
+This will run the application just as it would in production, using your local `.env` file and Redis instance.
+
+## Running the Docker Compose Stack
+
+To run the application in a production configuration including the Redis database, you can use the Docker Compose
+stack.
+
+First, build the Docker image as described in [the previous section](#building-the-docker-image). Then, run the
+following command:
+
+```bash
+docker-compose up
+```
+
+This will start the application and the Redis database in separate containers using your local `.env` file.
 
 ## Running the Documentation
 
