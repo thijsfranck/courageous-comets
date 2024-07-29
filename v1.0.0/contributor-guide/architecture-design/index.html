@@ -720,6 +720,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Decisions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1095,6 +1110,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Decisions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1320,8 +1350,8 @@ into several components:</p>
 <li><strong>Vectorization</strong>: Generates a vector representation to support similarity search.</li>
 </ul>
 <h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
-<p>The bot uses Redis as a caching layer to store the results of the analysis. Redis is a fast and efficient key-value
-store that supports the data structures needed to enable the application logic.</p>
+<p>The bot uses Redis as a database layer to store the results of the analysis. Redis is a fast and efficient key-value
+store that offers search and query features needed to enable the application logic.</p>
 <h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h2>
 <p>The data model is designed to support a variety of analysis tasks and provide a flexible foundation for future
 extensions.</p>
@@ -1331,76 +1361,100 @@ are structured as follows:</p>
 <table>
 <thead>
 <tr>
-<th>Field</th>
-<th>Type</th>
+<th>Name</th>
+<th>Data Type</th>
+<th>Index Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>message_id</code></td>
-<td>Tag</td>
-<td>The unique identifier of the message.</td>
+<td><code>user_id</code></td>
+<td><code>string</code></td>
+<td><code>Tag</code></td>
+<td>The discord ID of the user who sent the message.</td>
 </tr>
 <tr>
-<td><code>user_id</code></td>
-<td>Tag</td>
-<td>The unique identifier of the user who sent the message.</td>
+<td><code>message_id</code></td>
+<td><code>string</code></td>
+<td><code>Tag</code></td>
+<td>The discord message ID.</td>
 </tr>
 <tr>
 <td><code>channel_id</code></td>
-<td>Tag</td>
-<td>The unique identifier of the channel where the message was sent.</td>
+<td><code>string</code></td>
+<td><code>Tag</code></td>
+<td>The ID of the discord channel where the message was sent.</td>
 </tr>
 <tr>
 <td><code>guild_id</code></td>
-<td>Tag</td>
-<td>The unique identifier of the guild where the message was sent.</td>
-</tr>
-<tr>
-<td><code>content</code></td>
-<td>String</td>
-<td>The text content of the message after preprocessing.</td>
+<td><code>string</code></td>
+<td><code>Tag</code></td>
+<td>The ID of the guild where the message was sent.</td>
 </tr>
 <tr>
 <td><code>timestamp</code></td>
-<td>Number</td>
-<td>The timestamp when the message was sent.</td>
+<td><code>float</code></td>
+<td><code>Numeric</code></td>
+<td>The UNIX timestamp of when the message was sent.</td>
 </tr>
 <tr>
 <td><code>sentiment_neg</code></td>
-<td>Number</td>
-<td>The negative sentiment score of the message.</td>
-</tr>
-<tr>
-<td><code>sentiment_neu</code></td>
-<td>Number</td>
-<td>The neutral sentiment score of the message.</td>
+<td><code>float</code></td>
+<td><code>Numeric</code></td>
+<td>The negative score of the sentiment analysis of the message.</td>
 </tr>
 <tr>
 <td><code>sentiment_pos</code></td>
-<td>Number</td>
-<td>The positive sentiment score of the message.</td>
+<td><code>float</code></td>
+<td><code>Numeric</code></td>
+<td>The positive score of the sentiment analysis of the message.</td>
+</tr>
+<tr>
+<td><code>sentiment_neu</code></td>
+<td><code>float</code></td>
+<td><code>Numeric</code></td>
+<td>The neutral score of the sentiment analysis of the message.</td>
 </tr>
 <tr>
 <td><code>sentiment_compound</code></td>
-<td>Number</td>
-<td>The compound sentiment score of the message.</td>
+<td><code>float</code></td>
+<td><code>Numeric</code></td>
+<td>The compound score of the sentiment analysis of the message.</td>
 </tr>
 <tr>
 <td><code>embedding</code></td>
-<td>Vector</td>
-<td>The vector representation of the message.</td>
+<td><code>bytes</code></td>
+<td><code>Vector</code></td>
+<td>The embedding vector of the message content</td>
+</tr>
+<tr>
+<td><code>tokens</code></td>
+<td><code>string</code></td>
+<td>N/A</td>
+<td>JSON object mapping each token in the message to number of times it appeared in the message.</td>
 </tr>
 </tbody>
 </table>
-<p>Messages are keyed by a namespace prefix combined with the <code>guild_id</code> and the <code>message_id</code>. This combination ensures
-that messages can always be uniquely identified within the context of a guild.</p>
-<p>The fields with type <code>Tag</code> can be efficiently used for keyword search and filtering. This way we can quickly retrieve,
-filter and aggregate messages based on the context of an interaction, such as a user, channel, or guild.</p>
-<p>The <code>embedding</code> field is used to store the vector representation of the message. This field is used for
-similarity search and other analysis tasks that require a numerical representation of the text. For the similarity
-search, we use the <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a> metric to compare the vectors.</p>
+<h4 id="design-decisions">Design Decisions<a class="headerlink" href="#design-decisions" title="Permanent link">&para;</a></h4>
+<p>While the fields ending with <code>_id</code> are integers on Discord, they are stored as strings on Redis and indexed as
+<a href="https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/">Tag fields</a> as opposed
+to <a href="https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields">Numeric</a>
+because we want to make exact-match queries on these fields and also because they are more memory-efficient and
+fast.</p>
+<p>Rather than store the message as a JSON document with the sentiment-related values stored in a nested mapping,
+they are stored on the same hash with a prefix of <code>sentiment_</code>. This is because JSON documents generally have
+a larger memory footprint compared to the Hash when searching over documents. Also, JSON documents take up more
+space than the Hash. For context, the JSON document representation of the message takes at least 14Kb while the
+hash takes at most 4Kb.</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Cosine_similarity">Cosine Similarity</a> was chosen over the Euclidean distance
+and Internal product as the distance metric for searching the vector embedding because we want to consider the
+angle formed by two vectors (messages) and not their magnitude.</p>
+<p>The dimensions of the vector were chosen to match the dimension of the embedding generated by the <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">all-MiniLM-L6-v2</a>
+transformer. Ensure to set the correct dimension as the transformer model being used during index creation on Redis.</p>
+<p>The <code>tokens</code> field on the hash was not indexed as there was no need to search over it. Including it in the index
+would increase the size of the index structure and add unnecessary overhead. However, we can still return it from
+search-based queries.</p>
 <h2 id="packages-modules">Packages &amp; Modules<a class="headerlink" href="#packages-modules" title="Permanent link">&para;</a></h2>
 <p>This section describes the packages included with the project and the underlying module structure.</p>
 <h3 id="courageous_comets"><code>courageous_comets</code><a class="headerlink" href="#courageous_comets" title="Permanent link">&para;</a></h3>
@@ -1447,7 +1501,7 @@ search, we use the <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cos
 </tr>
 <tr>
 <td><code>exceptions.py</code></td>
-<td>Includes the base exception clss and custom exceptions used in the application.</td>
+<td>Includes the base exception class and custom exceptions used in the application.</td>
 </tr>
 <tr>
 <td><code>models.py</code></td>
@@ -1505,7 +1559,7 @@ processes of the application. This achieves the following goals:</p>
 <ol>
 <li>The process ensures that code changes are consistently tested, maintaining high code quality and reliability</li>
 <li>It also enables full traceability and reproducibility of any
-artifact released to production.</li>
+   artifact released to production.</li>
 </ol>
 <p>This section provides a comprehensive overview of each stage in the pipeline, its purpose, and its components.</p>
 <h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
