@@ -65,8 +65,8 @@ into several components:
 
 ### Storage
 
-The bot uses Redis as a caching layer to store the results of the analysis. Redis is a fast and efficient key-value
-store that supports the data structures needed to enable the application logic.
+The bot uses Redis as a database layer to store the results of the analysis. Redis is a fast and efficient key-value
+store that offers search and query features needed to enable the application logic.
 
 ## Data Model
 
@@ -120,7 +120,7 @@ The application is fully contained within the `courageous_comets` package. The p
 | `__init__.py`      | Entrypoint for the package. Exports the application client instance.                     |
 | `__main__.py`      | Entrypoint for the application. Responsible for setup, teardown and root error handling. |
 | `enums.py`         | Shared enumerations used across the application.                                         |
-| `exceptions.py`    | Includes the base exception clss and custom exceptions used in the application.          |
+| `exceptions.py`    | Includes the base exception class and custom exceptions used in the application.          |
 | `models.py`        | Defines the entities used by the application using Pydantic models.                      |
 | `preprocessing.py` | Contains the preprocessing logic for cleaning and normalizing text.                      |
 | `sentiment.py`     | Implements the sentiment analysis logic using the NLTK library.                          |
