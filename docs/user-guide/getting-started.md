@@ -38,7 +38,7 @@ Let's say you're excited to learn more about programming and are looking for peo
 Try the following command:
 
 ```plaintext
-/sentiment_search query: "excited to learn about programming"
+/sentiment_search query:"excited to learn about programming"
 ```
 
 The bot will return a list of messages that share your sentiment. Again, the results include the channels and authors
