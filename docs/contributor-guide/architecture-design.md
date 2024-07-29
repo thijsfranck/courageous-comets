@@ -76,31 +76,50 @@ extensions.
 ### Message
 
 The main entity of the data model is the `Message` object, which represents a message sent by a user. Messages
-are structured as follows:
+are represented as hashes on Redis and are structured as follows:
 
-| Field                | Type   | Description                                                      |
-| -------------------- | ------ | ---------------------------------------------------------------- |
-| `message_id`         | Tag    | The unique identifier of the message.                            |
-| `user_id`            | Tag    | The unique identifier of the user who sent the message.          |
-| `channel_id`         | Tag    | The unique identifier of the channel where the message was sent. |
-| `guild_id`           | Tag    | The unique identifier of the guild where the message was sent.   |
-| `content`            | String | The text content of the message after preprocessing.             |
-| `timestamp`          | Number | The timestamp when the message was sent.                         |
-| `sentiment_neg`      | Number | The negative sentiment score of the message.                     |
-| `sentiment_neu`      | Number | The neutral sentiment score of the message.                      |
-| `sentiment_pos`      | Number | The positive sentiment score of the message.                     |
-| `sentiment_compound` | Number | The compound sentiment score of the message.                     |
-| `embedding`          | Vector | The vector representation of the message.                        |
+| Field                | Type   | Indexed? | Index Type | Description                                                                                                                                                                                                                                 |
+| -------------------- | ------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `message_id`         | string | Yes      | Tag        | The unique identifier of the message.                                                                                                                                                                                                       |
+| `user_id`            | string | Yes      | Tag        | The unique identifier of the user who sent the message.                                                                                                                                                                                     |
+| `channel_id`         | string | Yes      | Tag        | The unique identifier of the channel where the message was sent.                                                                                                                                                                            |
+| `guild_id`           | string | Yes      | Tag        | The unique identifier of the guild where the message was sent.                                                                                                                                                                              |
+| `timestamp`          | float  | Yes      | Numeric    | The timestamp when the message was sent.                                                                                                                                                                                                    |
+| `sentiment_neg`      | float  | Yes      | Numeric    | The negative sentiment score of the message.                                                                                                                                                                                                |
+| `sentiment_neu`      | float  | Yes      | Numeric    | The neutral sentiment score of the message.                                                                                                                                                                                                 |
+| `sentiment_pos`      | float  | Yes      | Numeric    | The positive sentiment score of the message.                                                                                                                                                                                                |
+| `sentiment_compound` | float  | Yes      | Numeric    | The compound sentiment score of the message.                                                                                                                                                                                                |
+| `embedding`          | bytes  | Yes      | Vector     | The embedding vector of the message content                            |
+| `tokens`             | string | No       |            | The JSON string of the map of each token to its count.                                                                                                                                                                                      |
 
 Messages are keyed by a namespace prefix combined with the `guild_id` and the `message_id`. This combination ensures
 that messages can always be uniquely identified within the context of a guild.
 
-The fields with type `Tag` can be efficiently used for keyword search and filtering. This way we can quickly retrieve,
-filter and aggregate messages based on the context of an interaction, such as a user, channel, or guild.
+#### Data Model Design Considerations
 
-The `embedding` field is used to store the vector representation of the message. This field is used for
-similarity search and other analysis tasks that require a numerical representation of the text. For the similarity
-search, we use the [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity) metric to compare the vectors.
+- While the fields ending with `_id` are integers on Discord, they are stored as strings on Redis and indexed as
+  [Tags](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/) as opposed to
+  [Numeric](https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields)
+  because we generally want to make exact-match queries against these fields. Also, `Tags` are more
+  memory-efficient and fast to query.
+
+- Rather than store the message as a JSON document with the sentiment-related values stored in a nested key,
+  they are stored on the same hash with a prefix of `sentiment_`. This is because JSON documents generally
+  have a larger memory footprint compared to the hash when searching over documents. Also, JSON documents
+  take up more space than the hash. For context, the JSON document representation of the message takes at
+  least 14Kb while the hash takes at most 4Kb.
+
+- The [Cosine Similarity](https://en.wikipedia.org/wiki/Cosine_similarity) was chosen over the Euclidean
+  distance and Internal product as the distance metric for searching the vector embedding because we want
+  to consider the angle formed by two vectors (messages) and not their magnitude.
+
+- The dimensions of the vector were chosen to match the dimension of the embedding generated by the
+  [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) transformer. Ensure to set
+  the correct dimension as the transformer model being used during index creation on Redis.
+
+- The `tokens` field on the hash are not indexed as there is no need to search over it. Including it in the
+  index would increase the size of the index structure and add unnecessary overhead. However, we can still
+  return them from search-based queries.
 
 ## Packages & Modules
 
@@ -111,7 +130,7 @@ This section describes the packages included with the project and the underlying
 The application is fully contained within the `courageous_comets` package. The package is structured as follows:
 
 | Module             | Description                                                                              |
-| ------------------ | -----------------------------------------------------------------------------------------|
+| ------------------ | ---------------------------------------------------------------------------------------- |
 | `cogs`             | Contains the bot controllers (cogs) that handle user input.                              |
 | `nltk`             | Contains helpers for using the Natural Language Toolkit (NLTK) library.                  |
 | `redis`            | Contains the data access layer for interacting with Redis.                               |
@@ -120,7 +139,7 @@ The application is fully contained within the `courageous_comets` package. The p
 | `__init__.py`      | Entrypoint for the package. Exports the application client instance.                     |
 | `__main__.py`      | Entrypoint for the application. Responsible for setup, teardown and root error handling. |
 | `enums.py`         | Shared enumerations used across the application.                                         |
-| `exceptions.py`    | Includes the base exception class and custom exceptions used in the application.          |
+| `exceptions.py`    | Includes the base exception class and custom exceptions used in the application.         |
 | `models.py`        | Defines the entities used by the application using Pydantic models.                      |
 | `preprocessing.py` | Contains the preprocessing logic for cleaning and normalizing text.                      |
 | `sentiment.py`     | Implements the sentiment analysis logic using the NLTK library.                          |
@@ -133,7 +152,7 @@ The application is fully contained within the `courageous_comets` package. The p
 The `tests` package organizes the test suite for the application. The package is structured as follows:
 
 | Module              | Description                                                                       |
-| ------------------- | ----------------------------------------------------------------------------------|
+| ------------------- | --------------------------------------------------------------------------------- |
 | `conftest.py`       | Contains shared fixtures and ensures NLTK and Huggingface data is loaded in CI.   |
 | `courageous_comets` | Includes tests that validate the behavior of each application module.             |
 | `integrations`      | Provides tests that validate how the app interacts with Discord and the database. |
@@ -145,7 +164,7 @@ processes of the application. This achieves the following goals:
 
 1. The process ensures that code changes are consistently tested, maintaining high code quality and reliability
 2. It also enables full traceability and reproducibility of any
-artifact released to production.
+   artifact released to production.
 
 This section provides a comprehensive overview of each stage in the pipeline, its purpose, and its components.
 
