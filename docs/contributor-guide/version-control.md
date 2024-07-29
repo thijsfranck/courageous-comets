@@ -29,6 +29,7 @@ Try to keep your commits focused on a single task. If you need to make multiple 
 for each change.
 
 ??? EXAMPLE "Conventional Commit Format"
+
     Here's an example of a good commit message:
 
     ```plaintext
@@ -38,6 +39,7 @@ for each change.
     ```
 
 ??? TIP "Use Commitizen"
+
     The workspace includes [Commitizen](https://commitizen-tools.github.io/commitizen/) to help you write conventional
     commit messages. Run the following command to create a commit message interactively:
 
@@ -56,10 +58,12 @@ The pre-commit hooks include:
 - Commit message validation with [Commitizen](https://commitizen-tools.github.io/commitizen/)
 
 ??? QUESTION "What if the pre-commit hooks fail?"
+
     If the pre-commit hooks fail, you will need to address the issues before committing your changes. Follow the
     instructions provided by the pre-commit hooks to identify and fix the issues.
 
 ??? QUESTION "How do I run the pre-commit hooks manually?"
+
     Pre-commit hooks can also be run manually using the following command:
 
     ```bash
@@ -92,6 +96,7 @@ your branch as the source and the `main` branch as the base.
 In the pull request description, provide a brief overview of the changes and any relevant information for reviewers.
 
 ??? EXAMPLE "Pull Request Description"
+
     Here's an example of a good pull request description:
 
     ```plaintext
@@ -119,6 +124,7 @@ The project includes automated checks to ensure the code meets the quality stand
 - Running all tests with [pytest](https://docs.pytest.org/en/stable/)
 
 ??? QUESTION "What if the automated checks fail?"
+
     If any of the automated checks fail, please address the issues before requesting a review. Feedback from the
     automated checks should be available in the pull request checks tab.
 
@@ -130,6 +136,7 @@ feedback and suggestions for improvement.
 Once the reviewer approves the pull request, you can merge it into the `main` branch.
 
 ??? QUESTION "How do I request a review?"
+
     Request a review from a team member by [assigning them as a reviewer](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/requesting-a-pull-request-review)
     to your pull request.
 
@@ -145,6 +152,7 @@ A code review should focus on the following aspects:
 - Adherence to the project guidelines
 
 ??? EXAMPLE "Good Code Review Feedback"
+
     Here are some examples of good code review feedback:
 
     ```plaintext
@@ -158,6 +166,7 @@ Always be respectful and considerate when giving feedback. Remember that the goa
 the author grow as a developer.
 
 !!! SUCCESS "Be Positive"
+
     Don't forget to acknowledge the positive aspects of the contribution as well!
 
 ## Release
@@ -180,6 +189,7 @@ The release will trigger a [GitHub actions workflow](#github-actions) to build a
 Docker image and update the documentation.
 
 ??? TIP "Dry Run"
+
     You can perform a dry run to see the changes that will be made without actually committing them:
 
     ```bash
@@ -187,6 +197,7 @@ Docker image and update the documentation.
     ```
 
 ??? TIP "Commitizen and Conventional Commits"
+
     Commitizen uses the commit messages to determine the type of changes and generate the release notes.
     Make sure to follow the [commit message guidelines](#commits) to ensure accurate release notes.
 
@@ -197,15 +208,17 @@ Semantic version numbers consist of three parts: `major.minor.patch`. For exampl
 
 To calculate the next version number, follow these guidelines:
 
-- For *bug fixes* or *minor improvements*, increment the patch version.
-- For *new features* or *significant improvements*, increment the minor version.
+- For _bug fixes_ or _minor improvements_, increment the patch version.
+- For _new features_ or _significant improvements_, increment the minor version.
 - For **breaking changes**, increment the major version.
 
 ??? QUESTION "What is a breaking change?"
+
     A breaking change requires users to change the way they use the software. Examples include removal of features
     or backwards-incompatible API changes.
 
 ??? EXAMPLE "Semantic Versioning"
+
     Here are some examples of version increments:
 
     - Bug fixes: `1.0.0` -> `1.0.1`

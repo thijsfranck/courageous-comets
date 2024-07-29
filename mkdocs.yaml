@@ -38,27 +38,28 @@ theme:
 
 nav:
   - Users:
-    - user-guide/index.md
-    - Getting Started: user-guide/getting-started.md
-    - Installing the Bot: user-guide/installing-the-bot.md
-    - Data Privacy: user-guide/data-privacy.md
+      - user-guide/index.md
+      - Getting Started: user-guide/getting-started.md
+      - Installing the Bot: user-guide/installing-the-bot.md
+      - Data Privacy: user-guide/data-privacy.md
   - Administrators:
-    - admin-guide/index.md
-    - Deployment: admin-guide/deployment.md
-    - Configuration: admin-guide/configuration.md
-    - Changelog: CHANGELOG.md
+      - admin-guide/index.md
+      - Deployment: admin-guide/deployment.md
+      - Configuration: admin-guide/configuration.md
+      - Changelog: CHANGELOG.md
   - Contributors:
-    - contributor-guide/index.md
-    - Architecture & Design: contributor-guide/architecture-design.md
-    - Development Environment: contributor-guide/development-environment.md
-    - Secrets Management: contributor-guide/secrets-management.md
-    - Version Control: contributor-guide/version-control.md
-    - Documentation: contributor-guide/documentation.md
-    - Testing: contributor-guide/testing.md
+      - contributor-guide/index.md
+      - Architecture & Design: contributor-guide/architecture-design.md
+      - Development Environment: contributor-guide/development-environment.md
+      - Secrets Management: contributor-guide/secrets-management.md
+      - Version Control: contributor-guide/version-control.md
+      - Documentation: contributor-guide/documentation.md
+      - Testing: contributor-guide/testing.md
 
 markdown_extensions:
   - admonition
   - attr_list
+  - md_in_html
   - pymdownx.details
   - pymdownx.snippets
   - pymdownx.superfences:

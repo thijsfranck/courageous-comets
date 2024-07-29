@@ -10,6 +10,7 @@ divided into subdirectories for unit tests and integration tests. Each unit test
 module in the `courageous_comets` package.
 
 ??? EXAMPLE "Test Module Structure"
+
     ```plaintext
     project_root/
     ├── courageous_comets/
@@ -38,6 +39,7 @@ poetry run pytest
 This command will discover and run all the tests modules that match the pattern `test__*.py`.
 
 ??? TIP "Running Tests in your IDE"
+
     Most modern IDEs have built-in support for running tests. You can run tests directly from your IDE, which
     can be more convenient than running them from the command line.
 
@@ -55,6 +57,7 @@ Unit tests should cover the following aspects of your code:
 - Error handling
 
 ??? TIP "Consider Edge Cases"
+
     When writing tests, consider edge cases such as invalid inputs and unexpected behavior. These are often the
     areas where bugs are most likely to occur.
 
@@ -76,6 +79,7 @@ When writing tests, follow these guidelines:
 - Use [fixtures](https://docs.pytest.org/en/latest/explanation/fixtures.html) to set up common data or resources.
 
 ??? EXAMPLE "Example Tests"
+
     The `examples` folder includes sample tests that you can use as a base for your own test.
 
 ## Unit Testing and Type Annotations
@@ -87,6 +91,7 @@ need to write, particularly those related to input validation.
 For instance, consider the following function without type annotations:
 
 ???+ EXAMPLE "Function Without Type Annotations"
+
     ```python
     def add(a, b):
         return a + b
@@ -96,6 +101,7 @@ Without type annotations, you might write multiple tests to ensure that the func
 types of input, like strings, integers, or floats. But with type annotations:
 
 ???+ EXAMPLE "Function With Type Annotations"
+
     ```python
     def add(a: int, b: int) -> int:
         return a + b

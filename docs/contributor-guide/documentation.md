@@ -21,6 +21,7 @@ for the full specification and detailed examples.
 Here are some examples of how to write good documentation for functions and classes:
 
 ??? EXAMPLE "Function Documentation"
+
     ```python
     def example_function(param1: int, param2: str):
         """
@@ -55,6 +56,7 @@ Here are some examples of how to write good documentation for functions and clas
     ```
 
 ??? EXAMPLE "Class Documentation"
+
     ```python
     class Example:
         """
@@ -74,6 +76,7 @@ Python type annotations are strongly encouraged to improve code readability and 
 for all parameters and return values, as well as class attributes.
 
 ??? QUESTION "What are type annotations?"
+
     Type annotations are a way to specify the expected types of variables, function parameters, and return values
     in Python code. They are used to improve code readability and catch type-related errors early. Refer to the
     [official documentation](https://docs.python.org/3/library/typing.html) for more information.

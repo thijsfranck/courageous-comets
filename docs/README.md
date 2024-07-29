@@ -23,7 +23,7 @@ sentiment analysis to highlight the friendliest spaces and people.
 **Community Member Insights**: Curious about someone’s activity and attitude? Ask the bot for a summary and get
 a quick overview of their contributions and demeanor.
 
-#### Moderate with Ease 🛡️
+### Moderate with Ease 🛡️
 
 **Toxic Behavior Detection**: Moderators can use Courageous Comets to spot toxic behavior and spam to maintain
 a positive environment.

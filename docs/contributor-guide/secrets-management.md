@@ -61,6 +61,7 @@ on your system. Follow the instructions for your operating system below.
 ## Generate Keys
 
 ??? TIP "Using the development container"
+
     The development container automatically generates a key pair for you on initial setup. You public key will
     be shown in the terminal output. You can also find it later in the `secrets/keys.txt` file.
 
@@ -75,15 +76,18 @@ This will create a new key pair and save it to the `secrets/keys.txt` file. Shar
 so it can be registered.
 
 !!! DANGER "Security Warning"
+
     Only your public key can be safely shared. Do not share the private key with anyone!
 
 ??? QUESTION "Where can I find my public key?"
+
     You can find your public key in the `secrets/keys.txt` file or in the terminal output after generating the
     key pair.
 
 ## Registering a new Public Key
 
 !!! NOTE "Prerequisite"
+
     This step needs to be performed by a team member who already has access to the `.env` file.
 
 To register a new public key, first extend the `.sops.yaml` file in the project root directory.
@@ -109,6 +113,7 @@ git pull
 ```
 
 !!! NOTE "Prerequisite"
+
     `SOPS` requires the `SOPS_AGE_KEY_FILE` environment variable to be set to the path of your private key file.
     This is automatically set up in the development container.
 
@@ -122,6 +127,7 @@ This will decrypt the file and save the contents to a new `.env` file in the pro
 access the Discord bot token.
 
 !!! DANGER "Security Warning"
+
     Do not commit your decrypted `.env` file to version control or share the contents with anyone!
 
 ## Encrypting Secrets

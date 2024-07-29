@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 - All syntax for button has to be on the same line -->
+
 # Deployment
 
 This section provides instructions on how to deploy the Courageous Comets application in a production environment.
@@ -27,7 +29,6 @@ By the end of this guide, all services will be running as Docker containers on y
 The application can be deployed using Docker Compose. You can use the `docker-compose.yaml` file provided in the
 GitHub repository to start the application.
 
-<!-- markdownlint-disable-next-line MD013 - All syntax has to be on the same line -->
 [Get the Docker Compose :fontawesome-brands-docker:](https://github.com/thijsfranck/courageous-comets/blob/<APP_VERSION>/docker-compose.yaml){ .md-button .md-button--primary }
 
 Download the file and save it in any directory on your system.
@@ -40,6 +41,7 @@ directory as the `docker-compose.yaml` file.
 The sections below will guide you through setting up a minimal configuration to start the application.
 
 ??? QUESTION "What other configuration options are available?"
+
     Refer to the [configuration](configuration.md) section for a complete list of the available options.
 
 ### Discord Token
@@ -54,9 +56,11 @@ DISCORD_TOKEN=<YOUR_TOKEN>
 Replace `<YOUR_TOKEN>` with your Discord bot token.
 
 !!! DANGER "Security Warning"
+
     Keep your Discord bot token secure and do not share it with anyone!
 
 ??? QUESTION "Where do I find my Discord bot token?"
+
     See the configuration section for instructions on [how to obtain a Discord bot token](./configuration.md#discord_token).
 
 ### Image Versions
@@ -72,11 +76,13 @@ REDIS_STACK_VERSION=latest
 Replace `latest` with the tag corresponding to the version you want to use.
 
 ??? QUESTION "Where can I find previous versions of the image?"
+
     Previous versions of the Courageous Comets image are available on the [GitHub Container Registry](https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets).
 
 ## Start the Application
 
 !!! NOTE "Prerequisites"
+
     Please ensure that [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
     are installed on your system, and that the Docker daemon is running.
 

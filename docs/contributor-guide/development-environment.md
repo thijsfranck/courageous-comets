@@ -3,6 +3,7 @@
 Follow the steps below to set up your development environment.
 
 !!! NOTE "Prerequisites"
+
     You need to have [Git](https://git-scm.com) installed on your system.
 
 ## Environment Setup
@@ -16,6 +17,7 @@ The project includes a [development container](https://containers.dev) to automa
 environment, including the all tools and dependencies required to develop the application locally.
 
 !!! NOTE "Prerequisites"
+
     [Docker](https://www.docker.com) must be installed on your system to use the development container.
 
 #### Quick Start
@@ -57,6 +59,7 @@ The development container includes the following services for local development:
 If you prefer to set up the development environment manually, follow the steps below.
 
 !!! NOTE "Prerequisites"
+
     Please ensure [Python 3.12](https://www.python.org) and [Poetry](https://python-poetry.org) are installed
     on your system.
 
@@ -120,6 +123,7 @@ The repository includes an encrypted `.env.lock` file with the shared Discord bo
 [Secrets Management](./secrets-management.md) guide to decrypt the file and start using the token.
 
 ??? QUESTION "Can I use my own Discord bot token?"
+
     Yes, you can use your own Discord bot token. If you do so, there's need to decrypt the `.env.lock` file.
 
 ### Redis Configuration
@@ -146,6 +150,7 @@ The application should now be online and ready to respond to input from your Dis
 ## Building the Docker Image
 
 !!! INFO "Production Builds"
+
     The release process is fully automated and does not require you to build the docker image locally. See the
     [GitHub Actions](./version-control.md#github-actions) section of the version control guide for more information.
 

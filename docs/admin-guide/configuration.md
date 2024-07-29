@@ -31,6 +31,7 @@ Your token should have the following scopes:
 - `bot`
 
 !!! DANGER "Security Warning"
+
     Do not share your token with anyone!
 
 ## Optional Settings
@@ -126,4 +127,5 @@ The password of the Redis server. Set this variable if your Redis server require
 is set by default.
 
 !!! DANGER "Security Warning"
+
     Do not share your Redis password with anyone!

@@ -10,6 +10,8 @@
   "MD033": {
     "allowed_elements": [
       "img",
+      "figcaption",
+      "figure",
       "source",
       "video"
     ]
