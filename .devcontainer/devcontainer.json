@@ -17,11 +17,12 @@
         "DavidAnson.vscode-markdownlint",
         "KnisterPeter.vscode-commitizen",
         "tamasfe.even-better-toml",
-        "-ms-python.autopep8"
+        "-ms-python.autopep8",
+        "esbenp.prettier-vscode"
       ],
       "settings": {
         "[markdown]": {
-          "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff"
