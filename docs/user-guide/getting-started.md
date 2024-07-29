@@ -27,10 +27,8 @@ the channels and message authors, so you can get an idea of where the conversati
     <figcaption>Search Results</figcaption>
 </figure>
 
-??? TIP "Message Context"
-
-    The search feature is also available as a context menu option when you right-click on a message. Use this when
-    you see an interesting message and want to find more like it.
+The search feature is also available as a context menu option when you right-click on a message. Use this when
+you see an interesting message and want to find more like it.
 
 ## Discovering Like-Minded People
 
@@ -51,10 +49,8 @@ of the messages to help you explore further.
     <figcaption>Sentiment Search Results</figcaption>
 </figure>
 
-??? TIP "Message Context"
-
-    The sentiment search feature is also available as a context menu option when you right-click on a message.
-    Use this when you find a message that resonates with you and want to find more like it.
+The sentiment search feature is also available as a context menu option when you right-click on a message.
+Use this when you find a message that resonates with you and want to find more like it.
 
 ## Getting to Know the Community
 
