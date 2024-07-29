@@ -10,8 +10,8 @@ interactions, refer to the [Interactions Overview](#interactions-overview) at th
 
 ## Finding Your Way Around
 
-Let's say you've just joined the Python Discord server and you are interested in web development with Django.
-Let's use the search feature to find the most recent messages related to those topics.
+Let's say you've just joined a new server and you are interested in web development with Django. We'll use the
+search feature to find the most recent messages related to those topics.
 
 Type the following command in any channel:
 
