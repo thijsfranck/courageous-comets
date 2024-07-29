@@ -2,57 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/CHANGELOG/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/admin-guide/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/admin-guide/configuration/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/admin-guide/deployment/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/architecture-design/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/development-environment/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/documentation/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/secrets-management/</loc>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/testing/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/version-control/</loc>
-         <lastmod>2024-07-28</lastmod>
+         <lastmod>2024-07-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/user-guide/</loc>
+         <lastmod>2024-07-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/user-guide/data-privacy/</loc>
+         <lastmod>2024-07-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/user-guide/getting-started/</loc>
+         <lastmod>2024-07-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://thijsfranck.github.io/courageous-comets/v1.0.0/user-guide/installing-the-bot/</loc>
+         <lastmod>2024-07-29</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

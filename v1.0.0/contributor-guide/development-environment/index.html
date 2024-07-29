@@ -14,7 +14,7 @@
         <link rel="prev" href="../architecture-design/">
       
       
-        <link rel="next" href="../version-control/">
+        <link rel="next" href="../secrets-management/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -296,11 +296,11 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../admin-guide/" class="md-nav__link ">
+            <a href="../../user-guide/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
-    Administrators
+    Users
   </span>
   
 
@@ -315,6 +315,138 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Users
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/installing-the-bot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installing the Bot
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/data-privacy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Privacy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../admin-guide/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Administrators
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Administrators
           </label>
@@ -417,6 +549,8 @@
       
         
       
+        
+      
     
     
       
@@ -429,7 +563,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           
@@ -445,14 +579,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Contributors
           </label>
@@ -544,13 +678,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#automated-setup" class="md-nav__link">
+  <a href="#using-the-development-container" class="md-nav__link">
     <span class="md-ellipsis">
-      Automated Setup
+      Using the Development Container
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Automated Setup">
+    <nav class="md-nav" aria-label="Using the Development Container">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -566,6 +700,15 @@
   <a href="#detailed-setup-guide" class="md-nav__link">
     <span class="md-ellipsis">
       Detailed Setup Guide
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services" class="md-nav__link">
+    <span class="md-ellipsis">
+      Services
     </span>
   </a>
   
@@ -613,6 +756,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#redis-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redis Database
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -624,55 +776,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#secrets-management" class="md-nav__link">
+  <a href="#configuring-your-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Secrets Management
+      Configuring your Environment
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Secrets Management">
+    <nav class="md-nav" aria-label="Configuring your Environment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#install-tools" class="md-nav__link">
+  <a href="#discord-token" class="md-nav__link">
     <span class="md-ellipsis">
-      Install Tools
+      Discord Token
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-keys" class="md-nav__link">
+  <a href="#redis-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Generate Keys
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#registering-a-new-public-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      Registering a new Public Key
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#decrypting-secrets" class="md-nav__link">
-    <span class="md-ellipsis">
-      Decrypting Secrets
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#encrypting-secrets" class="md-nav__link">
-    <span class="md-ellipsis">
-      Encrypting Secrets
+      Redis Configuration
     </span>
   </a>
   
@@ -693,9 +818,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-the-application" class="md-nav__link">
+  <a href="#building-the-docker-image" class="md-nav__link">
     <span class="md-ellipsis">
-      Building the Application
+      Building the Docker Image
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-docker-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Docker Container
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-docker-compose-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Docker Compose Stack
     </span>
   </a>
   
@@ -714,6 +857,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../secrets-management/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Secrets Management
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -826,13 +990,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#automated-setup" class="md-nav__link">
+  <a href="#using-the-development-container" class="md-nav__link">
     <span class="md-ellipsis">
-      Automated Setup
+      Using the Development Container
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Automated Setup">
+    <nav class="md-nav" aria-label="Using the Development Container">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -848,6 +1012,15 @@
   <a href="#detailed-setup-guide" class="md-nav__link">
     <span class="md-ellipsis">
       Detailed Setup Guide
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services" class="md-nav__link">
+    <span class="md-ellipsis">
+      Services
     </span>
   </a>
   
@@ -895,6 +1068,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#redis-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redis Database
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -906,55 +1088,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#secrets-management" class="md-nav__link">
+  <a href="#configuring-your-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Secrets Management
+      Configuring your Environment
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Secrets Management">
+    <nav class="md-nav" aria-label="Configuring your Environment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#install-tools" class="md-nav__link">
+  <a href="#discord-token" class="md-nav__link">
     <span class="md-ellipsis">
-      Install Tools
+      Discord Token
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-keys" class="md-nav__link">
+  <a href="#redis-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Generate Keys
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#registering-a-new-public-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      Registering a new Public Key
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#decrypting-secrets" class="md-nav__link">
-    <span class="md-ellipsis">
-      Decrypting Secrets
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#encrypting-secrets" class="md-nav__link">
-    <span class="md-ellipsis">
-      Encrypting Secrets
+      Redis Configuration
     </span>
   </a>
   
@@ -975,9 +1130,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-the-application" class="md-nav__link">
+  <a href="#building-the-docker-image" class="md-nav__link">
     <span class="md-ellipsis">
-      Building the Application
+      Building the Docker Image
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-docker-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Docker Container
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-docker-compose-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Docker Compose Stack
     </span>
   </a>
   
@@ -1017,20 +1190,15 @@
 <p>You need to have <a href="https://git-scm.com">Git</a> installed on your system.</p>
 </div>
 <h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
-<p>You can set up the development environment using either the <a href="#automated-setup">automated</a> or <a href="#manual-setup">manual</a>
-setup process.</p>
-<h3 id="automated-setup">Automated Setup<a class="headerlink" href="#automated-setup" title="Permanent link">&para;</a></h3>
+<p>You can set up the development environment using either the <a href="#using-the-development-container">development container</a>
+or following the <a href="#manual-setup">manual</a> setup process.</p>
+<h3 id="using-the-development-container">Using the Development Container<a class="headerlink" href="#using-the-development-container" title="Permanent link">&para;</a></h3>
 <p>The project includes a <a href="https://containers.dev">development container</a> to automatically set up your development
-environment.</p>
+environment, including the all tools and dependencies required to develop the application locally.</p>
 <div class="admonition note">
 <p class="admonition-title">Prerequisites</p>
 <p><a href="https://www.docker.com">Docker</a> must be installed on your system to use the development container.</p>
 </div>
-<details class="tip">
-<summary>GitHub Codespaces</summary>
-<p>If your system does not support Docker, you can use a <a href="https://docs.github.com/en/codespaces/getting-started/quickstart">GitHub Codespace</a>
-to install a development container in the cloud.</p>
-</details>
 <h4 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h4>
 <p>See the video installation guide below for a step-by-step tutorial on installing the development container with
 Visual Studio Code:</p>
@@ -1050,6 +1218,29 @@ repository to clone. Choose the <code>thijsfranck/courageous-comets</code> repos
 <li><a href="https://code.visualstudio.com/docs/devcontainers/tutorial">Visual Studio Code</a></li>
 <li><a href="https://www.jetbrains.com/help/pycharm/connect-to-devcontainer.html">PyCharm</a></li>
 </ul>
+<h4 id="services">Services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h4>
+<p>The development container includes the following services for local development:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Description</th>
+<th>Address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Redis</td>
+<td>Database</td>
+<td><a href="http://localhost:6379"><code>localhost:6379</code></a></td>
+</tr>
+<tr>
+<td>RedisInsight</td>
+<td>Database GUI</td>
+<td><a href="http://localhost:8001"><code>localhost:8001</code></a></td>
+</tr>
+</tbody>
+</table>
 <h3 id="manual-setup">Manual Setup<a class="headerlink" href="#manual-setup" title="Permanent link">&para;</a></h3>
 <p>If you prefer to set up the development environment manually, follow the steps below.</p>
 <div class="admonition note">
@@ -1071,134 +1262,64 @@ on your system.</p>
 <p>Next, install the pre-commit hooks to ensure that your code is formatted and linted before each commit:</p>
 <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
 </code></pre></div>
-<h2 id="secrets-management">Secrets Management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h2>
-<p>To use our team's shared Discord bot token, you will need to retrieve it from the <code>.env.lock</code> file in the project
-root directory. This section will guide you through the process of decrypting the file to access the token.</p>
+<p>This will set up the pre-commit hooks to run automatically when you commit changes to the repository.</p>
+<h4 id="redis-database">Redis Database<a class="headerlink" href="#redis-database" title="Permanent link">&para;</a></h4>
+<p>The application requires a Redis database to run. We recommend setting up a local Redis instance using Docker
+for development purposes.</p>
+<p>To start a Redis instance using Docker, run the following command:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">6379</span>:6379<span class="w"> </span>-p<span class="w"> </span><span class="m">8001</span>:8001<span class="w"> </span>redis/redis-stack:latest
+</code></pre></div>
+<p>This will start a Redis server on port <code>6379</code> and a RedisInsight GUI on port <code>8001</code>.</p>
+<h2 id="configuring-your-environment">Configuring your Environment<a class="headerlink" href="#configuring-your-environment" title="Permanent link">&para;</a></h2>
+<p>To run the application, you will need to provide the following configurations in a <code>.env</code> file at the project
+root directory.</p>
+<h3 id="discord-token">Discord Token<a class="headerlink" href="#discord-token" title="Permanent link">&para;</a></h3>
+<p>The application requires a Discord bot token to run. It should be stored in the <code>.env</code> file as follows:</p>
+<div class="highlight"><pre><span></span><code>DISCORD_TOKEN=&lt;YOUR DISCORD_TOKEN&gt;
+</code></pre></div>
+<p>The repository includes an encrypted <code>.env.lock</code> file with the shared Discord bot token for our team. Follow the
+<a href="../secrets-management/">Secrets Management</a> guide to decrypt the file and start using the token.</p>
 <details class="question">
 <summary>Can I use my own Discord bot token?</summary>
-<p>Yes, you can use your own Discord bot token.</p>
-<p>First, create a new bot account on the <a href="https://discord.com/developers/applications">Discord Developer Portal</a>.
-Generate a token for your bot account and create a <code>.env</code> file in the project root directory. Add the following
-line to the file:</p>
-<div class="highlight"><pre><span></span><code>DISCORD_TOKEN=&lt;YOUR DISCORD TOKEN&gt;
-</code></pre></div>
-<p>If you choose to use your own token, you can skip the steps below.</p>
+<p>Yes, you can use your own Discord bot token. If you do so, there's need to decrypt the <code>.env.lock</code> file.</p>
 </details>
-<h3 id="install-tools">Install Tools<a class="headerlink" href="#install-tools" title="Permanent link">&para;</a></h3>
-<p>First, you will need to install <a href="https://github.com/FiloSottile/age"><code>age</code></a> and <a href="https://github.com/getsops/sops"><code>SOPS</code></a>
-on your system. Follow the instructions for your operating system below.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows</label><label for="__tabbed_1_2">macOS</label><label for="__tabbed_1_3">Linux</label><label for="__tabbed_1_4">Development Container</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p>Open a PowerShell terminal and run the following command to install <code>SOPS</code>:</p>
-<div class="highlight"><pre><span></span><code>winget<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>--id<span class="w"> </span>Mozilla.SOPS
+<h3 id="redis-configuration">Redis Configuration<a class="headerlink" href="#redis-configuration" title="Permanent link">&para;</a></h3>
+<p>If you're not using the development container, you will need to configure the Redis connection in the <code>.env</code> file:</p>
+<div class="highlight"><pre><span></span><code>REDIS_HOST=localhost
+REDIS_PORT=6379
 </code></pre></div>
-<p>To install <code>age</code>, download the <a href="https://github.com/FiloSottile/age/releases">latest binary for Windows</a> and
-add your <code>age</code> binary to the system <code>PATH</code>.</p>
-</div>
-<div class="tabbed-block">
-<p>Open a terminal and run the following command:</p>
-<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>age<span class="w"> </span>sops
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>Download the <a href="https://github.com/getsops/sops/releases"><code>SOPS</code> binary</a> for your platform. For instance, if
-you are on an amd64 architecture:</p>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/getsops/sops/releases/download/v3.9.0/sops-v3.9.0.linux.amd64
-</code></pre></div>
-<p>Move the binary into your <code>PATH</code>:</p>
-<div class="highlight"><pre><span></span><code>mv<span class="w"> </span>sops-v3.9.0.linux.amd64<span class="w"> </span>/usr/local/bin/sops
-</code></pre></div>
-<p>Make the binary executable:</p>
-<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/sops
-</code></pre></div>
-<p>Finally, install <code>age</code>:</p>
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>age
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>If you are using the development container, the tools are already installed! 🎉</p>
-</div>
-</div>
-</div>
-<h3 id="generate-keys">Generate Keys<a class="headerlink" href="#generate-keys" title="Permanent link">&para;</a></h3>
-<p>Next, you will need to generate a new key pair using <code>age</code>. Run the following command from the root directory of
-the project:</p>
-<div class="highlight"><pre><span></span><code>age-keygen<span class="w"> </span>-o<span class="w"> </span>&gt;<span class="w"> </span>secrets/keys.txt
-</code></pre></div>
-<p>This will create a new key pair and save it to the <code>secrets/keys.txt</code> file. Share your public key with the team
-so it can be registered.</p>
-<div class="admonition danger">
-<p class="admonition-title">Security Warning</p>
-<p>Only your public key can be safely shared. Do not share the private key with anyone!</p>
-</div>
-<details class="question">
-<summary>Where can I find my public key?</summary>
-<p>You can find your public key in the <code>secrets/keys.txt</code> file or in the terminal output after generating the
-key pair.</p>
-</details>
-<details class="tip">
-<summary>Development Container Automation</summary>
-<p>On initial setup, the key pair is generated automatically in the development container.</p>
-</details>
-<h3 id="registering-a-new-public-key">Registering a new Public Key<a class="headerlink" href="#registering-a-new-public-key" title="Permanent link">&para;</a></h3>
-<div class="admonition note">
-<p class="admonition-title">Prerequisite</p>
-<p>This step needs to be performed by a team member who already has access to the <code>.env</code> file.</p>
-</div>
-<p>To register a new public key, first extend the <code>.sops.yaml</code> file in the project root directory.
-Add the public key to the list of <code>age</code> keys. Each key is separated by a comma and a newline.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">creation_rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">      </span><span class="no">&lt;KEY1&gt;,</span>
-<span class="w">      </span><span class="no">&lt;KEY2&gt;,</span>
-<span class="w">      </span><span class="no">&lt;KEY3&gt;</span>
-</code></pre></div>
-<p>Next, <a href="#encrypting-secrets">encrypt</a> the <code>.env</code> file with the updated list of keys and push it to the repository.</p>
-<h3 id="decrypting-secrets">Decrypting Secrets<a class="headerlink" href="#decrypting-secrets" title="Permanent link">&para;</a></h3>
-<p>Once your public key is added to the <code>.env.lock</code> file, you can decrypt the file to access the Discord bot token.
-First, pull the latest changes from the repository:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Prerequisite</p>
-<p><code>SOPS</code> requires the <code>SOPS_AGE_KEY_FILE</code> environment variable to be set to the path of your private key file.
-This is automatically set up in the development container.</p>
-</div>
-<p>Next, run the following command to decrypt the <code>.env.lock</code> file:</p>
-<div class="highlight"><pre><span></span><code>sops<span class="w"> </span>decrypt<span class="w"> </span>--input-type<span class="w"> </span>dotenv<span class="w"> </span>--output-type<span class="w"> </span>dotenv<span class="w"> </span>.env.lock<span class="w"> </span>&gt;<span class="w"> </span>.env
-</code></pre></div>
-<p>This will decrypt the file and save the contents to a new <code>.env</code> file in the project root directory. You can now
-access the Discord bot token.</p>
-<div class="admonition danger">
-<p class="admonition-title">Security Warning</p>
-<p>Do not commit your decrypted <code>.env</code> file to version control or share the contents with anyone!</p>
-</div>
-<h3 id="encrypting-secrets">Encrypting Secrets<a class="headerlink" href="#encrypting-secrets" title="Permanent link">&para;</a></h3>
-<p>To encrypt the <code>.env</code> file after making changes, run the following command:</p>
-<div class="highlight"><pre><span></span><code>sops<span class="w"> </span>encrypt<span class="w"> </span>.env<span class="w"> </span>&gt;<span class="w"> </span>.env.lock
-</code></pre></div>
+<p>This configuration assumes you are running a local Redis instance on the default port.</p>
 <h2 id="running-the-application">Running the Application<a class="headerlink" href="#running-the-application" title="Permanent link">&para;</a></h2>
 <p>With your development environment set up and configured, you can run the application using the following command:</p>
 <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>courageous_comets
 </code></pre></div>
 <p>The application should now be online and ready to respond to input from your Discord server.</p>
-<h2 id="building-the-application">Building the Application<a class="headerlink" href="#building-the-application" title="Permanent link">&para;</a></h2>
+<h2 id="building-the-docker-image">Building the Docker Image<a class="headerlink" href="#building-the-docker-image" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Production Builds</p>
-<p>Production builds are fully automated. See the <a href="../version-control/#github-actions">GitHub Actions</a> section
-of the version control page for more information.</p>
+<p>The release process is fully automated and does not require you to build the docker image locally. See the
+<a href="../version-control/#github-actions">GitHub Actions</a> section of the version control guide for more information.</p>
 </div>
-<p>To run a local build for testing, first build the Python package with Poetry:</p>
+<p>Before building the Docker image, first build the Python package with Poetry:</p>
 <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>wheel
 </code></pre></div>
 <p>This will create a <code>.whl</code> file in the <code>dist</code> directory. Next, build the Docker image as follows:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>courageous-comets<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>ghcr.io/thijsfranck/courageous-comets:latest<span class="w"> </span>.
 </code></pre></div>
-<p>Finally, run the Docker container:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--env-file<span class="w"> </span>.env<span class="w"> </span>courageous-comets
+<h2 id="running-the-docker-container">Running the Docker Container<a class="headerlink" href="#running-the-docker-container" title="Permanent link">&para;</a></h2>
+<p>Once you have <a href="#building-the-docker-image">built the Docker image</a>, use the following command to run the production
+container locally:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--env-file<span class="w"> </span>.env<span class="w"> </span>ghcr.io/thijsfranck/courageous-comets:latest
 </code></pre></div>
-<p>This will run the application just as it would in production, using your local <code>.env</code> file.</p>
+<p>This will run the application just as it would in production, using your local <code>.env</code> file and Redis instance.</p>
+<h2 id="running-the-docker-compose-stack">Running the Docker Compose Stack<a class="headerlink" href="#running-the-docker-compose-stack" title="Permanent link">&para;</a></h2>
+<p>To run the application in a production configuration including the Redis database, you can use the Docker Compose
+stack.</p>
+<p>First, build the Docker image as described in <a href="#building-the-docker-image">the previous section</a>. Then, run the
+following command:</p>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up
+</code></pre></div>
+<p>This will start the application and the Redis database in separate containers using your local <code>.env</code> file.</p>
 <h2 id="running-the-documentation">Running the Documentation<a class="headerlink" href="#running-the-documentation" title="Permanent link">&para;</a></h2>
 <p>To view the documentation locally, you can use the following command:</p>
 <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>serve

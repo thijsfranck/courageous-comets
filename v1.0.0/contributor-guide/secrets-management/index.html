@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/documentation/">
+        <link rel="canonical" href="https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/secrets-management/">
       
       
-        <link rel="prev" href="../version-control/">
+        <link rel="prev" href="../development-environment/">
       
       
-        <link rel="next" href="../testing/">
+        <link rel="next" href="../version-control/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Documentation - Courageous Comets</title>
+        <title>Secrets Management - Courageous Comets</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#documentation" class="md-skip">
+        <a href="#secrets-management" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Documentation
+              Secrets Management
             
           </span>
         </div>
@@ -640,10 +640,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../secrets-management/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Secrets Management
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -652,6 +672,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install Tools
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Keys
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registering-a-new-public-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registering a new Public Key
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decrypting-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decrypting Secrets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encrypting-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Encrypting Secrets
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -682,30 +767,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Documentation
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../documentation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -714,53 +779,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-to-document" class="md-nav__link">
-    <span class="md-ellipsis">
-      What to Document
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#docstring-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Docstring Format
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#type-annotations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Type Annotations
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -821,27 +839,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-to-document" class="md-nav__link">
+  <a href="#install-tools" class="md-nav__link">
     <span class="md-ellipsis">
-      What to Document
+      Install Tools
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#docstring-format" class="md-nav__link">
+  <a href="#generate-keys" class="md-nav__link">
     <span class="md-ellipsis">
-      Docstring Format
+      Generate Keys
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#type-annotations" class="md-nav__link">
+  <a href="#registering-a-new-public-key" class="md-nav__link">
     <span class="md-ellipsis">
-      Type Annotations
+      Registering a new Public Key
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decrypting-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decrypting Secrets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encrypting-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Encrypting Secrets
     </span>
   </a>
   
@@ -865,78 +901,105 @@
   
 
 
-<h1 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h1>
-<p>Good code documentation aids understanding and speeds up the development process. Follow the guidelines below
-to document your code effectively.</p>
-<h2 id="what-to-document">What to Document<a class="headerlink" href="#what-to-document" title="Permanent link">&para;</a></h2>
-<p>Always document the following elements of your code:</p>
-<ol>
-<li><strong>Classes</strong>, including their <strong>attributes and public methods</strong></li>
-<li><strong>Module-level functions and constants</strong></li>
-</ol>
-<p>Prioritize documenting public methods and attributes (those not starting with an underscore). However, private
-methods with complex logic should also be documented for clarity.</p>
-<h2 id="docstring-format">Docstring Format<a class="headerlink" href="#docstring-format" title="Permanent link">&para;</a></h2>
-<p>This project uses numpy-style docstrings. Refer to the <a href="https://numpydoc.readthedocs.io/en/latest/format.html">style guide</a>
-for the full specification and detailed examples.</p>
-<p>Here are some examples of how to write good documentation for functions and classes:</p>
-<details class="example">
-<summary>Function Documentation</summary>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">example_function</span><span class="p">(</span><span class="n">param1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">param2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    One-line summary of the function.</span>
-
-<span class="sd">    Detailed functional description of what the function does. Can span</span>
-<span class="sd">    multiple lines.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    param1 : int</span>
-<span class="sd">        Description of the first parameter.</span>
-<span class="sd">    param2 : str</span>
-<span class="sd">        Description of the second parameter.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    bool</span>
-<span class="sd">        Description of the return value.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        Description of the error.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; example_function(1, &quot;test&quot;)</span>
-<span class="sd">    True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="o">...</span>
+<h1 id="secrets-management">Secrets Management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h1>
+<p>To use our team's shared Discord bot token, you will need to retrieve it from the <code>.env.lock</code> file in the project
+root directory. This section will guide you through the process of decrypting the file to access the token.</p>
+<h2 id="install-tools">Install Tools<a class="headerlink" href="#install-tools" title="Permanent link">&para;</a></h2>
+<p>First, you will need to install <a href="https://github.com/FiloSottile/age"><code>age</code></a> and <a href="https://github.com/getsops/sops"><code>SOPS</code></a>
+on your system. Follow the instructions for your operating system below.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows</label><label for="__tabbed_1_2">macOS</label><label for="__tabbed_1_3">Linux</label><label for="__tabbed_1_4">Development Container</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Open a PowerShell terminal and run the following command to install <code>SOPS</code>:</p>
+<div class="highlight"><pre><span></span><code>winget<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>--id<span class="w"> </span>Mozilla.SOPS
 </code></pre></div>
-</details>
-<details class="example">
-<summary>Class Documentation</summary>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Example</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class-level docstring describing the class.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    attribute : int</span>
-<span class="sd">        Description of the attribute.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="o">...</span>
+<p>To install <code>age</code>, download the <a href="https://github.com/FiloSottile/age/releases">latest binary for Windows</a> and
+add your <code>age</code> binary to the system <code>PATH</code>.</p>
+</div>
+<div class="tabbed-block">
+<p>Open a terminal and run the following command:</p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>age<span class="w"> </span>sops
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Download the <a href="https://github.com/getsops/sops/releases"><code>SOPS</code> binary</a> for your platform. For instance, if
+you are on an amd64 architecture:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/getsops/sops/releases/download/v3.9.0/sops-v3.9.0.linux.amd64
+</code></pre></div>
+<p>Move the binary into your <code>PATH</code>:</p>
+<div class="highlight"><pre><span></span><code>mv<span class="w"> </span>sops-v3.9.0.linux.amd64<span class="w"> </span>/usr/local/bin/sops
+</code></pre></div>
+<p>Make the binary executable:</p>
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/sops
+</code></pre></div>
+<p>Finally, install <code>age</code>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>age
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>If you are using the development container, the tools are already installed! 🎉</p>
+</div>
+</div>
+</div>
+<h2 id="generate-keys">Generate Keys<a class="headerlink" href="#generate-keys" title="Permanent link">&para;</a></h2>
+<details class="tip">
+<summary>Using the development container</summary>
+<p>The development container automatically generates a key pair for you on initial setup. You public key will
+be shown in the terminal output. You can also find it later in the <code>secrets/keys.txt</code> file.</p>
 </details>
-<h2 id="type-annotations">Type Annotations<a class="headerlink" href="#type-annotations" title="Permanent link">&para;</a></h2>
-<p>Python type annotations are strongly encouraged to improve code readability and maintainability. Use type annotations
-for all parameters and return values, as well as class attributes.</p>
+<p>Next, you will need to generate a new key pair using <code>age</code>. Run the following command from the root directory of
+the project:</p>
+<div class="highlight"><pre><span></span><code>age-keygen<span class="w"> </span>-o<span class="w"> </span>&gt;<span class="w"> </span>secrets/keys.txt
+</code></pre></div>
+<p>This will create a new key pair and save it to the <code>secrets/keys.txt</code> file. Share your public key with the team
+so it can be registered.</p>
+<div class="admonition danger">
+<p class="admonition-title">Security Warning</p>
+<p>Only your public key can be safely shared. Do not share the private key with anyone!</p>
+</div>
 <details class="question">
-<summary>What are type annotations?</summary>
-<p>Type annotations are a way to specify the expected types of variables, function parameters, and return values
-in Python code. They are used to improve code readability and catch type-related errors early. Refer to the
-<a href="https://docs.python.org/3/library/typing.html">official documentation</a> for more information.</p>
+<summary>Where can I find my public key?</summary>
+<p>You can find your public key in the <code>secrets/keys.txt</code> file or in the terminal output after generating the
+key pair.</p>
 </details>
+<h2 id="registering-a-new-public-key">Registering a new Public Key<a class="headerlink" href="#registering-a-new-public-key" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Prerequisite</p>
+<p>This step needs to be performed by a team member who already has access to the <code>.env</code> file.</p>
+</div>
+<p>To register a new public key, first extend the <code>.sops.yaml</code> file in the project root directory.
+Add the public key to the list of <code>age</code> keys. Each key is separated by a comma and a newline.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">creation_rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">      </span><span class="no">&lt;KEY1&gt;,</span>
+<span class="w">      </span><span class="no">&lt;KEY2&gt;,</span>
+<span class="w">      </span><span class="no">&lt;KEY3&gt;</span>
+</code></pre></div>
+<p>Next, <a href="#encrypting-secrets">encrypt</a> the <code>.env</code> file with the updated list of keys and push it to the repository.</p>
+<h2 id="decrypting-secrets">Decrypting Secrets<a class="headerlink" href="#decrypting-secrets" title="Permanent link">&para;</a></h2>
+<p>Once your public key is added to the <code>.env.lock</code> file, you can decrypt the file to access the Discord bot token.
+First, pull the latest changes from the repository:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Prerequisite</p>
+<p><code>SOPS</code> requires the <code>SOPS_AGE_KEY_FILE</code> environment variable to be set to the path of your private key file.
+This is automatically set up in the development container.</p>
+</div>
+<p>Next, run the following command to decrypt the <code>.env.lock</code> file:</p>
+<div class="highlight"><pre><span></span><code>sops<span class="w"> </span>decrypt<span class="w"> </span>--input-type<span class="w"> </span>dotenv<span class="w"> </span>--output-type<span class="w"> </span>dotenv<span class="w"> </span>.env.lock<span class="w"> </span>&gt;<span class="w"> </span>.env
+</code></pre></div>
+<p>This will decrypt the file and save the contents to a new <code>.env</code> file in the project root directory. You can now
+access the Discord bot token.</p>
+<div class="admonition danger">
+<p class="admonition-title">Security Warning</p>
+<p>Do not commit your decrypted <code>.env</code> file to version control or share the contents with anyone!</p>
+</div>
+<h2 id="encrypting-secrets">Encrypting Secrets<a class="headerlink" href="#encrypting-secrets" title="Permanent link">&para;</a></h2>
+<p>To encrypt the <code>.env</code> file after making changes, run the following command:</p>
+<div class="highlight"><pre><span></span><code>sops<span class="w"> </span>encrypt<span class="w"> </span>.env<span class="w"> </span>&gt;<span class="w"> </span>.env.lock
+</code></pre></div>
+<p>This will encrypt the file and save it to the <code>.env.lock</code> file. You can now commit the changes to version control.</p>
 
 
 

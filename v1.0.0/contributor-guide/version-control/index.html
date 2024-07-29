@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://thijsfranck.github.io/courageous-comets/v1.0.0/contributor-guide/version-control/">
       
       
-        <link rel="prev" href="../development-environment/">
+        <link rel="prev" href="../secrets-management/">
       
       
         <link rel="next" href="../documentation/">
@@ -296,11 +296,11 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../admin-guide/" class="md-nav__link ">
+            <a href="../../user-guide/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
-    Administrators
+    Users
   </span>
   
 
@@ -315,6 +315,138 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Users
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/installing-the-bot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installing the Bot
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/data-privacy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Privacy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../admin-guide/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Administrators
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Administrators
           </label>
@@ -417,6 +549,8 @@
       
         
       
+        
+      
     
     
       
@@ -429,7 +563,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           
@@ -445,14 +579,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Contributors
           </label>
@@ -493,6 +627,27 @@
   
   <span class="md-ellipsis">
     Development Environment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../secrets-management/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Secrets Management
   </span>
   
 
@@ -921,7 +1076,7 @@ before each commit.</p>
 <p>The pre-commit hooks include:</p>
 <ul>
 <li>Linting and formatting with <a href="https://docs.astral.sh/ruff/">Ruff</a></li>
-<li>Commit message validation with <a href="https://commitlint.js.org">Commitlint</a></li>
+<li>Commit message validation with <a href="https://commitizen-tools.github.io/commitizen/">Commitizen</a></li>
 </ul>
 <details class="question">
 <summary>What if the pre-commit hooks fail?</summary>
@@ -971,7 +1126,7 @@ This pull request adds a new uptime command to display the bot&#39;s uptime.
 <ul>
 <li>All <a href="#automated-checks">pre-commit hooks</a> must pass</li>
 <li>Type checking with <a href="https://github.com/microsoft/pyright">Pyright</a></li>
-<li>Unit tests with <a href="https://docs.pytest.org/en/stable/">pytest</a></li>
+<li>Running all tests with <a href="https://docs.pytest.org/en/stable/">pytest</a></li>
 </ul>
 <details class="question">
 <summary>What if the automated checks fail?</summary>
