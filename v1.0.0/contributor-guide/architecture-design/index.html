@@ -1468,13 +1468,14 @@ of data. Redis only writes to memory and periodically persists to disk, making i
 a lot of small messages quickly.</p>
 <p>Further, we expected to need efficient full-text search capabilities and metric-based search capabilities. There
 are plugins for Redis that provide these features. The Redis Stack distribution includes these plugins by default,
-making it a good fit for our use case. Further, we expected not to require relational queries or complex joins,
-which are better suited for a relational database like PostgreSQL.</p>
+making it a good fit for our use case.</p>
+<p>Additionally, we expected not to require relational queries or complex joins, which are better suited for a relational
+database like PostgreSQL.</p>
 <p>Redis is also easy to set up and configure, making it a good choice for a small-scale application like Courageous
 Comets.</p>
-<p>There is a small risk of data loss in case of a crash. In case of an unexpected shutdown, the application may
-lose data that Redis has not yet persisted to disk. However, we are willing to accept this risk given that
-missing a few messages will not affect the overall user experience.</p>
+<p>There is a small risk of data loss in case of a crash. The application may lose data that Redis has not yet persisted
+to disk. However, we are willing to accept this risk given that missing a few messages will not affect the overall
+user experience.</p>
 <h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h2>
 <p>The data model is designed to support a variety of analysis tasks and provide a flexible foundation for future
 extensions.</p>
