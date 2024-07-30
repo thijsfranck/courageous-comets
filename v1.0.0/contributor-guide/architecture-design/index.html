@@ -673,6 +673,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Decisions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -689,10 +722,25 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#storage" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
     <span class="md-ellipsis">
-      Storage
+      Database
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decisions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design decisions
     </span>
   </a>
   
@@ -720,20 +768,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Message">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
-  <a href="#design-decisions" class="md-nav__link">
+  <a href="#design-decisions_2" class="md-nav__link">
     <span class="md-ellipsis">
       Design Decisions
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1063,6 +1105,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Decisions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1079,10 +1154,25 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#storage" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
     <span class="md-ellipsis">
-      Storage
+      Database
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decisions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design decisions
     </span>
   </a>
   
@@ -1110,20 +1200,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Message">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
-  <a href="#design-decisions" class="md-nav__link">
+  <a href="#design-decisions_2" class="md-nav__link">
     <span class="md-ellipsis">
       Design Decisions
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1311,15 +1395,18 @@ corresponding details section.</p>
         subgraph Bot[&lt;a href='#bot'&gt;Bot&lt;/a&gt;]
             subgraph Controllers[&lt;a href='#controllers'&gt;Controllers&lt;/a&gt;]
                 MessagesCog["Messages"]
+                Interactions["Interactions"]
             end
             subgraph ApplicationLogic[&lt;a href='#application-logic'&gt;Application Logic&lt;/a&gt;]
                 Preprocessing{{"Preprocessing"}}
-                WordCount["Word Count"]
-                Sentiment["Sentiment Analysis"]
-                Vectorization["Vectorization"]
+                subgraph Processing
+                    WordCount["Word Count"]
+                    Sentiment["Sentiment Analysis"]
+                    Vectorization["Vectorization"]
+                end
             end
         end
-        subgraph Storage[&lt;a href='#storage'&gt;Storage&lt;/a&gt;]
+        subgraph Storage[&lt;a href='#database'&gt;Database&lt;/a&gt;]
             Redis[("Redis")]
         end
     end
@@ -1329,17 +1416,38 @@ corresponding details section.</p>
     Preprocessing ---&gt;|"Text"| WordCount
     Preprocessing ---&gt;|"Text"| Sentiment
     Preprocessing ---&gt;|"Text"| Vectorization
-    WordCount --&gt;|"Cache"| Redis
-    Sentiment --&gt;|"Cache"| Redis
-    Vectorization --&gt;|"Cache"| Redis</code></pre>
+    WordCount --&gt;|"Token Count"| Redis
+    Sentiment --&gt;|"Sentiment Scores"| Redis
+    Vectorization --&gt;|"Vector Embedding"| Redis
+    User &lt;--&gt;|"Interactions"| Interactions
+    Interactions --&gt;|"Queries"| Redis</code></pre>
 <h3 id="bot">Bot<a class="headerlink" href="#bot" title="Permanent link">&para;</a></h3>
 <p>The bot is the main component of the Courageous Comets application. It is responsible for processing messages
 and performing analysis on them.</p>
-<p>The bot is built using the <a href="https://discordpy.readthedocs.io/en/stable/">discord.py</a> library. It is designed to
-be modular and extensible, with the core features implemented on separate layers.</p>
+<p>The bot is built using the <a href="https://discordpy.readthedocs.io/en/stable/">discord.py</a> library. We chose this library
+since it's the most mature library for building Discord bots in Python and did not expect to need any special
+features provided by other libraries.</p>
+<p>The application is designed to be modular and extensible, with the core features implemented on separate layers.</p>
 <h4 id="controllers">Controllers<a class="headerlink" href="#controllers" title="Permanent link">&para;</a></h4>
-<p>Controllers are responsible for handling user input and invoking the appropriate application logic. Each controller
-is a separate cog in the bot, allowing for easy extension and maintenance.</p>
+<p>Controllers are responsible for handling user input and invoking the appropriate application logic. All controllers
+are implemented as Discord cogs, which are modular components that can be enabled or disabled based on the
+application configuration.</p>
+<h5 id="messages">Messages<a class="headerlink" href="#messages" title="Permanent link">&para;</a></h5>
+<p>The messages cog is highlighted in the diagram as it is the primary controller for processing messages. It listens
+for messages sent by users, and passes them on for internal processing.</p>
+<h5 id="interactions">Interactions<a class="headerlink" href="#interactions" title="Permanent link">&para;</a></h5>
+<p>Other cogs included with the bot are responsible for handling interactions with users, such as slash commands,
+context menus, and buttons. Typically, the response to an interaction will be a UI element like an embed. Embeds
+may include charts, tables, or other visualizations.</p>
+<h5 id="design-decisions">Design Decisions<a class="headerlink" href="#design-decisions" title="Permanent link">&para;</a></h5>
+<p>Responses from the bot should typically be sent as ephemeral messages, meaning they are only visible to the user
+who triggered the interaction. The exception to this is when an interaction is supposed to be visible to all users.</p>
+<p>When an interaction is triggered, the bot should respond as soon as possible to acknowledge the interaction. In
+case of loading times, the bot should provide a loading indicator to the user. In case of errors, useful feedback
+should be provided to the user in the form of an error message.</p>
+<p>We decided to have a dedicated cog per interaction. For example, there is a separate cog for searching for keywords
+using a slash command and a separate cog for searching for keywords using a context menu item. This split makes
+sure that each cog does not grow too large and remains maintainable.</p>
 <h4 id="application-logic">Application Logic<a class="headerlink" href="#application-logic" title="Permanent link">&para;</a></h4>
 <p>The application logic is responsible for processing messages and performing analysis on them. The logic is divided
 into several components:</p>
@@ -1349,9 +1457,22 @@ into several components:</p>
 <li><strong>Sentiment Analysis</strong>: Analyzes the sentiment of the input text.</li>
 <li><strong>Vectorization</strong>: Generates a vector representation to support similarity search.</li>
 </ul>
-<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
+<h2 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h2>
 <p>The bot uses Redis as a database layer to store the results of the analysis. Redis is a fast and efficient key-value
 store that offers search and query features needed to enable the application logic.</p>
+<h3 id="design-decisions_1">Design decisions<a class="headerlink" href="#design-decisions_1" title="Permanent link">&para;</a></h3>
+<p>We chose Redis over other databases like PostgreSQL or MongoDB because of its speed and simplicity.</p>
+<p>We knew that we'd be writing messages at a high rate and needed a database that could keep up with the volume
+of data. Redis only writes to memory and periodically persists to disk, making it ideal for our workload of writing
+a lot of small messages quickly.</p>
+<p>Further, we expected to need efficient full-text search capabilities and metric-based search capabilities. Redis
+provides these features out of the box, making it a good fit for our use case. Further, we expected not to require
+relational queries or complex joins, which are better suited for a relational database like PostgreSQL.</p>
+<p>Redis is also easy to set up and configure, making it a good choice for a small-scale application like Courageous
+Comets.</p>
+<p>There is a small risk of data loss in case of a crash. In case of an unexpected shutdown, the application may
+lose data that Redis has not yet persisted to disk. However, we are willing to accept this risk given that
+missing a few messages will not affect the overall user experience.</p>
 <h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h2>
 <p>The data model is designed to support a variety of analysis tasks and provide a flexible foundation for future
 extensions.</p>
@@ -1436,7 +1557,7 @@ are structured as follows:</p>
 </tr>
 </tbody>
 </table>
-<h4 id="design-decisions">Design Decisions<a class="headerlink" href="#design-decisions" title="Permanent link">&para;</a></h4>
+<h3 id="design-decisions_2">Design Decisions<a class="headerlink" href="#design-decisions_2" title="Permanent link">&para;</a></h3>
 <p>While the fields ending with <code>_id</code> are integers on Discord, they are stored as strings on Redis and indexed as
 <a href="https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/">Tag fields</a> as opposed
 to <a href="https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields">Numeric</a>
@@ -1469,7 +1590,11 @@ search-based queries.</p>
 <tbody>
 <tr>
 <td><code>cogs</code></td>
-<td>Contains the bot controllers (cogs) that handle user input.</td>
+<td>Provides the bot controllers (cogs) that handle user input.</td>
+</tr>
+<tr>
+<td><code>discord</code></td>
+<td>Implements functions for interacting with the Discord API.</td>
 </tr>
 <tr>
 <td><code>nltk</code></td>
@@ -1477,11 +1602,15 @@ search-based queries.</p>
 </tr>
 <tr>
 <td><code>redis</code></td>
-<td>Contains the data access layer for interacting with Redis.</td>
+<td>Provides the data access layer for interacting with Redis.</td>
 </tr>
 <tr>
 <td><code>transformers</code></td>
 <td>Contains helpers for working with Huggingface Transformers.</td>
+</tr>
+<tr>
+<td><code>ui</code></td>
+<td>Includes all UI elements for the bot (<code>charts</code>, <code>components</code>, <code>embeds</code>, and <code>views</code>).</td>
 </tr>
 <tr>
 <td><code>client.py</code></td>
@@ -1505,11 +1634,15 @@ search-based queries.</p>
 </tr>
 <tr>
 <td><code>models.py</code></td>
-<td>Defines the entities used by the application using Pydantic models.</td>
+<td>Defines the entities used by the application using <code>pydantic</code> models.</td>
 </tr>
 <tr>
 <td><code>preprocessing.py</code></td>
 <td>Contains the preprocessing logic for cleaning and normalizing text.</td>
+</tr>
+<tr>
+<td><code>processing.py</code></td>
+<td>Implements the main processing logic for analyzing messages.</td>
 </tr>
 <tr>
 <td><code>sentiment.py</code></td>
@@ -1518,6 +1651,10 @@ search-based queries.</p>
 <tr>
 <td><code>settings.py</code></td>
 <td>Provides input validation, default values and type hints for the app settings.</td>
+</tr>
+<tr>
+<td><code>utils.py</code></td>
+<td>Contains utility functions used across the application.</td>
 </tr>
 <tr>
 <td><code>vectorizer.py</code></td>

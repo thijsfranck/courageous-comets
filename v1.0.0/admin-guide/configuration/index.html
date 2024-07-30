@@ -618,6 +618,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mplconfigdir" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPLCONFIGDIR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#nltk_data" class="md-nav__link">
     <span class="md-ellipsis">
       NLTK_DATA
@@ -682,6 +691,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applicationyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      application.yaml
+    </span>
+  </a>
   
 </li>
       
@@ -1038,6 +1056,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mplconfigdir" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPLCONFIGDIR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#nltk_data" class="md-nav__link">
     <span class="md-ellipsis">
       NLTK_DATA
@@ -1102,6 +1129,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applicationyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      application.yaml
+    </span>
+  </a>
   
 </li>
       
@@ -1178,6 +1214,12 @@
 <td><code>INFO</code></td>
 </tr>
 <tr>
+<td><a href="#mplconfigdir"><code>MPLCONFIGDIR</code></a></td>
+<td>The directory containing Matplotlib configuration files.</td>
+<td>No</td>
+<td><code>/app/matplotlib</code></td>
+</tr>
+<tr>
 <td><a href="#nltk_data"><code>NLTK_DATA</code></a></td>
 <td>The directory containing NLTK data files.</td>
 <td>No</td>
@@ -1236,26 +1278,9 @@ Your token should have the following scopes:</p>
 <h2 id="optional-settings">Optional Settings<a class="headerlink" href="#optional-settings" title="Permanent link">&para;</a></h2>
 <p>The following settings are optional or have default values that can be overridden:</p>
 <h3 id="bot_config_path"><code>BOT_CONFIG_PATH</code><a class="headerlink" href="#bot_config_path" title="Permanent link">&para;</a></h3>
-<p>This specifies the location of the bot's configuration file, which is a YAML file containing the following information:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># List of cogs to load when the bot starts, identified by their package name.</span>
-<span class="nt">cogs</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
-<span class="c1"># List of cogs to load in development mode only, identified by their package name.</span>
-<span class="nt">dev-cogs</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
-<span class="c1"># List of NLTK datasets to download on startup.</span>
-<span class="nt">nltk</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;DATASET_NAME&gt;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;DATASET_NAME&gt;</span>
-<span class="c1"># List of Huggingface Transformers models to download on startup.</span>
-<span class="nt">transformers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;MODEL_NAME&gt;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;MODEL_NAME&gt;</span>
-</code></pre></div>
-<p>By default, the application searches for a file named <code>application.yaml</code> in the directory from which it is launched.
-In the Docker image, this file is located at <code>/app/application.yaml</code>.</p>
+<p>This specifies the location of the bot's configuration file. By default, the application searches for a file named
+<code>application.yaml</code> in the directory from which it is launched. In the Docker image, this file is located at <code>/app/application.yaml</code>.</p>
+<p><a href="#applicationyaml">Read more</a> about the <code>application.yaml</code> file.</p>
 <h3 id="discord_api_concurrency"><code>DISCORD_API_CONCURRENCY</code><a class="headerlink" href="#discord_api_concurrency" title="Permanent link">&para;</a></h3>
 <p>The maximum number of concurrent Discord API requests. By default, this is set to <code>3</code>.</p>
 <h3 id="environment"><code>ENVIRONMENT</code><a class="headerlink" href="#environment" title="Permanent link">&para;</a></h3>
@@ -1277,6 +1302,9 @@ from which the application is launched. In the Docker image, this directory is l
 <li><code>CRITICAL</code></li>
 </ul>
 <p>The default log level is <code>INFO</code>.</p>
+<h3 id="mplconfigdir"><code>MPLCONFIGDIR</code><a class="headerlink" href="#mplconfigdir" title="Permanent link">&para;</a></h3>
+<p>The directory containing <code>matplotlib</code> configuration files. Uses the default <code>matplotlib</code> configuration directory
+unless otherwise configured. In the Docker image, the <code>matplotlib</code> configuration files are located at <code>/app/matplotlib</code>.</p>
 <h3 id="nltk_data"><code>NLTK_DATA</code><a class="headerlink" href="#nltk_data" title="Permanent link">&para;</a></h3>
 <p>The directory containing NLTK data files. By default, this is set to <code>nltk_data</code> in the directory from which the
 application is launched. In the Docker image, this directory is located at <code>/app/nltk_data</code>.</p>
@@ -1298,6 +1326,93 @@ is set by default.</p>
 <p class="admonition-title">Security Warning</p>
 <p>Do not share your Redis password with anyone!</p>
 </div>
+<h2 id="applicationyaml"><code>application.yaml</code><a class="headerlink" href="#applicationyaml" title="Permanent link">&para;</a></h2>
+<p>The <code>application.yaml</code> file is a configuration file that specifies the cogs to load, the NLTK datasets to download,
+and the Huggingface Transformers models to install on startup. It has the following structure:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List of cogs to load when the bot starts, identified by their package name.</span>
+<span class="nt">cogs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
+<span class="c1"># List of cogs to load in development mode only, identified by their package name.</span>
+<span class="nt">dev-cogs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;PACKAGE_NAME&gt;</span>
+<span class="c1"># List of NLTK datasets to download on startup.</span>
+<span class="nt">nltk</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;DATASET_NAME&gt;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;DATASET_NAME&gt;</span>
+<span class="c1"># List of Huggingface Transformers models to download on startup.</span>
+<span class="nt">transformers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;MODEL_NAME&gt;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;MODEL_NAME&gt;</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Advanced Users Only</p>
+<p>For standard use, the <code>application.yaml</code> file does not need to be changed. We recommend against modifying this
+file unless you know what you're doing.</p>
+</div>
+<p>One possible use case is to add additional feature or disable existing features by modifying the list of cogs.
+To add a new cog, add the package name to the <code>cogs</code> list. To disable a feature, remove the package name from
+the list.</p>
+<p>Below is a list of all cogs that are loaded by default:</p>
+<table>
+<thead>
+<tr>
+<th>Package Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>courageous_comets.cogs.about</code></td>
+<td>Provides information about the bot.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.keywords.search_command</code></td>
+<td>Searches for keywords using a slash command.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.keywords.search_context_menu</code></td>
+<td>Searches for keywords using a context menu item.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.keywords.topics_command</code></td>
+<td>Lists the most popular keywords for a given context using a slash command.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.keywords.user_context_menu</code></td>
+<td>Lists the most popular keywords for a particular user using a context menu item.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.messages</code></td>
+<td>Listens for messages and passes them on for internal processing.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.ping</code></td>
+<td>Responds to ping requests.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.sentiment.message_context_menu</code></td>
+<td>Analyzes the sentiment of a message using a context menu item.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.sentiment.search_command</code></td>
+<td>Searches for messages with similar sentiment using a slash command.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.sentiment.search_context_menu</code></td>
+<td>Searches for messages with similar sentiment using a context menu item.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.sentiment.user_context_menu</code></td>
+<td>Analyzes the sentiment of a user's messages using a context menu item.</td>
+</tr>
+<tr>
+<td><code>courageous_comets.cogs.frequency</code></td>
+<td>Provides an overview of the amount of recent messages for a given timespan.</td>
+</tr>
+</tbody>
+</table>
 
 
 
