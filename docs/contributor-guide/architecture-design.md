@@ -112,15 +112,17 @@ a lot of small messages quickly.
 
 Further, we expected to need efficient full-text search capabilities and metric-based search capabilities. There
 are plugins for Redis that provide these features. The Redis Stack distribution includes these plugins by default,
-making it a good fit for our use case. Further, we expected not to require relational queries or complex joins,
-which are better suited for a relational database like PostgreSQL.
+making it a good fit for our use case.
+
+Additionally, we expected not to require relational queries or complex joins, which are better suited for a relational
+database like PostgreSQL.
 
 Redis is also easy to set up and configure, making it a good choice for a small-scale application like Courageous
 Comets.
 
-There is a small risk of data loss in case of a crash. In case of an unexpected shutdown, the application may
-lose data that Redis has not yet persisted to disk. However, we are willing to accept this risk given that
-missing a few messages will not affect the overall user experience.
+There is a small risk of data loss in case of a crash. The application may lose data that Redis has not yet persisted
+to disk. However, we are willing to accept this risk given that missing a few messages will not affect the overall
+user experience.
 
 ## Data Model
 
