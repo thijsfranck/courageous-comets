@@ -154,7 +154,7 @@ While the fields ending with `_id` are integers on Discord, they are stored as s
 [Tags](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/) rather than
 [Numeric](https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields)
 because we want to make exact-match queries against these fields. Also, `Tags` are more memory-efficient and
-fast to query.
+faster to query.
 
 Rather than store the message as a JSON document with the sentiment-related values stored in a nested mapping,
 they are stored on the same hash with a prefix of `sentiment_`. This is because JSON documents generally have
