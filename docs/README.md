@@ -5,35 +5,52 @@ the Discord bot that helps you feel at home in any server!
 
 ## Features
 
-Our bot is designed to help you:
+<div class="grid cards" markdown>
 
-### Discover and Connect Effortlessly 🚀
+- :fontawesome-solid-people-group:{ .lg .middle } **Discover new communities**
 
-**Channel and Message Search**: Easily find channels and messages that match your interests. Courageous Comets
-helps you quickly locate the communities you care about.
+    ---
 
-**Similar Message Finder**: Found a message you like? Use the bot to find related messages across different channels.
-Stay informed and engaged without endless scrolling.
+    Quickly evaluate whether a new server is the right fit for you.
 
-### Foster Positive Communities 🤗
+    [:octicons-arrow-right-24: Get to know a community](./user-guide/getting-started.md#getting-to-know-the-community)
 
-**Sentiment Analysis**: Identify the most welcoming and positive communities on Discord. Our bot uses advanced
-sentiment analysis to highlight the friendliest spaces and people.
+- :octicons-search-16:{ .lg .middle } **Find your niche**
 
-**Community Member Insights**: Curious about someone’s activity and attitude? Ask the bot for a summary and get
-a quick overview of their contributions and demeanor.
+    ---
 
-### Moderate with Ease 🛡️
+    Easily locate the channels and users that match your interests and values.
 
-**Toxic Behavior Detection**: Moderators can use Courageous Comets to spot toxic behavior and spam to maintain
-a positive environment.
+    [:octicons-arrow-right-24: Find your way around](./user-guide/getting-started.md#finding-your-way-around)
 
-**Reward Positive Contributions**: Recognize and reward community members who make positive or relevant contributions.
+    [:octicons-arrow-right-24: Discover like-minded people](./user-guide/getting-started.md#discovering-like-minded-people)
+
+- :material-human-greeting-variant:{ .lg .middle } **Foster positivity**
+
+    ---
+
+    Identify the most welcoming and positive communities on Discord and help them grow.
+
+    [:octicons-arrow-right-24: Build safe environments](./user-guide/getting-started.md#contributing-to-a-safe-environment)
+
+- :material-scale-balance:{ .lg .middle } **Free and open-source**
+
+    ---
+
+    Courageous Comets is fully [open source](https://github.com/thijsfranck/courageous-comets/blob/<APP_VERSION>/)
+    and free to use for anyone!
+
+    [:octicons-arrow-right-24: Install on your server](./user-guide/installing-the-bot.md)
+
+    [:octicons-arrow-right-24: Deploy your own instance](./admin-guide//deployment.md)
+
+</div>
 
 ## Contents
 
 This documentation is divided into the following sections:
 
+- [User Guide](./user-guide/index.md): How to interact with the bot and make the most of its features.
 - [Administrator Guide](./admin-guide/index.md): How to deploy, configure and manage the bot in production.
 - [Contributor Guide](./contributor-guide/index.md): How to set up a development environment and contribute to
   the project.
