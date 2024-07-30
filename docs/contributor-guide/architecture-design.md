@@ -151,8 +151,8 @@ are structured as follows:
 ### Design Decisions
 
 While the fields ending with `_id` are integers on Discord, they are stored as strings on Redis and indexed as
-[Tags](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/) as opposed
-to [Numeric](https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields)
+[Tags](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/) rather than
+[Numeric](https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields)
 because we want to make exact-match queries against these fields. Also, `Tags` are more memory-efficient and
 fast to query.
 
