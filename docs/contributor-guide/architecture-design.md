@@ -17,15 +17,18 @@ graph LR
         subgraph Bot[<a href='#bot'>Bot</a>]
             subgraph Controllers[<a href='#controllers'>Controllers</a>]
                 MessagesCog["Messages"]
+                Interactions["Interactions"]
             end
             subgraph ApplicationLogic[<a href='#application-logic'>Application Logic</a>]
                 Preprocessing{{"Preprocessing"}}
-                WordCount["Word Count"]
-                Sentiment["Sentiment Analysis"]
-                Vectorization["Vectorization"]
+                subgraph Processing
+                    WordCount["Word Count"]
+                    Sentiment["Sentiment Analysis"]
+                    Vectorization["Vectorization"]
+                end
             end
         end
-        subgraph Storage[<a href='#storage'>Storage</a>]
+        subgraph Storage[<a href='#database'>Database</a>]
             Redis[("Redis")]
         end
     end
@@ -35,9 +38,11 @@ graph LR
     Preprocessing --->|"Text"| WordCount
     Preprocessing --->|"Text"| Sentiment
     Preprocessing --->|"Text"| Vectorization
-    WordCount -->|"Cache"| Redis
-    Sentiment -->|"Cache"| Redis
-    Vectorization -->|"Cache"| Redis
+    WordCount -->|"Token Count"| Redis
+    Sentiment -->|"Sentiment Scores"| Redis
+    Vectorization -->|"Vector Embedding"| Redis
+    User <-->|"Interactions"| Interactions
+    Interactions -->|"Queries"| Redis
 ```
 
 ### Bot
@@ -45,13 +50,41 @@ graph LR
 The bot is the main component of the Courageous Comets application. It is responsible for processing messages
 and performing analysis on them.
 
-The bot is built using the [discord.py](https://discordpy.readthedocs.io/en/stable/) library. It is designed to
-be modular and extensible, with the core features implemented on separate layers.
+The bot is built using the [discord.py](https://discordpy.readthedocs.io/en/stable/) library. We chose this library
+since it's the most mature library for building Discord bots in Python and did not expect to need any special
+features provided by other libraries.
+
+The application is designed to be modular and extensible, with the core features implemented on separate layers.
 
 #### Controllers
 
-Controllers are responsible for handling user input and invoking the appropriate application logic. Each controller
-is a separate cog in the bot, allowing for easy extension and maintenance.
+Controllers are responsible for handling user input and invoking the appropriate application logic. All controllers
+are implemented as Discord cogs, which are modular components that can be enabled or disabled based on the
+application configuration.
+
+##### Messages
+
+The messages cog is highlighted in the diagram as it is the primary controller for processing messages. It listens
+for messages sent by users, and passes them on for internal processing.
+
+##### Interactions
+
+Other cogs included with the bot are responsible for handling interactions with users, such as slash commands,
+context menus, and buttons. Typically, the response to an interaction will be a UI element like an embed. Embeds
+may include charts, tables, or other visualizations.
+
+##### Design Decisions
+
+Responses from the bot should typically be sent as ephemeral messages, meaning they are only visible to the user
+who triggered the interaction. The exception to this is when an interaction is supposed to be visible to all users.
+
+When an interaction is triggered, the bot should respond as soon as possible to acknowledge the interaction. In
+case of loading times, the bot should provide a loading indicator to the user. In case of errors, useful feedback
+should be provided to the user in the form of an error message.
+
+We decided to have a dedicated cog per interaction. For example, there is a separate cog for searching for keywords
+using a slash command and a separate cog for searching for keywords using a context menu item. This split makes
+sure that each cog does not grow too large and remains maintainable.
 
 #### Application Logic
 
@@ -63,10 +96,29 @@ into several components:
 - **Sentiment Analysis**: Analyzes the sentiment of the input text.
 - **Vectorization**: Generates a vector representation to support similarity search.
 
-### Storage
+## Database
 
 The bot uses Redis as a database layer to store the results of the analysis. Redis is a fast and efficient key-value
 store that offers search and query features needed to enable the application logic.
+
+### Design decisions
+
+We chose Redis over other databases like PostgreSQL or MongoDB because of its speed and simplicity.
+
+We knew that we'd be writing messages at a high rate and needed a database that could keep up with the volume
+of data. Redis only writes to memory and periodically persists to disk, making it ideal for our workload of writing
+a lot of small messages quickly.
+
+Further, we expected to need efficient full-text search capabilities and metric-based search capabilities. Redis
+provides these features out of the box, making it a good fit for our use case. Further, we expected not to require
+relational queries or complex joins, which are better suited for a relational database like PostgreSQL.
+
+Redis is also easy to set up and configure, making it a good choice for a small-scale application like Courageous
+Comets.
+
+There is a small risk of data loss in case of a crash. In case of an unexpected shutdown, the application may
+lose data that Redis has not yet persisted to disk. However, we are willing to accept this risk given that
+missing a few messages will not affect the overall user experience.
 
 ## Data Model
 
@@ -92,7 +144,7 @@ are structured as follows:
 | `embedding`          | `bytes`   | `Vector`   | The embedding vector of the message content                                                  |
 | `tokens`             | `string`  | N/A        | JSON object mapping each token in the message to number of times it appeared in the message. |
 
-#### Design Decisions
+### Design Decisions
 
 While the fields ending with `_id` are integers on Discord, they are stored as strings on Redis and indexed as
 [Tag fields](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/) as opposed
@@ -127,19 +179,23 @@ The application is fully contained within the `courageous_comets` package. The p
 
 | Module             | Description                                                                              |
 | ------------------ | ---------------------------------------------------------------------------------------- |
-| `cogs`             | Contains the bot controllers (cogs) that handle user input.                              |
+| `cogs`             | Provides the bot controllers (cogs) that handle user input.                              |
+| `discord`          | Implements functions for interacting with the Discord API.                               |
 | `nltk`             | Contains helpers for using the Natural Language Toolkit (NLTK) library.                  |
-| `redis`            | Contains the data access layer for interacting with Redis.                               |
+| `redis`            | Provides the data access layer for interacting with Redis.                               |
 | `transformers`     | Contains helpers for working with Huggingface Transformers.                              |
+| `ui`               | Includes all UI elements for the bot (`charts`, `components`, `embeds`, and `views`).    |
 | `client.py`        | Contains the main application client class.                                              |
 | `__init__.py`      | Entrypoint for the package. Exports the application client instance.                     |
 | `__main__.py`      | Entrypoint for the application. Responsible for setup, teardown and root error handling. |
 | `enums.py`         | Shared enumerations used across the application.                                         |
 | `exceptions.py`    | Includes the base exception class and custom exceptions used in the application.         |
-| `models.py`        | Defines the entities used by the application using Pydantic models.                      |
+| `models.py`        | Defines the entities used by the application using `pydantic` models.                    |
 | `preprocessing.py` | Contains the preprocessing logic for cleaning and normalizing text.                      |
+| `processing.py`    | Implements the main processing logic for analyzing messages.                             |
 | `sentiment.py`     | Implements the sentiment analysis logic using the NLTK library.                          |
 | `settings.py`      | Provides input validation, default values and type hints for the app settings.           |
+| `utils.py`         | Contains utility functions used across the application.                                  |
 | `vectorizer.py`    | Implements the vectorization logic using the Huggingface Transformers library.           |
 | `words.py`         | Contains the word count logic for counting the number of words in a text.                |
 
