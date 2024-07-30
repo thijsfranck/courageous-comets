@@ -102,7 +102,7 @@ The bot uses Redis as a database layer to store the results of the analysis. Red
 store that offers search and query features needed to enable the application logic. Courageous Comets uses the
 Redis Stack distribution, which includes plugins for full-text search and metric-based search.
 
-### Design decisions
+### Design Decisions
 
 We chose Redis over other databases like PostgreSQL or MongoDB because of its speed and simplicity.
 
