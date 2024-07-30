@@ -99,7 +99,8 @@ into several components:
 ## Database
 
 The bot uses Redis as a database layer to store the results of the analysis. Redis is a fast and efficient key-value
-store that offers search and query features needed to enable the application logic.
+store that offers search and query features needed to enable the application logic. Courageous Comets uses the
+Redis Stack distribution, which includes plugins for full-text search and metric-based search.
 
 ### Design decisions
 
@@ -109,9 +110,10 @@ We knew that we'd be writing messages at a high rate and needed a database that 
 of data. Redis only writes to memory and periodically persists to disk, making it ideal for our workload of writing
 a lot of small messages quickly.
 
-Further, we expected to need efficient full-text search capabilities and metric-based search capabilities. Redis
-provides these features out of the box, making it a good fit for our use case. Further, we expected not to require
-relational queries or complex joins, which are better suited for a relational database like PostgreSQL.
+Further, we expected to need efficient full-text search capabilities and metric-based search capabilities. There
+are plugins for Redis that provide these features. The Redis Stack distribution includes these plugins by default,
+making it a good fit for our use case. Further, we expected not to require relational queries or complex joins,
+which are better suited for a relational database like PostgreSQL.
 
 Redis is also easy to set up and configure, making it a good choice for a small-scale application like Courageous
 Comets.
