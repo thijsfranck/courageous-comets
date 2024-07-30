@@ -11,6 +11,7 @@ The following environment variables are available to configure the application:
 | [`HF_DOWNLOAD_CONCURRENCY`](#hf_download_concurrency)                             | The maximum number of concurrent downloads when installing transformers. | No       | `3`                |
 | [`HF_HOME`](#hf_home)                                                             | The directory containing Huggingface Transformers data files.            | No       | `hf_data`          |
 | [`LOG_LEVEL`](#log_level)                                                         | The minimum log level.                                                   | No       | `INFO`             |
+| [`MPLCONFIGDIR`](#mplconfigdir)                                                   | The directory containing Matplotlib configuration files.                 | No       | `/app/matplotlib`  |
 | [`NLTK_DATA`](#nltk_data)                                                         | The directory containing NLTK data files.                                | No       | `nltk_data`        |
 | [`NLTK_DOWNLOAD_CONCURRENCY`](#nltk_download_concurrency)                         | The maximum number of concurrent downloads when installing NLTK data.    | No       | `3`                |
 | [`PREPROCESSING_MAX_WORD_LENGTH`](#preprocessing_max_word_length)                 | The maximum word length. Longer words are dropped.                       | No       | `35`               |
@@ -40,29 +41,10 @@ The following settings are optional or have default values that can be overridde
 
 ### `BOT_CONFIG_PATH`
 
-This specifies the location of the bot's configuration file, which is a YAML file containing the following information:
+This specifies the location of the bot's configuration file. By default, the application searches for a file named
+`application.yaml` in the directory from which it is launched. In the Docker image, this file is located at `/app/application.yaml`.
 
-```yaml
-# List of cogs to load when the bot starts, identified by their package name.
-cogs:
-  - <PACKAGE_NAME>
-  - <PACKAGE_NAME>
-# List of cogs to load in development mode only, identified by their package name.
-dev-cogs:
-  - <PACKAGE_NAME>
-  - <PACKAGE_NAME>
-# List of NLTK datasets to download on startup.
-nltk:
-  - <DATASET_NAME>
-  - <DATASET_NAME>
-# List of Huggingface Transformers models to download on startup.
-transformers:
-  - <MODEL_NAME>
-  - <MODEL_NAME>
-```
-
-By default, the application searches for a file named `application.yaml` in the directory from which it is launched.
-In the Docker image, this file is located at `/app/application.yaml`.
+[Read more](#applicationyaml) about the `application.yaml` file.
 
 ### `DISCORD_API_CONCURRENCY`
 
@@ -94,6 +76,11 @@ The minimum log level to display. The following levels are available:
 - `CRITICAL`
 
 The default log level is `INFO`.
+
+### `MPLCONFIGDIR`
+
+The directory containing `matplotlib` configuration files. Uses the default `matplotlib` configuration directory
+unless otherwise configured. In the Docker image, the `matplotlib` configuration files are located at `/app/matplotlib`.
 
 ### `NLTK_DATA`
 
@@ -129,3 +116,53 @@ is set by default.
 !!! DANGER "Security Warning"
 
     Do not share your Redis password with anyone!
+
+## `application.yaml`
+
+The `application.yaml` file is a configuration file that specifies the cogs to load, the NLTK datasets to download,
+and the Huggingface Transformers models to install on startup. It has the following structure:
+
+```yaml
+# List of cogs to load when the bot starts, identified by their package name.
+cogs:
+  - <PACKAGE_NAME>
+  - <PACKAGE_NAME>
+# List of cogs to load in development mode only, identified by their package name.
+dev-cogs:
+  - <PACKAGE_NAME>
+  - <PACKAGE_NAME>
+# List of NLTK datasets to download on startup.
+nltk:
+  - <DATASET_NAME>
+  - <DATASET_NAME>
+# List of Huggingface Transformers models to download on startup.
+transformers:
+  - <MODEL_NAME>
+  - <MODEL_NAME>
+```
+
+!!! WARNING "Advanced Users Only"
+
+    For standard use, the `application.yaml` file does not need to be changed. We recommend against modifying this
+    file unless you know what you're doing.
+
+One possible use case is to add additional feature or disable existing features by modifying the list of cogs.
+To add a new cog, add the package name to the `cogs` list. To disable a feature, remove the package name from
+the list.
+
+Below is a list of all cogs that are loaded by default:
+
+| Package Name                                            | Description                                                                      |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `courageous_comets.cogs.about`                          | Provides information about the bot.                                              |
+| `courageous_comets.cogs.keywords.search_command`        | Searches for keywords using a slash command.                                     |
+| `courageous_comets.cogs.keywords.search_context_menu`   | Searches for keywords using a context menu item.                                 |
+| `courageous_comets.cogs.keywords.topics_command`        | Lists the most popular keywords for a given context using a slash command.       |
+| `courageous_comets.cogs.keywords.user_context_menu`     | Lists the most popular keywords for a particular user using a context menu item. |
+| `courageous_comets.cogs.messages`                       | Listens for messages and passes them on for internal processing.                 |
+| `courageous_comets.cogs.ping`                           | Responds to ping requests.                                                       |
+| `courageous_comets.cogs.sentiment.message_context_menu` | Analyzes the sentiment of a message using a context menu item.                   |
+| `courageous_comets.cogs.sentiment.search_command`       | Searches for messages with similar sentiment using a slash command.              |
+| `courageous_comets.cogs.sentiment.search_context_menu`  | Searches for messages with similar sentiment using a context menu item.          |
+| `courageous_comets.cogs.sentiment.user_context_menu`    | Analyzes the sentiment of a user's messages using a context menu item.           |
+| `courageous_comets.cogs.frequency`                      | Provides an overview of the amount of recent messages for a given timespan.      |
