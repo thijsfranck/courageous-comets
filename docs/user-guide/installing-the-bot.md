@@ -3,7 +3,7 @@
 # Installing the Bot
 
 This guide will help you get started with the Courageous Comets Discord bot. You'll learn how to invite the bot
-to your server and use its basic features.
+to your server and use its admin features.
 
 ## Installation
 
