@@ -151,15 +151,15 @@ are structured as follows:
 ### Design Decisions
 
 While the fields ending with `_id` are integers on Discord, they are stored as strings on Redis and indexed as
-[Tag fields](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/) as opposed
-to [Numeric](https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields)
-because we want to make exact-match queries on these fields and also because they are more memory-efficient and
-fast.
+[Tags](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/tags/) rather than
+[Numeric](https://redis.io/docs/latest/develop/interact/search-and-query/basic-constructs/field-and-type-options/#numeric-fields)
+because we want to make exact-match queries against these fields. Also, `Tags` are more memory-efficient and
+faster to query.
 
 Rather than store the message as a JSON document with the sentiment-related values stored in a nested mapping,
 they are stored on the same hash with a prefix of `sentiment_`. This is because JSON documents generally have
-a larger memory footprint compared to the Hash when searching over documents. Also, JSON documents take up more
-space than the Hash. For context, the JSON document representation of the message takes at least 14Kb while the
+a larger memory footprint compared to the hash when searching over documents. Also, JSON documents take up more
+space than the hash. For context, the JSON document representation of the message takes at least 14Kb while the
 hash takes at most 4Kb.
 
 The [Cosine Similarity](https://en.wikipedia.org/wiki/Cosine_similarity) was chosen over the Euclidean distance
