@@ -98,10 +98,13 @@ for the last 60 minutes.
 
 ## Contributing to a Safe Environment
 
-Courageous Comets can also help moderators maintain a positive and welcoming environment in their servers.
-The sentiment analysis used to power the search features can also be used to identify toxic behavior and spam.
+What's better than finding a server that aligns with your interests? When that server is filled
+with friendly and welcoming people!
 
-Use the sentiment analysis interaction on a particular message or user to get an overview of their attitude.
+Courageous Comets helps moderators maintain a positive and safe environment in their servers. Use the bot to identify
+the most helpful members of the community, or to detect toxic behavior and spam.
+
+Right-click on any user or message and use the sentiment analysis interaction to get an overview of their attitude.
 
 <figure markdown="span" style="max-width: 500px;">
     [![User Sentiment](../assets/user-guide/user-sentiment.png)](../assets/user-guide/user-sentiment.png)
