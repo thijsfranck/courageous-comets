@@ -138,8 +138,10 @@ sentiment search feature and supports the moderation features of the bot.
 
 The sentiment analysisis performed using the NLTK library, which provides a pre-trained sentiment analysis model.
 The model assigns polarity scores to the input text, which indicate the positive, negative, and neutral sentiment
-of the text. Scores range from -1 (most negative) to 1 (most positive). The model also provides a compound score,
-which is a normalized combination of the positive, negative, and neutral scores.
+of the text.
+
+Scores range from -1 (most negative) to 1 (most positive). The model also provides a compound score, which is a
+normalized combination of the positive, negative, and neutral scores.
 
 The polarity scores for every message are stored in the database for later retrieval and analysis.
 
