@@ -16,15 +16,15 @@ graph LR
     subgraph Courageous Comets
         subgraph Bot[<a href='#bot'>Bot</a>]
             subgraph Controllers[<a href='#controllers'>Controllers</a>]
-                MessagesCog["Messages"]
-                Interactions["Interactions"]
+                MessagesCog[<a href='#messages'>messages</a>]
+                Interactions[<a href='#interactions'>interactions</a>]
             end
             subgraph ApplicationLogic[<a href='#application-logic'>Application Logic</a>]
-                Preprocessing{{"Preprocessing"}}
+                Preprocessing{{<a href='#preprocessing'>Preprocessing</a>}}
                 subgraph Processing
-                    WordCount["Word Count"]
-                    Sentiment["Sentiment Analysis"]
-                    Vectorization["Vectorization"]
+                    WordCount[<a href='#word-count'>Word Count</a>]
+                    Sentiment[<a href='#sentiment-analysis'>Sentiment Analysis</a>]
+                    Vectorization[<a href='#vectorization'>Vectorization</a>]
                 end
             end
         end
@@ -95,6 +95,69 @@ into several components:
 - **Word Count**: Counts the number of words in the input text.
 - **Sentiment Analysis**: Analyzes the sentiment of the input text.
 - **Vectorization**: Generates a vector representation to support similarity search.
+
+##### Preprocessing
+
+The preprocessing step is responsible for cleaning and normalizing the input text. This includes the following
+steps:
+
+- Drop code blocks
+- Drop links
+- Replace special characters and diacritics with standard ASCII characters
+- Expand contractions
+- Drop punctuation
+- Drop very long words
+- Drop extra whitespace
+- Truncate the text to a maximum length
+
+Preprocessing is essential to ensure that the input text is in a consistent format before further analysis is
+performed and to avoid overloading the downstream components with irrelevant information.
+
+##### Word Count
+
+The word count analysis counts the number of keywords in the input message. This analysis is used to generate
+the most popular topics in a channel or server.
+
+The first step in the word count analysis is to tokenize the input text. The text is split into individual words
+using the NLTK library, which is a popular library for natural language processing in Python that provides a robust
+tokenizer for English text out of the box.
+
+The tokenized text is then stemmed using NLTK's Snowball Stemmer. Stemming reduces words to their root form, which
+helps to group similar words together. For example, the words "running" and "runs" would both be stemmed to "run".
+
+Next, we remove stopwords from the tokenized text. Stopwords are common words like "the", "and", and "is" that
+do not carry much meaning and are typically removed from text before analysis. We also remove any words that are
+single characters long, as these are unlikely to be meaningful.
+
+Finally, the keywords are counted and the results are stored in the database.
+
+##### Sentiment Analysis
+
+The sentiment analysis component is responsible for analyzing the attitude of an input message. This enables the
+sentiment search feature and supports the moderation features of the bot.
+
+The sentiment analysisis performed using the NLTK library, which provides a pre-trained sentiment analysis model.
+The model assigns polarity scores to the input text, which indicate the positive, negative, and neutral sentiment
+of the text. Scores range from -1 (most negative) to 1 (most positive). The model also provides a compound score,
+which is a normalized combination of the positive, negative, and neutral scores.
+
+The polarity scores for every message are stored in the database for later retrieval and analysis.
+
+##### Vectorization
+
+The vectorization component is responsible for generating a vector representation of the input text. The vector
+representation is used to support similarity search, which allows users to find messages with similar content.
+
+Vectorization is done using the Sentence Transformers library, which provides pre-trained models for generating
+embeddings of text. The embeddings are high-dimensional vectors that capture the semantic meaning of the input
+text.
+
+First, the input text is tokenized using Sentence Transformers and passed into the transformer model to generate
+the embedding for each token. These embeddings are then averaged to generate a single embedding for the entire
+text.
+
+Finally, the embedding is passed into Torch to generate the final vector representation. This vector is stored
+in the database for later retrieval and analysis.
 
 ## Database
 
