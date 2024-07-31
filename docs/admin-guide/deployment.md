@@ -5,7 +5,7 @@
 This section provides instructions on how to deploy the Courageous Comets application in a production environment.
 Follow the steps below to set up the application.
 
-The application is deployed using [Docker](https://www.docker.com/) [Docker Compose](https://docs.docker.com/compose/).
+The application is deployed using [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/).
 It consists of the following services:
 
 - [**courageous-comets**](https://github.com/thijsfranck/courageous-comets/pkgs/container/courageous-comets):
