@@ -140,10 +140,13 @@ The sentiment analysisis performed using the NLTK library, which provides a pre-
 The model assigns polarity scores to the input text, which indicate the positive, negative, and neutral sentiment
 of the text.
 
-Scores range from -1 (most negative) to 1 (most positive). The model also provides a compound score, which is a
-normalized combination of the positive, negative, and neutral scores.
+Each polarity score ranges from 0 to 1, with 0 indicating the absence of the sentiment. All three scores sum up
+to 1.
 
-The polarity scores for every message are stored in the database for later retrieval and analysis.
+The model also provides a compound score, which is a normalized combination of the positive, negative, and neutral
+scores. Compound scores range from -1 (most negative) to 1 (most positive).
+
+The polarity scores and compound score for every message are stored in the database for later retrieval and analysis.
 
 ##### Vectorization
 
