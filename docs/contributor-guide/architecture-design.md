@@ -150,19 +150,19 @@ The polarity scores and compound score for every message are stored in the datab
 
 ##### Vectorization
 
-The vectorization component is responsible for generating a vector representation of the input text. The vector
-representation is used to support similarity search, which allows users to find messages with similar content.
+The vectorization component is responsible for generating a vector embedding of the input text. The vector
+embeddings support similarity search, which allows users to find messages with similar meaning.
 
-Vectorization is done using the Sentence Transformers library, which provides pre-trained models for generating
-embeddings of text. The embeddings are high-dimensional vectors that capture the semantic meaning of the input
-text.
+Vectorization is done using the [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+transformer which maps sentences and paragraphs to a 384-dimensional dense vector space that captures the semantic
+meaning of the input text.
 
-First, the input text is tokenized using Sentence Transformers and passed into the transformer model to generate
-the embedding for each token. These embeddings are then averaged to generate a single embedding for the entire
-text.
+First, a tokenizer is trained using the model and used to tokenize the text. The token embeddings are computed
+using Torch and then a pooling operation is applied on top of the contextualized word embeddings.
+These embeddings are then normalized to generate a single embedding for the entire text.
 
-Finally, the embedding is passed into Torch to generate the final vector representation. This vector is stored
-in the database for later retrieval and analysis.
+Finally, the embedding vector is converted to bytes and this bytes representation is stored in the database
+for later retrieval and analysis.
 
 ## Database
 
