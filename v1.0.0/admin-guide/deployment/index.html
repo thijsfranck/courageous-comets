@@ -957,7 +957,7 @@ It consists of the following services:</p>
 <h2 id="get-the-docker-compose-file">Get the Docker Compose File<a class="headerlink" href="#get-the-docker-compose-file" title="Permanent link">&para;</a></h2>
 <p>The application can be deployed using Docker Compose. You can use the <code>docker-compose.yaml</code> file provided in the
 GitHub repository to start the application.</p>
-<p><a class="md-button md-button--primary" href="https://github.com/thijsfranck/courageous-comets/blob/&lt;APP_VERSION&gt;/docker-compose.yaml">Get the Docker Compose <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg></span></a></p>
+<p><a class="md-button md-button--primary" href="https://github.com/thijsfranck/courageous-comets/blob/v1.0.0/docker-compose.yaml">Get the Docker Compose <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg></span></a></p>
 <p>Download the file and save it in any directory on your system.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>Before starting the application, you need to configure the application settings. Create a <code>.env</code> file in the same
@@ -984,7 +984,7 @@ file:</p>
 <h3 id="image-versions">Image Versions<a class="headerlink" href="#image-versions" title="Permanent link">&para;</a></h3>
 <p>By default, the application uses the latest version of each Docker image. To specify a particular version, you
 can add the following variables to the <code>.env</code> file:</p>
-<div class="highlight"><pre><span></span><code>COURAGEOUS_COMETS_VERSION=&lt;APP_VERSION&gt;
+<div class="highlight"><pre><span></span><code>COURAGEOUS_COMETS_VERSION=v1.0.0
 REDIS_STACK_VERSION=latest
 </code></pre></div>
 <p>Replace <code>latest</code> with the tag corresponding to the version you want to use.</p>
